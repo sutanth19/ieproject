@@ -1,0 +1,81 @@
+/* Navigation Bar Styling */
+.appBar {
+  width: 100%;
+  transition: all 0.3s ease;
+  background-color: #002b49;
+}
+  
+.logo {
+  height: 24px !important;
+  width: auto;
+}
+
+/* Mobile Navigation Drawer Styling */
+.mobile-drawer-header {
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.drawer-menu-item {
+  border-radius: 8px;
+  margin: 4px 8px;
+  transition: all 0.2s ease;
+}
+
+.drawer-menu-item:hover {
+  background-color: rgba(73, 172, 209, 0.08);
+}
+
+.drawer-menu-item.active {
+  background-color: rgba(73, 172, 209, 0.1);
+  border-left: 4px solid #4BAAD1;
+}
+
+.drawer-menu-icon {
+  min-width: 40px;
+}
+
+/* Animation for drawer items */
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.MuiDrawer-paper .MuiListItem-root {
+  animation: fadeInRight 0.3s ease forwards;
+  animation-delay: calc(0.05s * var(--item-index, 0));
+}
+
+/* Better mobile menu button */
+.mobile-menu-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.mobile-menu-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Media queries for responsive padding */
+@media (min-width: 960px) {
+  .toolbar {
+    padding: 0 24px;
+  }
+}
+
+/* Footer adjustments for mobile */
+@media (max-width: 767px) {
+  .MuiDrawer-paper .MuiBox-root:last-child {
+    padding-bottom: 70px !important; /* Ensure enough space for the footer with floating button */
+  }
+}

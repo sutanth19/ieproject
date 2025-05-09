@@ -1,0 +1,62 @@
+/* Custom Gantt task type styles */
+
+/* Default progress bar color for all tasks */
+.wx-gantt .wx-progress-percent {
+    background-color: #ffc107;
+  }
+  
+  /* Style rules for the "narrow" type */
+  .wx-gantt .wx-bar.wx-task.narrow {
+    background-color: #676a81;
+    color: transparent;
+    height: 10px !important;
+    margin-top: 10px;
+    border: 1px solid #63667a;
+  }
+  .wx-gantt .wx-bar.wx-task.narrow .wx-progress-percent {
+    background-color: #1a2630;
+  }
+  .wx-gantt .wx-bar.wx-task.narrow .wx-link {
+    background-color: #384047;
+    border-radius: 0px;
+  }
+  .wx-gantt .wx-bar.wx-task.narrow .wx-link .wx-inner {
+    border-radius: 0px;
+  }
+  
+  /* Style rules for the "progress" type */
+  .wx-gantt .wx-bar.wx-task.progress {
+    background-color: transparent;
+    color: var(--wx-color-font);
+    border-radius: 50px;
+    border: 1px solid #00bcd4;
+  }
+  .wx-gantt .wx-bar.wx-task.progress .wx-progress-percent {
+    background-color: #00bcd4;
+  }
+  .wx-gantt .wx-bar.wx-task.progress .wx-progress-wrapper {
+    border-radius: 50px;
+  }
+  
+  /* Style rules for the "urgent" type */
+  .wx-gantt .wx-bar.wx-task.urgent {
+    background-color: #f49a82;
+    border: 1px solid #f45e36;
+  }
+  .wx-gantt .wx-bar.wx-task.urgent .wx-progress-percent {
+    background-color: #f45e36;
+  }
+  
+  /* Style rules for the "round" type */
+  .wx-gantt .wx-bar.wx-task.round {
+    background-color: #9c27b0;
+    border-radius: 20px;
+    color: white;
+  }
+  .wx-gantt .wx-bar.wx-task.round .wx-progress-percent {
+    background-color: #673ab7;
+    border-radius: 20px;
+  }
+  .wx-gantt .wx-bar.wx-task.round .wx-progress-wrapper {
+    border-radius: 20px;
+  }

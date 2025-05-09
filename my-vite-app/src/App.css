@@ -1,0 +1,149 @@
+/* App.css - Updated with modern mobile navigation styles */
+
+/* Import Google Fonts - Added Inter for a more modern look */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap');
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: 'Inter', 'Roboto', sans-serif;
+}
+
+/* Default Light Mode for <body> */
+body {
+  background-color: #f5f5f5;
+  color: #000;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark Mode override */
+body.dark-mode {
+  background-color: #121212;
+  color: #fff;
+}
+
+/* Container for the entire app */
+.app-root {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navigation Bar Styling */
+.appBar {
+  width: 100%;
+  background: #002b49 !important;
+  transition: all 0.3s ease;
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo container */
+.logo-container {
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.logo-container:hover {
+  transform: scale(1.05);
+}
+
+.logo {
+  height: 32px;
+  width: auto;
+}
+
+/* Main Content Container */
+.content {
+  flex: 1;
+  margin-top: 50px; /* Offset for fixed AppBar */
+  padding: 24px 16px;
+  box-sizing: border-box;
+}
+
+/* Mobile Navigation Drawer Styling */
+.mobile-drawer-header {
+  background-color: #002b49;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.drawer-menu-item {
+  border-radius: 8px;
+  margin: 4px 8px;
+  transition: all 0.2s ease;
+}
+
+.drawer-menu-item:hover {
+  background-color: rgba(73, 172, 209, 0.08);
+}
+
+.drawer-menu-item.active {
+  background-color: rgba(73, 172, 209, 0.1);
+  border-left: 4px solid #4BAAD1;
+}
+
+.drawer-menu-icon {
+  min-width: 40px;
+}
+
+/* Animation for drawer items */
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.MuiDrawer-paper .MuiListItem-root {
+  animation: fadeInRight 0.3s ease forwards;
+  animation-delay: calc(0.05s * var(--item-index, 0));
+}
+
+/* Better mobile menu button */
+.mobile-menu-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.mobile-menu-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Media queries for responsive padding */
+@media (min-width: 960px) {
+  .content {
+    padding: 32px;
+  }
+  
+  .toolbar {
+    padding: 0 24px;
+  }
+}
+
+/* Subtle animations for interactive elements */
+button, a {
+  transition: all 0.2s ease !important;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}

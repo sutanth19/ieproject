@@ -1,0 +1,658 @@
+/* =========================================================================
+   VARIABLES - KEEP ALL VARIABLES 
+   ========================================================================= */
+:root {
+  --card-background-color-dark-mode: #1e2e4a;
+  --color-dark-mode: #002b49;
+  --color-light-mode: #46BFE8;
+  --section-background-dark-mode: rgb(18, 30, 52);
+  --section-stripe-background-dark-mode: #000f2b;
+  --section-background-light-mode: #e6e7e8;
+  --section-stripe-background-light-mode: rgb(236, 236, 236);
+  --section-color-dark-mode: white;
+  --section-color-light-mode: #333;
+  
+  /* Additional consistent values */
+  --border-accent-width: 4px;
+  --standard-transition: all 0.3s ease;
+  
+  /* Button colors */
+  --primary-button-color: #2196f3;
+  --primary-button-hover: #1976d2;
+  --button-shadow: 0 2px 4px rgba(33, 150, 243, 0.3);
+  --button-shadow-hover: 0 4px 8px rgba(33, 150, 243, 0.4);
+  
+  /* Gantt chart colors */
+  --gantt-primary-color: #19BEF0;
+  --gantt-primary-hover: #17ace0;
+  --gantt-background-overlay: rgba(255, 255, 255, 0.2);
+  --gantt-border-light: rgba(255, 255, 255, 0.3);
+}
+
+/* =========================================================================
+   1. GLOBAL CONTAINER & DARK MODE - USED IN HOME.JSX
+   ========================================================================= */
+.home-container {
+  width: 100%;
+  background-color: #ECECEC; /* Light-mode background */
+  color: #333;
+}
+
+.home-container.dark-mode {
+  background-color: #121e34; /* Dark-mode background */
+  color: #f8f8f8;
+}
+
+/* =========================================================================
+  2. SECTION STYLES - USED IN HOME.JSX
+  ========================================================================= */
+section > * {
+  margin: auto;
+  padding: 50px 0;
+}
+
+section:first-of-type > * {
+  padding: 0;
+}
+
+section:not(:first-of-type) > * {
+  padding-top: 50px;
+}
+
+@media (max-width: 768px) {
+  section > * {
+    max-width: 100%;
+    padding: 8px;
+  }
+}
+
+section {
+  background-color: var(--section-background-light-mode);
+  color: var(--section-color-light-mode);
+}
+
+/* stripe */
+section:nth-of-type(odd) {
+  background-color: var(--section-stripe-background-light-mode);
+  color: var(--section-color-light-mode);
+}
+
+section.dark-mode {
+  background-color: var(--section-background-dark-mode);
+  color: var(--section-color-dark-mode);
+}
+
+/* stripe dark mode */
+section:nth-of-type(odd).dark-mode {
+  background-color: var(--section-stripe-background-dark-mode);
+  color: var(--section-color-dark-mode);
+}
+
+section .section-title {
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+section .section-description {
+  padding-left: 1rem;
+  border-left: var(--border-accent-width) solid var(--color-light-mode);
+}
+
+/* =========================================================================
+   3. FONT & TEXT STYLES - USED IN IEDB.JSX AND OTHER COMPONENTS
+   ========================================================================= */
+.ie-description,
+.ie-text {
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+  margin-bottom: 24px;
+  color: #444444;
+}
+
+.home-container.dark-mode .ie-description,
+.home-container.dark-mode .ie-text {
+  color: #f8f8f8;
+}
+
+/* =========================================================================
+   4. CARD STYLES - COMMON CARD STYLES FOR ALL COMPONENTS
+   ========================================================================= */
+.card.dark-mode {
+  background-color: var(--card-background-color-dark-mode);
+}
+
+/* =========================================================================
+   5. IE JOB SCOPE CARDS - USED IN INTRODUCTION.JSX
+   ========================================================================= */
+.ie-job-scope {
+  transition: var(--standard-transition);
+  cursor: pointer;
+  animation: cardFadeIn 1s ease forwards;
+  border-left: var(--border-accent-width) solid var(--color-light-mode);
+}
+
+.home-container.dark-mode .ie-job-scope {
+  background-color: var(--card-background-color-dark-mode); /* Use the variable for consistency */
+  border-left: var(--border-accent-width) solid var(--color-light-mode);
+}
+
+/* =========================================================================
+   6. TRAINING CARDS - USED IN TRAINING.JSX
+   ========================================================================= */
+.training-card {
+  transition: var(--standard-transition);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.training-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* =========================================================================
+   7. ICONS STYLES - USED IN INTRODUCTION.JSX AND TOPIC.JSX
+   ========================================================================= */
+.ie-icon {
+  font-size: 2rem !important;
+  z-index: 1;
+  color: var(--color-dark-mode);
+  transition: transform 0.3s ease;
+}
+
+.home-container.dark-mode .ie-icon {
+  color: var(--color-light-mode);
+}
+
+.icon-style {
+  font-size: 1.8rem;
+  margin-right: 0.75rem;
+}
+
+/* Topic component icon styles */
+.topic-icon-style {
+  font-size: 1.8rem;
+  margin-right: 0.75rem;
+}
+
+/* Topic icon colors - Used in Topic.jsx */
+.topic-green { color: #4CAF50; }
+.topic-blue { color: var(--color-light-mode); }
+.topic-orange { color: #FF9800; }
+.topic-yellow { color: #FFC107; }
+
+/* =========================================================================
+   8. ANIMATIONS - USED IN IE JOB SCOPE CARDS
+   ========================================================================= */
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================================
+   9. UTILITY CLASSES - REUSABLE ACROSS COMPONENTS
+   ========================================================================= */
+/* Colors */
+.text-primary {
+  color: var(--color-light-mode);
+}
+
+.text-secondary {
+  color: var(--color-dark-mode);
+}
+
+/* Layout helpers */
+.border-left-accent {
+  border-left: var(--border-accent-width) solid var(--color-light-mode);
+  padding-left: 1rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* Hover effects */
+.hover-lift {
+  transition: transform 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+}
+
+/* =========================================================================
+   10. LOGIN & REGISTER STYLES - USED IN LOGIN.JSX AND REGISTER.JSX
+   ========================================================================= */
+/* Container layouts */
+.login-container, .register-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  background-color: var(--section-background-light-mode);
+}
+ 
+.login-container.dark-mode, .register-container.dark-mode {
+  background-color: var(--section-background-dark-mode);
+  color: var(--section-color-dark-mode);
+}
+ 
+.login-content-wrapper, .register-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  height: 100vh;
+}
+ 
+/* Card styles */
+.login-card, .register-card {
+  border-radius: 8px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  transition: var(--standard-transition);
+  animation: cardFadeIn 1s ease forwards;
+  border-left: var(--border-accent-width) solid var(--color-light-mode);
+  background-color: #fff;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+ 
+.login-card.dark-mode, .register-card.dark-mode {
+  background-color: var(--card-background-color-dark-mode);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  border-left: var(--border-accent-width) solid var(--color-light-mode);
+}
+ 
+@media (min-width: 600px) {
+  .login-card, .register-card {
+    max-width: 400px;
+  }
+}
+ 
+.login-card-content, .register-card-content {
+  padding: 16px;
+}
+ 
+@media (min-width: 600px) {
+  .login-card-content, .register-card-content {
+    padding: 30px;
+  }
+}
+ 
+/* Header styles */
+.login-header, .register-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+ 
+.login-icon, .register-icon {
+  font-size: 40px;
+  color: var(--color-light-mode);
+  margin-bottom: 8px;
+}
+ 
+.login-title, .register-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--color-dark-mode);
+}
+ 
+.login-title.dark-mode, .register-title.dark-mode {
+  color: #fff;
+}
+ 
+.login-subtitle, .register-subtitle {
+  margin-bottom: 4px;
+  color: #666;
+}
+ 
+.login-subtitle.dark-mode, .register-subtitle.dark-mode {
+  color: #ccc;
+}
+ 
+/* Form styles */
+.login-form, .register-form {
+  width: 100%;
+  margin-top: 8px;
+}
+ 
+.form-field, .form-field-register {
+  margin-bottom: 16px;
+}
+ 
+.form-field-password, .form-field-role {
+  margin-bottom: 24px;
+}
+ 
+/* Input field styles */
+.input-field .MuiOutlinedInput-root fieldset,
+.select-field .MuiOutlinedInput-root fieldset {
+  transition: border-color 0.3s;
+  border-color: rgba(0, 0, 0, 0.23);
+  border-radius: 4px;
+}
+ 
+.input-field.dark-mode .MuiOutlinedInput-root fieldset,
+.select-field.dark-mode .MuiOutlinedInput-root fieldset {
+  border-color: rgba(255, 255, 255, 0.23);
+}
+ 
+.input-field .MuiOutlinedInput-root:hover fieldset,
+.select-field .MuiOutlinedInput-root:hover fieldset {
+  border-color: var(--color-light-mode);
+}
+ 
+.input-field .MuiOutlinedInput-root.Mui-focused fieldset,
+.select-field .MuiOutlinedInput-root.Mui-focused fieldset {
+  border-color: var(--color-light-mode);
+}
+ 
+.input-field .MuiInputLabel-root,
+.select-field .MuiInputLabel-root {
+  color: rgba(0, 0, 0, 0.6);
+}
+ 
+.input-field.dark-mode .MuiInputLabel-root,
+.select-field.dark-mode .MuiInputLabel-root {
+  color: rgba(255, 255, 255, 0.7);
+}
+ 
+.input-field .MuiInputLabel-root.Mui-focused,
+.select-field .MuiInputLabel-root.Mui-focused {
+  color: var(--color-light-mode);
+}
+ 
+.input-field .MuiInputBase-input,
+.select-field .MuiSelect-select {
+  color: inherit;
+}
+ 
+.input-field.dark-mode .MuiInputBase-input,
+.select-field.dark-mode .MuiSelect-select {
+  color: #fff;
+}
+ 
+/* Password field styles */
+.password-toggle-button {
+  color: inherit;
+}
+ 
+.password-toggle-button.dark-mode {
+  color: rgba(255, 255, 255, 0.7);
+}
+ 
+/* Select field styles */
+.select-field .MuiSvgIcon-root {
+  color: rgba(0, 0, 0, 0.54);
+}
+ 
+.select-field.dark-mode .MuiSvgIcon-root {
+  color: rgba(255, 255, 255, 0.7);
+}
+ 
+/* Button styles */
+.login-button, .register-button {
+  padding-top: 12px;  
+  padding-bottom: 12px;
+  background-color: var(--primary-button-color);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 4px;
+  box-shadow: var(--button-shadow);
+  transition: var(--standard-transition);
+  letter-spacing: 0.5px;
+}
+ 
+.login-button:hover, .register-button:hover {
+  background-color: var(--primary-button-hover);
+  box-shadow: var(--button-shadow-hover);
+}
+ 
+/* Link and text styles */
+.signup-text, .login-text {
+  margin-top: 24px;
+  text-align: center;
+  color: #666;
+  padding-top: 16px;
+}
+ 
+.signup-text.dark-mode, .login-text.dark-mode {
+  color: #bbb;
+}
+ 
+.signup-link, .login-link {
+  color: var(--primary-button-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+  margin-left: 4px;
+}
+ 
+.signup-link:hover, .login-link:hover {
+  color: var(--primary-button-hover);
+  text-decoration: underline;
+}
+ 
+/* Alert styles */
+.login-alert, .register-alert {
+  width: 100%;
+  max-width: 400px;
+}
+ 
+/* =========================================================================
+   11. SELECT MENU STYLES - USED IN LOGIN & REGISTER FORMS
+   ========================================================================= */
+.select-menu {
+  background-color: #fff;
+}
+ 
+.select-menu.dark-mode {
+  background-color: var(--card-background-color-dark-mode);
+  color: #fff;
+}
+ 
+.select-menu .menu-item {
+  padding: 8px 16px;
+}
+ 
+.select-menu .menu-item:hover {
+  background-color: rgba(75, 170, 209, 0.08);
+}
+ 
+.select-menu.dark-mode .menu-item:hover {
+  background-color: rgba(75, 170, 209, 0.15);
+}
+ 
+.select-menu .menu-item.selected {
+  background-color: rgba(75, 170, 209, 0.12);
+}
+ 
+.select-menu .menu-item.selected:hover {
+  background-color: rgba(75, 170, 209, 0.2);
+}
+ 
+.select-menu.dark-mode .menu-item.selected {
+  background-color: rgba(75, 170, 209, 0.2);
+}
+ 
+.select-menu.dark-mode .menu-item.selected:hover {
+  background-color: rgba(75, 170, 209, 0.3);
+}
+
+/* =========================================================================
+   12. GANTT TOOLBAR STYLES - USED IN GANTTTOOLBAR.JSX
+   ========================================================================= */
+/* Main container */
+.gantt-toolbar-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+ 
+/* Header area */
+.gantt-toolbar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: var(--gantt-primary-color);
+  border-bottom: 1px solid #e0e0e0;
+}
+ 
+/* Title */
+.gantt-toolbar-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff;
+}
+ 
+/* Controls container */
+.gantt-toolbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+ 
+/* Filter tag - only shows when filter is active */
+.gantt-toolbar-filter-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  background-color: var(--gantt-background-overlay);
+  border: 1px solid var(--gantt-border-light);
+  border-radius: 4px;
+  margin-right: 8px;
+}
+ 
+.gantt-toolbar-filter-icon {
+  font-size: 16px !important;
+  color: #fff;
+}
+ 
+.gantt-toolbar-filter-text {
+  font-size: 12px;
+  color: #fff;
+  font-weight: 500;
+}
+ 
+/* Action buttons container */
+.gantt-toolbar-actions {
+  display: flex;
+  align-items: center;
+}
+ 
+/* Icon buttons */
+.gantt-toolbar-icon-button {
+  color: #fff;
+  padding: 6px;
+  margin: 0 2px;
+}
+ 
+.gantt-toolbar-icon-button:hover {
+  background-color: var(--gantt-background-overlay);
+}
+ 
+.gantt-toolbar-icon-button:disabled {
+  color: rgba(255, 255, 255, 0.5);
+}
+ 
+/* Popover */
+.gantt-toolbar-popover {
+  width: 280px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+ 
+.gantt-toolbar-popover-container {
+  display: flex;
+  flex-direction: column;
+}
+ 
+/* Popover header */
+.gantt-toolbar-popover-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background-color: var(--gantt-primary-color);
+  border-bottom: 1px solid #e0e0e0;
+}
+ 
+.gantt-toolbar-popover-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: #fff;
+}
+ 
+.gantt-toolbar-popover-title svg {
+  color: #fff;
+  font-size: 18px;
+}
+ 
+.gantt-toolbar-popover-close {
+  padding: 4px;
+  color: #fff;
+}
+ 
+/* Form */
+.gantt-toolbar-form {
+  padding: 16px;
+}
+ 
+.gantt-toolbar-form-group {
+  margin-bottom: 14px;
+}
+ 
+.gantt-toolbar-form-label {
+  margin-bottom: 4px;
+  color: #555;
+  font-weight: 500;
+  font-size: 12px;
+}
+ 
+.gantt-toolbar-input {
+  font-size: 14px;
+}
+ 
+/* Action buttons */
+.gantt-toolbar-actions-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+ 
+.gantt-toolbar-button {
+  min-width: 80px;
+  text-transform: none;
+  font-size: 13px;
+  border-radius: 2px;
+}
+ 
+.gantt-toolbar-reset {
+  color: #555;
+  border-color: #ccc;
+}
+ 
+.gantt-toolbar-apply {
+  background-color: var(--gantt-primary-color);
+  color: white;
+}
+ 
+.gantt-toolbar-apply:hover {
+  background-color: var(--gantt-primary-hover) !important;
+}
