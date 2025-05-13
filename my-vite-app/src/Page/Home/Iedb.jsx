@@ -8,7 +8,7 @@ import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
-import { useTheme } from "../../context_themes/ThemeContext";
+import { useTheme } from "./../../themes/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import { reportAPI } from "../../services/reportAPI";
 import '../Css/Global.css';

@@ -1,6 +1,6 @@
 // src/Page/Admin/AdminDashboard/AdminDashboard.jsx
 import React, { useState } from "react";
-import { useTheme as useAppTheme } from "../../../context_themes/ThemeContext";
+import { useTheme as useAppTheme } from "./../../../themes/ThemeContext";
 import { useTheme as useMuiTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";

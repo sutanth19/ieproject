@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTheme } from '../../context_themes/ThemeContext';
+import { useTheme } from './../../themes/ThemeContext';
 import { motion } from 'framer-motion';
 
 const Contact = ({ onClose }) => {

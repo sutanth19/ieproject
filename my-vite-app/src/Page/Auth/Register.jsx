@@ -16,7 +16,7 @@ import MenuItem from '@mui/material/MenuItem';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from './AuthContext';
-import { useTheme } from '../../context_themes/ThemeContext';
+import { useTheme } from '../../themes/ThemeContext';
 import '../Css/Global.css';
 
 const Register = () => {

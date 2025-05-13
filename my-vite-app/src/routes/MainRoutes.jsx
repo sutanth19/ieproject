@@ -10,7 +10,7 @@ import GanttView from '../Page/Gantt/GanttView';
 import AdminRoutes from './AdminRoutes';  // Import AdminRoutes
 import { useAuth } from '../Page/Auth/AuthContext';
 
-// Protected route component for admin routes
+// Protected route component for admin routes only
 const ProtectedAdminRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
   
@@ -19,52 +19,27 @@ const ProtectedAdminRoute = ({ children }) => {
     return children;
   }
   
-  // In production, properly check authentication
-  return isAuthenticated ? children : <Navigate to="/ieportal/login" replace />;
+  // In production, redirect to home if not authenticated
+  return isAuthenticated ? children : <Navigate to="/home" replace />;
 };
 
-const MainRoutes = ({ basePath = '', loginKey = 0 }) => {
+const MainRoutes = ({ loginKey = 0 }) => {
   const location = useLocation();
   const { handleLoginSuccess } = useAuth();
 
-  // Fixed getBasePath function that returns the proper base path
-  const getBasePath = () => {
-    const pathParts = window.location.pathname.split('/');
-    return pathParts[1] === 'ieportal' ? '/ieportal' : '';
-  };
-  
-  const currentBasePath = getBasePath();
-
   return (
     <Routes>
-      {/* Base redirects */}
-      <Route path="/" element={<Navigate to={`${currentBasePath}/login`} replace />} />
-      <Route path="/ieportal" element={<Navigate to={`${currentBasePath}/login`} replace />} />
+      {/* Base redirect - now redirects to home page instead of login */}
+      <Route path="/" element={<Home />} />
       
-      {/* Main routes */}
+      {/* Main routes - no need to duplicate with /ieportal prefix since BrowserRouter handles that */}
       <Route path="/home" element={<Home />} />
-      <Route path="/ieportal/home" element={<Home />} />
-      
-      {/*
-      <Route path="/about" element={<About />} />
-      <Route path="/ieportal/about" element={<About />} /> */}
-      
       <Route path="/contact" element={<Contact />} />
-      <Route path="/ieportal/contact" element={<Contact />} />
-      
       <Route path="/topics" element={<Topic />} />
-      <Route path="/ieportal/topics" element={<Topic />} />
-      
       <Route path="/gantt" element={<GanttView />} />
-      <Route path="/ieportal/gantt" element={<GanttView />} />
       
-      {/* Admin routes - these are now properly connected */}
+      {/* Admin routes */}
       <Route path="/admin/*" element={
-        <ProtectedAdminRoute>
-          <AdminRoutes />
-        </ProtectedAdminRoute>
-      } />
-      <Route path="/ieportal/admin/*" element={
         <ProtectedAdminRoute>
           <AdminRoutes />
         </ProtectedAdminRoute>
@@ -79,21 +54,12 @@ const MainRoutes = ({ basePath = '', loginKey = 0 }) => {
           }} 
         />
       } />
-      <Route path="/ieportal/login" element={
-        <Login 
-          key={`ieportal-login-${loginKey}`}
-          onLoginSuccess={() => {
-            if (handleLoginSuccess) handleLoginSuccess();
-          }} 
-        />
-      } />
       
       {/* Registration */}
       <Route path="/register" element={<RegisterPage />} />
-      <Route path="/ieportal/register" element={<RegisterPage />} />
       
-      {/* Catch all - redirect to login */}
-      <Route path="*" element={<Navigate to={`${currentBasePath}/login`} replace />} />
+      {/* Catch all - redirect to home page instead of login */}
+      <Route path="*" element={<Navigate to="/home" replace />} />
     </Routes>
   );
 };

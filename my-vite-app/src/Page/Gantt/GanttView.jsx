@@ -8,7 +8,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import "wx-react-gantt/dist/gantt.css";
 import { getZoomConfig } from "./ZoomControls";
 import GanttToolbar from "./GanttToolbar";
-import "./custom-gantt-styles.css";
+import './../Css/Global.css'; 
 import Form from "./Form";
 import SimpleDataProvider from "./SimpleDataProvider"; 
 

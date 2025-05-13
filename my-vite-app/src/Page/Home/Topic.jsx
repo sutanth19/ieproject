@@ -11,7 +11,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import { FaChartLine, FaIndustry, FaTools, FaLightbulb } from "react-icons/fa";
-import { useTheme } from "../../context_themes/ThemeContext";
+import { useTheme } from "./../../themes/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import '../Css/Global.css';
 

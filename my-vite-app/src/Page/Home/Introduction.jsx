@@ -7,7 +7,7 @@ import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
-import { useTheme } from '../../context_themes/ThemeContext';
+import { useTheme } from './../../themes/ThemeContext';
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import './../Css/Global.css'; 

@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Popover from '@mui/material/Popover';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
@@ -14,8 +11,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import TuneIcon from '@mui/icons-material/Tune';
-import './../Css/Global.css'; // Import the Global.css file instead of a separate CSS file
-
+import './../Css/Global.css'; 
 
 const GanttToolbar = ({
   onZoomIn,
@@ -27,9 +23,9 @@ const GanttToolbar = ({
   onStartDateChange,
   onEndDateChange,
   onFilterApply,
-  onFilterReset
+  onFilterReset,
+  darkMode = false
 }) => {
-  const theme = useTheme();
   const [filterAnchorEl, setFilterAnchorEl] = useState(null);
   const [localStartDate, setLocalStartDate] = useState(startDate || '');
   const [localEndDate, setLocalEndDate] = useState(endDate || '');
@@ -111,9 +107,9 @@ const GanttToolbar = ({
   };
 
   return (
-    <Box className="gantt-toolbar-container">
+    <Box className={`gantt-toolbar-container ${darkMode ? 'dark-mode' : ''}`}>
       {/* Header Title */}
-      <Box className="gantt-toolbar-header">
+      <Box className={`gantt-toolbar-header ${darkMode ? 'dark-mode' : ''}`}>
         <Typography component="h1" className="gantt-toolbar-title">
           IE Gantt Chart
         </Typography>
@@ -146,7 +142,6 @@ const GanttToolbar = ({
                 <TuneIcon fontSize="small" />
               </IconButton>
             </Tooltip>
-
 
             {/* Zoom Out */}
             <Tooltip title="Zoom Out">
@@ -190,81 +185,68 @@ const GanttToolbar = ({
           horizontal: 'right',
         }}
         PaperProps={{
-          elevation: 3,
-          className: "gantt-toolbar-popover"
+          className: `date-filter-popover ${darkMode ? 'dark-mode' : ''}`
         }}
       >
-        <Box className="gantt-toolbar-popover-container">
+        <Box className="date-filter-container">
           {/* Popover Header */}
-          <Box className="gantt-toolbar-popover-header">
-            <Typography variant="subtitle2" className="gantt-toolbar-popover-title">
+          <Box className="date-filter-header">
+            <Typography variant="subtitle2" className="date-filter-title">
               <FilterListIcon fontSize="small" />
               Date Range Filter
             </Typography>
             <IconButton 
               size="small" 
               onClick={handleFilterClose}
-              className="gantt-toolbar-popover-close"
+              className="date-filter-close"
             >
               <CloseIcon fontSize="small" />
             </IconButton>
           </Box>
           
           {/* Filter Form */}
-          <Box className="gantt-toolbar-form">
+          <Box className={`date-filter-form ${darkMode ? 'dark-mode' : ''}`}>
             {/* Start Date */}
-            <Box className="gantt-toolbar-form-group">
-              <Typography variant="body2" className="gantt-toolbar-form-label">
+            <Box className="date-filter-form-group">
+              <Typography variant="body2" className={`date-filter-form-label ${darkMode ? 'dark-mode' : ''}`}>
                 Start Date
               </Typography>
-              <TextField
+              <input
                 type="date"
-                fullWidth
-                size="small"
+                className={`date-filter-input ${darkMode ? 'dark-mode' : ''}`}
                 value={formatDateForInput(localStartDate)}
                 onChange={handleLocalStartDateChange}
-                InputProps={{
-                  className: "gantt-toolbar-input"
-                }}
               />
             </Box>
             
             {/* End Date */}
-            <Box className="gantt-toolbar-form-group">
-              <Typography variant="body2" className="gantt-toolbar-form-label">
+            <Box className="date-filter-form-group">
+              <Typography variant="body2" className={`date-filter-form-label ${darkMode ? 'dark-mode' : ''}`}>
                 End Date
               </Typography>
-              <TextField
+              <input
                 type="date"
-                fullWidth
-                size="small"
+                className={`date-filter-input ${darkMode ? 'dark-mode' : ''}`}
                 value={formatDateForInput(localEndDate)}
                 onChange={handleLocalEndDateChange}
-                InputProps={{
-                  className: "gantt-toolbar-input"
-                }}
               />
             </Box>
             
             {/* Action Buttons */}
-            <Box className="gantt-toolbar-actions-buttons">
-              <Button 
-                variant="outlined" 
+            <Box className="date-filter-actions">
+              <button 
+                className={`date-filter-button date-filter-reset ${darkMode ? 'dark-mode' : ''}`}
                 onClick={handleResetFilter}
-                startIcon={<RestartAltIcon />}
-                size="small"
-                className="gantt-toolbar-button gantt-toolbar-reset"
               >
+                <RestartAltIcon style={{ fontSize: '16px', marginRight: '4px', verticalAlign: 'text-bottom' }} />
                 Reset
-              </Button>
-              <Button 
-                variant="contained" 
+              </button>
+              <button 
+                className="date-filter-button date-filter-apply"
                 onClick={handleApplyFilter}
-                size="small"
-                className="gantt-toolbar-button gantt-toolbar-apply"
               >
                 Apply
-              </Button>
+              </button>
             </Box>
           </Box>
         </Box>

@@ -14,14 +14,15 @@ import IconButton from '@mui/material/IconButton';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import LoginIcon from '@mui/icons-material/Login';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
-import { useTheme } from '../../context_themes/ThemeContext';
+import { useTheme } from '../../themes/ThemeContext';
 import '../Css/Global.css';
 
 const Login = ({ onLoginSuccess }) => {
   const { darkMode } = useTheme();
   const { login, handleLoginSuccess } = useAuth(); 
+  const navigate = useNavigate(); // Add useNavigate hook
   const [userNtId, setUserNtId] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -66,11 +67,18 @@ const Login = ({ onLoginSuccess }) => {
         });
         
         setTimeout(() => {
-          handleLoginSuccess();
+          // Call context method first
+          if (handleLoginSuccess) {
+            handleLoginSuccess();
+          }
           
+          // Call prop callback if provided
           if (onLoginSuccess) {
             onLoginSuccess();
           }
+          
+          // Add explicit navigation to home page
+          navigate('/home');
         }, 1500);
       } else {
         setAlert({
@@ -94,14 +102,6 @@ const Login = ({ onLoginSuccess }) => {
   const handleCloseAlert = () => {
     setAlert({ ...alert, open: false });
   };
-
-  // Get the basePath for correct navigation
-  const getBasePath = () => {
-    const pathParts = window.location.pathname.split('/');
-    return pathParts[1] === 'ieportal' ? '/ieportal' : '';
-  };
-  
-  const basePath = getBasePath();
 
   return (
     <Box className={`login-container ${darkMode ? 'dark-mode' : ''}`}>
@@ -193,7 +193,7 @@ const Login = ({ onLoginSuccess }) => {
               >
                 Don't have an account?{' '}
                 <Link 
-                  to={`${basePath}/register`}
+                  to="/register"
                   className="signup-link"
                 >
                   Sign Up

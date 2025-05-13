@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import WorkIcon from '@mui/icons-material/Work';
 import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { useTheme } from '../../context_themes/ThemeContext';
+import { useTheme } from './../../themes/ThemeContext';
 import '../Css/Global.css';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardMedia from '@mui/material/CardMedia';

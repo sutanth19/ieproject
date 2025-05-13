@@ -5,7 +5,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useTheme } from './../context_themes/ThemeContext';
+import { useTheme } from './../themes/ThemeContext';
 import { SunMoonSwitch } from './../themes/SunMoonSwitch';
 import './TopNavBar.css';
 import ContactModal from '../Page/Home/ContactModal';

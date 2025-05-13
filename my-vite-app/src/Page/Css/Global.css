@@ -23,16 +23,10 @@
   --button-shadow-hover: 0 4px 8px rgba(33, 150, 243, 0.4);
   
   /* Gantt chart colors */
-  --gantt-primary-color: var(--color-light-mode);
+  --gantt-primary-color: #19BEF0;
   --gantt-primary-hover: #17ace0;
   --gantt-background-overlay: rgba(255, 255, 255, 0.2);
   --gantt-border-light: rgba(255, 255, 255, 0.3);
-  
-  /* Text colors */
-  --text-dark: #333;
-  --text-light: #f8f8f8;
-  --text-muted-dark: #666;
-  --text-muted-light: #ccc;
 }
 
 /* =========================================================================
@@ -496,21 +490,13 @@ section .section-description {
 }
 
 /* =========================================================================
-   12. GANTT TOOLBAR STYLES - UPDATED TO MATCH CARD STYLING
+   12. GANTT TOOLBAR STYLES - USED IN GANTTTOOLBAR.JSX
    ========================================================================= */
 /* Main container */
 .gantt-toolbar-container {
   display: flex;
   flex-direction: column;
   width: 100%;
-  border-radius: 4px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: var(--standard-transition);
-}
-
-.gantt-toolbar-container.dark-mode {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
  
 /* Header area */
@@ -518,13 +504,9 @@ section .section-description {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
-  background-color: var(--color-light-mode);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.gantt-toolbar-header.dark-mode {
-  background-color: var(--color-dark-mode);
+  padding: 8px 16px;
+  background-color: var(--gantt-primary-color);
+  border-bottom: 1px solid #e0e0e0;
 }
  
 /* Title */
@@ -585,8 +567,193 @@ section .section-description {
   color: rgba(255, 255, 255, 0.5);
 }
  
+/* Popover */
+.gantt-toolbar-popover {
+  width: 280px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+ 
+.gantt-toolbar-popover-container {
+  display: flex;
+  flex-direction: column;
+}
+ 
+/* Popover header */
+.gantt-toolbar-popover-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background-color: var(--gantt-primary-color);
+  border-bottom: 1px solid #e0e0e0;
+}
+ 
+.gantt-toolbar-popover-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: #fff;
+}
+ 
+.gantt-toolbar-popover-title svg {
+  color: #fff;
+  font-size: 18px;
+}
+ 
+.gantt-toolbar-popover-close {
+  padding: 4px;
+  color: #fff;
+}
+ 
+/* Form */
+.gantt-toolbar-form {
+  padding: 16px;
+}
+ 
+.gantt-toolbar-form-group {
+  margin-bottom: 14px;
+}
+ 
+.gantt-toolbar-form-label {
+  margin-bottom: 4px;
+  color: #555;
+  font-weight: 500;
+  font-size: 12px;
+}
+ 
+.gantt-toolbar-input {
+  font-size: 14px;
+}
+ 
+/* Action buttons */
+.gantt-toolbar-actions-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+ 
+.gantt-toolbar-button {
+  min-width: 80px;
+  text-transform: none;
+  font-size: 13px;
+  border-radius: 2px;
+}
+ 
+.gantt-toolbar-reset {
+  color: #555;
+  border-color: #ccc;
+}
+ 
+.gantt-toolbar-apply {
+  background-color: var(--gantt-primary-color);
+  color: white;
+}
+ 
+.gantt-toolbar-apply:hover {
+  background-color: var(--gantt-primary-hover) !important;
+}
+
 /* =========================================================================
-   13. DATE RANGE FILTER POPOVER STYLES - UPDATED TO MATCH CARDS
+   12. GANTT TOOLBAR STYLES - UPDATED TO MATCH CARD STYLING (REDUCED HEIGHT)
+   ========================================================================= */
+/* Main container */
+.gantt-toolbar-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  transition: var(--standard-transition);
+}
+
+.gantt-toolbar-container.dark-mode {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+ 
+/* Header area - REDUCED PADDING */
+.gantt-toolbar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 12px; /* Reduced from 12px 16px */
+  background-color: var(--color-light-mode);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gantt-toolbar-header.dark-mode {
+  background-color: var(--color-dark-mode);
+}
+ 
+/* Title - SMALLER FONT */
+.gantt-toolbar-title {
+  font-size: 0.9rem; /* Reduced from 1rem */
+  font-weight: 500;
+  color: #fff;
+}
+ 
+/* Controls container */
+.gantt-toolbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* Slightly reduced from 8px */
+}
+ 
+/* Filter tag - REDUCED SIZE */
+.gantt-toolbar-filter-tag {
+  display: flex;
+  align-items: center;
+  gap: 4px; /* Reduced from 6px */
+  padding: 2px 6px; /* Reduced from 3px 8px */
+  background-color: var(--gantt-background-overlay);
+  border: 1px solid var(--gantt-border-light);
+  border-radius: 3px; /* Slightly reduced */
+  margin-right: 6px; /* Reduced from 8px */
+}
+ 
+.gantt-toolbar-filter-icon {
+  font-size: 14px !important; /* Reduced from 16px */
+  color: #fff;
+}
+ 
+.gantt-toolbar-filter-text {
+  font-size: 11px; /* Reduced from 12px */
+  color: #fff;
+  font-weight: 500;
+}
+ 
+/* Action buttons container */
+.gantt-toolbar-actions {
+  display: flex;
+  align-items: center;
+}
+ 
+/* Icon buttons - SMALLER SIZE */
+.gantt-toolbar-icon-button {
+  color: #fff;
+  padding: 4px; 
+  margin: 0 1px; 
+}
+
+
+.gantt-toolbar-icon-button .MuiSvgIcon-root {
+  font-size: 18px !important; 
+}
+ 
+.gantt-toolbar-icon-button:hover {
+  background-color: var(--gantt-background-overlay);
+}
+ 
+.gantt-toolbar-icon-button:disabled {
+  color: rgba(255, 255, 255, 0.5);
+}
+ 
+/* =========================================================================
+   13. DATE RANGE FILTER POPOVER STYLES - FINAL VERSION
    ========================================================================= */
 /* Popover */
 .date-filter-popover {
@@ -599,7 +766,7 @@ section .section-description {
 }
 
 .date-filter-popover.dark-mode {
-  background-color: var(--card-background-color-dark-mode);
+  background-color: #222;
   color: var(--text-light);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
@@ -615,56 +782,42 @@ section .section-description {
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  background-color: var(--color-light-mode);
+  background-color: var(--color-light-mode); 
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
- 
-.date-filter-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 500;
-  color: #fff;
-  font-size: 14px;
-}
- 
-.date-filter-title svg {
-  color: #fff;
-  font-size: 18px;
-}
- 
-.date-filter-close {
-  padding: 4px;
-  color: #fff;
-}
- 
+
 /* Form */
 .date-filter-form {
   padding: 16px;
+  background-color: #fff;
 }
- 
+
+
 .date-filter-form-group {
   margin-bottom: 14px;
 }
  
 .date-filter-form-label {
-  margin-bottom: 4px;
+  display: block;
+  margin-bottom: 8px;
   color: var(--text-dark);
   font-weight: 500;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .date-filter-form-label.dark-mode {
-  color: var(--text-light);
+  color: #fff;
 }
  
 .date-filter-input {
   width: 100%;
   font-size: 14px;
   padding: 8px 12px;
-  border: 1px solid rgba(0, 0, 0, 0.23);
+  border: 1px solid #ccc;
   border-radius: 4px;
   transition: border-color 0.3s;
+  background-color: #fff;
+  color: #333;
 }
 
 .date-filter-input:hover {
@@ -677,9 +830,9 @@ section .section-description {
 }
 
 .date-filter-input.dark-mode {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-color: rgba(255, 255, 255, 0.23);
-  color: var(--text-light);
+  background-color: #fff;
+  border-color: #ccc;
+  color: #333; 
 }
 
 .date-filter-input.dark-mode:hover {
@@ -700,9 +853,9 @@ section .section-description {
  
 .date-filter-button {
   min-width: 80px;
-  padding: 6px 16px;
+  padding: 8px 16px;
   font-size: 13px;
-  border-radius: 2px;
+  border-radius: 4px;
   cursor: pointer;
   transition: var(--standard-transition);
   border: 1px solid transparent;
@@ -710,8 +863,8 @@ section .section-description {
 }
  
 .date-filter-reset {
-  color: var(--text-dark);
-  background-color: transparent;
+  color: #333;
+  background-color: #fff;
   border-color: #ccc;
 }
 
@@ -721,12 +874,13 @@ section .section-description {
 }
 
 .date-filter-reset.dark-mode {
-  color: var(--text-light);
-  border-color: rgba(255, 255, 255, 0.23);
+  color: #333;
+  background-color: #fff; /* White button in dark mode */
+  border-color: #ccc;
 }
 
 .date-filter-reset.dark-mode:hover {
-  background-color: rgba(70, 191, 232, 0.08);
+  background-color: #f8f8f8;
   border-color: var(--color-light-mode);
 }
  
@@ -739,3 +893,184 @@ section .section-description {
 .date-filter-apply:hover {
   background-color: var(--gantt-primary-hover);
 }
+
+/* Make sure icon colors are correct in both modes */
+.date-filter-button .MuiSvgIcon-root {
+  font-size: 16px;
+  margin-right: 4px;
+  vertical-align: text-bottom;
+}
+
+.date-filter-reset .MuiSvgIcon-root {
+  color: #555;
+}
+
+.date-filter-reset.dark-mode .MuiSvgIcon-root {
+  color: #555;
+}
+
+/* Calendar icon style for date inputs */
+.date-filter-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+
+/* Placeholder styling */
+.date-filter-input::placeholder {
+  color: #999;
+}
+
+.date-filter-input.dark-mode::placeholder {
+  color: #999;
+}
+
+/* =========================================================================
+   13.1. Custom Gantt task type styles
+   ========================================================================= */
+
+
+/* Default progress bar color for all tasks */
+.wx-gantt .wx-progress-percent {
+    background-color: #ffc107;
+  }
+  
+  /* Style rules for the "narrow" type */
+  .wx-gantt .wx-bar.wx-task.narrow {
+    background-color: #676a81;
+    color: transparent;
+    height: 10px !important;
+    margin-top: 10px;
+    border: 1px solid #63667a;
+  }
+  .wx-gantt .wx-bar.wx-task.narrow .wx-progress-percent {
+    background-color: #1a2630;
+  }
+  .wx-gantt .wx-bar.wx-task.narrow .wx-link {
+    background-color: #384047;
+    border-radius: 0px;
+  }
+  .wx-gantt .wx-bar.wx-task.narrow .wx-link .wx-inner {
+    border-radius: 0px;
+  }
+  
+  /* Style rules for the "progress" type */
+  .wx-gantt .wx-bar.wx-task.progress {
+    background-color: transparent;
+    color: var(--wx-color-font);
+    border-radius: 50px;
+    border: 1px solid #00bcd4;
+  }
+  .wx-gantt .wx-bar.wx-task.progress .wx-progress-percent {
+    background-color: #00bcd4;
+  }
+  .wx-gantt .wx-bar.wx-task.progress .wx-progress-wrapper {
+    border-radius: 50px;
+  }
+  
+  /* Style rules for the "urgent" type */
+  .wx-gantt .wx-bar.wx-task.urgent {
+    background-color: #f49a82;
+    border: 1px solid #f45e36;
+  }
+  .wx-gantt .wx-bar.wx-task.urgent .wx-progress-percent {
+    background-color: #f45e36;
+  }
+  
+  /* Style rules for the "round" type */
+  .wx-gantt .wx-bar.wx-task.round {
+    background-color: #9c27b0;
+    border-radius: 20px;
+    color: white;
+  }
+  .wx-gantt .wx-bar.wx-task.round .wx-progress-percent {
+    background-color: #673ab7;
+    border-radius: 20px;
+  }
+  .wx-gantt .wx-bar.wx-task.round .wx-progress-wrapper {
+    border-radius: 20px;
+  }
+
+  /* =========================================================================
+   14. NavBar
+   ========================================================================= */
+
+   /* Navigation Bar Styling */
+.appBar {
+    width: 100%;
+    transition: all 0.3s ease;
+    background-color: #002b49;
+  }
+    
+  .logo {
+    height: 20px !important;
+    width: auto;
+  }
+  
+  /* Mobile Navigation Drawer Styling */
+  .mobile-drawer-header {
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+  }
+  
+  .drawer-menu-item {
+    border-radius: 8px;
+    margin: 4px 8px;
+    transition: all 0.2s ease;
+  }
+  
+  .drawer-menu-item:hover {
+    background-color: rgba(73, 172, 209, 0.08);
+  }
+  
+  .drawer-menu-item.active {
+    background-color: rgba(73, 172, 209, 0.1);
+    border-left: 4px solid #4BAAD1;
+  }
+  
+  .drawer-menu-icon {
+    min-width: 40px;
+  }
+  
+  /* Animation for drawer items */
+  @keyframes fadeInRight {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .MuiDrawer-paper .MuiListItem-root {
+    animation: fadeInRight 0.3s ease forwards;
+    animation-delay: calc(0.05s * var(--item-index, 0));
+  }
+  
+  /* Better mobile menu button */
+  .mobile-menu-button {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+  
+  .mobile-menu-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Media queries for responsive padding */
+  @media (min-width: 960px) {
+    .toolbar {
+      padding: 0 24px;
+    }
+  }
+  
+  /* Footer adjustments for mobile */
+  @media (max-width: 767px) {
+    .MuiDrawer-paper .MuiBox-root:last-child {
+      padding-bottom: 70px !important; /* Ensure enough space for the footer with floating button */
+    }
+  }

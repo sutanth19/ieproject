@@ -2,13 +2,14 @@
 import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import { useTheme } from '../../context_themes/ThemeContext';
+import { useTheme } from './../../themes/ThemeContext';
 import { useLocation } from 'react-router-dom';
 import CarouselHome from './CarouselHome';
 import Topic from './Topic';
 import Training from './Training';
 import Introduction from './Introduction';
 import Iedb from './Iedb';
+import News from './News';
 import './../Css/Global.css'; 
 
 const sections = [
@@ -17,6 +18,7 @@ const sections = [
   { id: 'topic', component: <Topic /> },
   { id: 'training', component: <Training /> },
   { id: 'iedb', component: <Iedb /> },
+  { id: 'news', component: <News /> },
 ];
 
 const Home = () => {
