@@ -23,10 +23,16 @@
   --button-shadow-hover: 0 4px 8px rgba(33, 150, 243, 0.4);
   
   /* Gantt chart colors */
-  --gantt-primary-color: #19BEF0;
+  --gantt-primary-color: var(--color-light-mode);
   --gantt-primary-hover: #17ace0;
   --gantt-background-overlay: rgba(255, 255, 255, 0.2);
   --gantt-border-light: rgba(255, 255, 255, 0.3);
+  
+  /* Text colors */
+  --text-dark: #333;
+  --text-light: #f8f8f8;
+  --text-muted-dark: #666;
+  --text-muted-light: #ccc;
 }
 
 /* =========================================================================
@@ -490,13 +496,21 @@ section .section-description {
 }
 
 /* =========================================================================
-   12. GANTT TOOLBAR STYLES - USED IN GANTTTOOLBAR.JSX
+   12. GANTT TOOLBAR STYLES - UPDATED TO MATCH CARD STYLING
    ========================================================================= */
 /* Main container */
 .gantt-toolbar-container {
   display: flex;
   flex-direction: column;
   width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: var(--standard-transition);
+}
+
+.gantt-toolbar-container.dark-mode {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
  
 /* Header area */
@@ -504,9 +518,13 @@ section .section-description {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 16px;
-  background-color: var(--gantt-primary-color);
-  border-bottom: 1px solid #e0e0e0;
+  padding: 12px 16px;
+  background-color: var(--color-light-mode);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gantt-toolbar-header.dark-mode {
+  background-color: var(--color-dark-mode);
 }
  
 /* Title */
@@ -567,92 +585,157 @@ section .section-description {
   color: rgba(255, 255, 255, 0.5);
 }
  
+/* =========================================================================
+   13. DATE RANGE FILTER POPOVER STYLES - UPDATED TO MATCH CARDS
+   ========================================================================= */
 /* Popover */
-.gantt-toolbar-popover {
-  width: 280px;
+.date-filter-popover {
+  width: 320px;
   border-radius: 4px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background-color: #fff;
+  border-left: var(--border-accent-width) solid var(--color-light-mode);
+}
+
+.date-filter-popover.dark-mode {
+  background-color: var(--card-background-color-dark-mode);
+  color: var(--text-light);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
  
-.gantt-toolbar-popover-container {
+.date-filter-container {
   display: flex;
   flex-direction: column;
 }
  
 /* Popover header */
-.gantt-toolbar-popover-header {
+.date-filter-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 16px;
-  background-color: var(--gantt-primary-color);
-  border-bottom: 1px solid #e0e0e0;
+  padding: 12px 16px;
+  background-color: var(--color-light-mode);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
  
-.gantt-toolbar-popover-title {
+.date-filter-title {
   display: flex;
   align-items: center;
   gap: 8px;
   font-weight: 500;
   color: #fff;
+  font-size: 14px;
 }
  
-.gantt-toolbar-popover-title svg {
+.date-filter-title svg {
   color: #fff;
   font-size: 18px;
 }
  
-.gantt-toolbar-popover-close {
+.date-filter-close {
   padding: 4px;
   color: #fff;
 }
  
 /* Form */
-.gantt-toolbar-form {
+.date-filter-form {
   padding: 16px;
 }
  
-.gantt-toolbar-form-group {
+.date-filter-form-group {
   margin-bottom: 14px;
 }
  
-.gantt-toolbar-form-label {
+.date-filter-form-label {
   margin-bottom: 4px;
-  color: #555;
+  color: var(--text-dark);
   font-weight: 500;
   font-size: 12px;
 }
+
+.date-filter-form-label.dark-mode {
+  color: var(--text-light);
+}
  
-.gantt-toolbar-input {
+.date-filter-input {
+  width: 100%;
   font-size: 14px;
+  padding: 8px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  border-radius: 4px;
+  transition: border-color 0.3s;
+}
+
+.date-filter-input:hover {
+  border-color: var(--color-light-mode);
+}
+
+.date-filter-input:focus {
+  border-color: var(--color-light-mode);
+  outline: none;
+}
+
+.date-filter-input.dark-mode {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.23);
+  color: var(--text-light);
+}
+
+.date-filter-input.dark-mode:hover {
+  border-color: var(--color-light-mode);
+}
+
+.date-filter-input.dark-mode:focus {
+  border-color: var(--color-light-mode);
 }
  
 /* Action buttons */
-.gantt-toolbar-actions-buttons {
+.date-filter-actions {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  margin-top: 8px;
+  margin-top: 16px;
 }
  
-.gantt-toolbar-button {
+.date-filter-button {
   min-width: 80px;
-  text-transform: none;
+  padding: 6px 16px;
   font-size: 13px;
   border-radius: 2px;
+  cursor: pointer;
+  transition: var(--standard-transition);
+  border: 1px solid transparent;
+  font-weight: 500;
 }
  
-.gantt-toolbar-reset {
-  color: #555;
+.date-filter-reset {
+  color: var(--text-dark);
+  background-color: transparent;
   border-color: #ccc;
 }
- 
-.gantt-toolbar-apply {
-  background-color: var(--gantt-primary-color);
-  color: white;
+
+.date-filter-reset:hover {
+  background-color: rgba(70, 191, 232, 0.04);
+  border-color: var(--color-light-mode);
+}
+
+.date-filter-reset.dark-mode {
+  color: var(--text-light);
+  border-color: rgba(255, 255, 255, 0.23);
+}
+
+.date-filter-reset.dark-mode:hover {
+  background-color: rgba(70, 191, 232, 0.08);
+  border-color: var(--color-light-mode);
 }
  
-.gantt-toolbar-apply:hover {
-  background-color: var(--gantt-primary-hover) !important;
+.date-filter-apply {
+  background-color: var(--color-light-mode);
+  color: white;
+  border: none;
+}
+ 
+.date-filter-apply:hover {
+  background-color: var(--gantt-primary-hover);
 }
