@@ -1074,3 +1074,72 @@ section .section-description {
       padding-bottom: 70px !important; /* Ensure enough space for the footer with floating button */
     }
   }
+
+/* =========================================================================
+   15. TAG SCROLLBAR STYLES 
+   ========================================================================= */
+
+.tag-scroll-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  position: relative;
+  padding-bottom: 4px; /* Small space for scrollbar */
+  margin-bottom: -2px; /* Compensate for padding */
+}
+
+/* Hide default scrollbar buttons */
+.tag-scroll-container::-webkit-scrollbar-button {
+  display: none; 
+}
+
+/* Make the scrollbar thin and minimal */
+.tag-scroll-container::-webkit-scrollbar {
+  height: 3px; 
+  width: auto;
+  display: block !important; 
+}
+
+.tag-scroll-container::-webkit-scrollbar-track {
+  background: transparent; /* Transparent track */
+  border-radius: 0;
+}
+
+.tag-scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(70, 191, 232, 0.6); /* Slightly transparent thumb */
+  border-radius: 3px;
+  border: none;
+}
+
+.tag-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(70, 191, 232, 0.8); 
+}
+
+/* Remove corner pieces */
+.tag-scroll-container::-webkit-scrollbar-corner {
+  display: none;
+}
+
+/* For Firefox - make scrollbar thin with no buttons */
+.tag-scroll-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(70, 191, 232, 0.6) transparent;
+}
+
+
+.tag-scroll-container {
+  -ms-overflow-style: none;
+}
+
+/* Only show the scrollbar when needed */
+.tag-scroll-container:not(:hover)::-webkit-scrollbar-thumb {
+  background: rgba(70, 191, 232, 0.4); 
+}
+
+/* Dark mode adjustments */
+.home-container.dark-mode .tag-scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(70, 191, 232, 0.6);
+}
+
+.home-container.dark-mode .tag-scroll-container {
+  scrollbar-color: rgba(70, 191, 232, 0.6) transparent;
+}

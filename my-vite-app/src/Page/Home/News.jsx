@@ -27,7 +27,7 @@ const newsContent = [
         title: "news 2",
         description: "long-text-here",
         date: "Apr 27, 2025",
-        tag: ["tag1", "tag2", "tag3"]
+        tag: ["tag1", "tag2-long-tag-here-for-example-overflow-of-the-content", "tag3-try-long-text-here"]
     },
     {
         type: "news",
@@ -106,20 +106,47 @@ const News = () => {
                                                 </Typography>
                                             </Box>
                                             <Box display="flex" justifyContent="space-between" alignItems="center">
-                                                <Box sx={{ flex: 1, minWidth: 0, overflowX: 'auto' }}>
+                                                <Box 
+                                                    className="tag-scroll-container"
+                                                    sx={{ 
+                                                        flex: 1, 
+                                                        minWidth: 0,
+                                                        // No gradients or extra indicators
+                                                        '&::after': {
+                                                            display: 'none'
+                                                        },
+                                                        // Hide buttons
+                                                        '&::-webkit-scrollbar-button': {
+                                                            display: 'none !important'
+                                                        },
+                                                        // Simple background
+                                                        backgroundColor: 'transparent'
+                                                    }}
+                                                >
                                                     <Stack
                                                         direction="row"
                                                         spacing={1}
-                                                        sx={{ flexWrap: 'nowrap', minWidth: 'max-content' }}
+                                                        sx={{ 
+                                                            flexWrap: 'nowrap', 
+                                                            minWidth: 'max-content',
+                                                            py: 0.5 
+                                                        }}
                                                     >
                                                         {item.tag.map((tag, idx) => (
                                                             <Chip
-                                                            key={idx}
-                                                            size="small"
-                                                            clickable
-                                                            label={tag}
-                                                            sx={{ height: 'auto', borderRadius: '5px', flexShrink: 0 }}
-                                                        />
+                                                                key={idx}
+                                                                size="small"
+                                                                clickable
+                                                                label={tag}
+                                                                sx={{ 
+                                                                    height: 'auto', 
+                                                                    borderRadius: '5px', 
+                                                                    flexShrink: 0,
+                                                                    '& .MuiChip-label': {
+                                                                        padding: '4px 8px' 
+                                                                    }
+                                                                }}
+                                                            />
                                                         ))}
                                                     </Stack>
                                                 </Box>
@@ -144,4 +171,3 @@ const News = () => {
 };
 
 export default News;
-
