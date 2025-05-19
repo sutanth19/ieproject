@@ -132,7 +132,7 @@ section .section-description {
 }
 
 .home-container.dark-mode .ie-job-scope {
-  background-color: var(--card-background-color-dark-mode); /* Use the variable for consistency */
+  background-color: var(--card-background-color-dark-mode);
   border-left: var(--border-accent-width) solid var(--color-light-mode);
 }
 
@@ -175,12 +175,6 @@ section .section-description {
   font-size: 1.8rem;
   margin-right: 0.75rem;
 }
-
-/* Topic icon colors - Used in Topic.jsx */
-.topic-green { color: #4CAF50; }
-.topic-blue { color: var(--color-light-mode); }
-.topic-orange { color: #FF9800; }
-.topic-yellow { color: #FFC107; }
 
 /* =========================================================================
    8. ANIMATIONS - USED IN IE JOB SCOPE CARDS
@@ -289,7 +283,6 @@ section .section-description {
   }
 }
  
-/* Header styles */
 .login-header, .register-header {
   text-align: center;
   margin-bottom: 16px;
@@ -400,7 +393,6 @@ section .section-description {
   color: rgba(255, 255, 255, 0.7);
 }
  
-/* Button styles */
 .login-button, .register-button {
   padding-top: 12px;  
   padding-bottom: 12px;
@@ -418,7 +410,6 @@ section .section-description {
   box-shadow: var(--button-shadow-hover);
 }
  
-/* Link and text styles */
 .signup-text, .login-text {
   margin-top: 24px;
   text-align: center;
@@ -443,7 +434,6 @@ section .section-description {
   text-decoration: underline;
 }
  
-/* Alert styles */
 .login-alert, .register-alert {
   width: 100%;
   max-width: 400px;
@@ -497,6 +487,16 @@ section .section-description {
   display: flex;
   flex-direction: column;
   width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  transition: var(--standard-transition);
+  z-index: 10;
+  position: relative;
+}
+
+.gantt-toolbar-container.dark-mode {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
  
 /* Header area */
@@ -504,183 +504,7 @@ section .section-description {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 16px;
-  background-color: var(--gantt-primary-color);
-  border-bottom: 1px solid #e0e0e0;
-}
- 
-/* Title */
-.gantt-toolbar-title {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #fff;
-}
- 
-/* Controls container */
-.gantt-toolbar-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
- 
-/* Filter tag - only shows when filter is active */
-.gantt-toolbar-filter-tag {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 3px 8px;
-  background-color: var(--gantt-background-overlay);
-  border: 1px solid var(--gantt-border-light);
-  border-radius: 4px;
-  margin-right: 8px;
-}
- 
-.gantt-toolbar-filter-icon {
-  font-size: 16px !important;
-  color: #fff;
-}
- 
-.gantt-toolbar-filter-text {
-  font-size: 12px;
-  color: #fff;
-  font-weight: 500;
-}
- 
-/* Action buttons container */
-.gantt-toolbar-actions {
-  display: flex;
-  align-items: center;
-}
- 
-/* Icon buttons */
-.gantt-toolbar-icon-button {
-  color: #fff;
-  padding: 6px;
-  margin: 0 2px;
-}
- 
-.gantt-toolbar-icon-button:hover {
-  background-color: var(--gantt-background-overlay);
-}
- 
-.gantt-toolbar-icon-button:disabled {
-  color: rgba(255, 255, 255, 0.5);
-}
- 
-/* Popover */
-.gantt-toolbar-popover {
-  width: 280px;
-  border-radius: 4px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
- 
-.gantt-toolbar-popover-container {
-  display: flex;
-  flex-direction: column;
-}
- 
-/* Popover header */
-.gantt-toolbar-popover-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 16px;
-  background-color: var(--gantt-primary-color);
-  border-bottom: 1px solid #e0e0e0;
-}
- 
-.gantt-toolbar-popover-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 500;
-  color: #fff;
-}
- 
-.gantt-toolbar-popover-title svg {
-  color: #fff;
-  font-size: 18px;
-}
- 
-.gantt-toolbar-popover-close {
-  padding: 4px;
-  color: #fff;
-}
- 
-/* Form */
-.gantt-toolbar-form {
-  padding: 16px;
-}
- 
-.gantt-toolbar-form-group {
-  margin-bottom: 14px;
-}
- 
-.gantt-toolbar-form-label {
-  margin-bottom: 4px;
-  color: #555;
-  font-weight: 500;
-  font-size: 12px;
-}
- 
-.gantt-toolbar-input {
-  font-size: 14px;
-}
- 
-/* Action buttons */
-.gantt-toolbar-actions-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-top: 8px;
-}
- 
-.gantt-toolbar-button {
-  min-width: 80px;
-  text-transform: none;
-  font-size: 13px;
-  border-radius: 2px;
-}
- 
-.gantt-toolbar-reset {
-  color: #555;
-  border-color: #ccc;
-}
- 
-.gantt-toolbar-apply {
-  background-color: var(--gantt-primary-color);
-  color: white;
-}
- 
-.gantt-toolbar-apply:hover {
-  background-color: var(--gantt-primary-hover) !important;
-}
-
-/* =========================================================================
-   12. GANTT TOOLBAR STYLES - UPDATED TO MATCH CARD STYLING (REDUCED HEIGHT)
-   ========================================================================= */
-/* Main container */
-.gantt-toolbar-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  border-radius: 4px;
-  overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-  transition: var(--standard-transition);
-}
-
-.gantt-toolbar-container.dark-mode {
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-}
- 
-/* Header area - REDUCED PADDING */
-.gantt-toolbar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px 12px; /* Reduced from 12px 16px */
+  padding: 6px 12px;
   background-color: var(--color-light-mode);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -689,9 +513,9 @@ section .section-description {
   background-color: var(--color-dark-mode);
 }
  
-/* Title - SMALLER FONT */
+/* Title */
 .gantt-toolbar-title {
-  font-size: 0.9rem; /* Reduced from 1rem */
+  font-size: 0.9rem;
   font-weight: 500;
   color: #fff;
 }
@@ -700,39 +524,249 @@ section .section-description {
 .gantt-toolbar-controls {
   display: flex;
   align-items: center;
-  gap: 6px; /* Slightly reduced from 8px */
+  gap: 6px;
 }
  
-/* Filter tag - REDUCED SIZE */
+/* Filter tag */
 .gantt-toolbar-filter-tag {
   display: flex;
   align-items: center;
-  gap: 4px; /* Reduced from 6px */
-  padding: 2px 6px; /* Reduced from 3px 8px */
+  gap: 4px;
+  padding: 2px 6px;
   background-color: var(--gantt-background-overlay);
   border: 1px solid var(--gantt-border-light);
-  border-radius: 3px; /* Slightly reduced */
-  margin-right: 6px; /* Reduced from 8px */
+  border-radius: 3px;
+  margin-right: 6px;
 }
  
 .gantt-toolbar-filter-icon {
-  font-size: 14px !important; /* Reduced from 16px */
+  font-size: 14px !important;
   color: #fff;
 }
  
 .gantt-toolbar-filter-text {
-  font-size: 11px; /* Reduced from 12px */
+  font-size: 11px;
   color: #fff;
   font-weight: 500;
 }
  
-/* Action buttons container */
 .gantt-toolbar-actions {
   display: flex;
   align-items: center;
 }
  
-/* Icon buttons - SMALLER SIZE */
+.gantt-toolbar-icon-button {
+  color: #fff !important;
+  padding: 4px;
+  margin: 0 1px;
+}
+
+.gantt-toolbar-icon-button .MuiSvgIcon-root {
+  font-size: 18px !important; 
+}
+ 
+.gantt-toolbar-icon-button:hover {
+  background-color: var(--gantt-background-overlay);
+}
+ 
+.gantt-toolbar-icon-button:disabled {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.date-filter-popover {
+  width: 280px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.date-filter-popover.dark-mode {
+  background-color: var(--color-dark-mode);
+}
+
+.date-filter-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.date-filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background-color: var(--gantt-primary-color);
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.date-filter-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.date-filter-title svg {
+  color: #fff;
+  font-size: 18px;
+}
+
+.date-filter-close {
+  padding: 4px;
+  color: #fff;
+}
+
+/* Form */
+.date-filter-form {
+  padding: 16px;
+  background-color: #fff;
+}
+
+.date-filter-form.dark-mode {
+  background-color: var(--color-dark-mode);
+  color: #fff;
+}
+
+.date-filter-form-group {
+  margin-bottom: 14px;
+}
+
+.date-filter-form-label {
+  margin-bottom: 4px;
+  color: #555;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.date-filter-form-label.dark-mode {
+  color: #ddd;
+}
+
+.date-filter-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.date-filter-input.dark-mode {
+  background-color: #2a2a3a;
+  border-color: #444;
+  color: #fff;
+}
+
+.date-filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.date-filter-button {
+  min-width: 80px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.date-filter-reset {
+  color: #555;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+}
+
+.date-filter-reset.dark-mode {
+  color: #ddd;
+  background-color: #2a2a3a;
+  border-color: #444;
+}
+
+.date-filter-apply {
+  background-color: var(--gantt-primary-color);
+  color: white;
+}
+
+.date-filter-apply:hover {
+  background-color: var(--gantt-primary-hover);
+}
+/* =========================================================================
+   12. GANTT TOOLBAR STYLES
+   ========================================================================= */
+/* Main container */
+.gantt-toolbar-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: 0; 
+  overflow: visible;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  transition: var(--standard-transition);
+  margin: 0; 
+  padding: 0; 
+}
+
+.gantt-toolbar-container.dark-mode {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+ 
+.gantt-toolbar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 12px;
+  background-color: #19BEF0; 
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gantt-toolbar-header.dark-mode {
+  background-color: #19BEF0;
+}
+ 
+.gantt-toolbar-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+.gantt-toolbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+ 
+.gantt-toolbar-filter-tag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  background-color: var(--gantt-background-overlay);
+  border: 1px solid var(--gantt-border-light);
+  border-radius: 3px;
+  margin-right: 6px;
+}
+ 
+.gantt-toolbar-filter-icon {
+  font-size: 14px !important;
+  color: #fff;
+}
+ 
+.gantt-toolbar-filter-text {
+  font-size: 11px;
+  color: #fff;
+  font-weight: 500;
+}
+ 
+.gantt-toolbar-actions {
+  display: flex;
+  align-items: center;
+}
+
 .gantt-toolbar-icon-button {
   color: #fff;
   padding: 4px; 
@@ -753,16 +787,16 @@ section .section-description {
 }
  
 /* =========================================================================
-   13. DATE RANGE FILTER POPOVER STYLES - FINAL VERSION
+   13.1 DATE RANGE FILTER POPOVER STYLES
    ========================================================================= */
-/* Popover */
+
 .date-filter-popover {
   width: 320px;
   border-radius: 4px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   background-color: #fff;
-  border-left: var(--border-accent-width) solid var(--color-light-mode);
+  border-left: var(--border-accent-width) solid #19BEF0;
 }
 
 .date-filter-popover.dark-mode {
@@ -776,17 +810,17 @@ section .section-description {
   flex-direction: column;
 }
  
-/* Popover header */
+
 .date-filter-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  background-color: var(--color-light-mode); 
+  background-color: #19BEF0; 
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Form */
+
 .date-filter-form {
   padding: 16px;
   background-color: #fff;
@@ -821,11 +855,11 @@ section .section-description {
 }
 
 .date-filter-input:hover {
-  border-color: var(--color-light-mode);
+  border-color: #19BEF0;  
 }
 
 .date-filter-input:focus {
-  border-color: var(--color-light-mode);
+  border-color: #19BEF0;  
   outline: none;
 }
 
@@ -836,14 +870,13 @@ section .section-description {
 }
 
 .date-filter-input.dark-mode:hover {
-  border-color: var(--color-light-mode);
+  border-color: #19BEF0;  
 }
 
 .date-filter-input.dark-mode:focus {
-  border-color: var(--color-light-mode);
+  border-color: #19BEF0;  
 }
  
-/* Action buttons */
 .date-filter-actions {
   display: flex;
   justify-content: flex-end;
@@ -869,32 +902,31 @@ section .section-description {
 }
 
 .date-filter-reset:hover {
-  background-color: rgba(70, 191, 232, 0.04);
-  border-color: var(--color-light-mode);
+  background-color: rgba(25, 190, 240, 0.04); 
+  border-color: #19BEF0; 
 }
 
 .date-filter-reset.dark-mode {
   color: #333;
-  background-color: #fff; /* White button in dark mode */
+  background-color: #fff;
   border-color: #ccc;
 }
 
 .date-filter-reset.dark-mode:hover {
   background-color: #f8f8f8;
-  border-color: var(--color-light-mode);
+  border-color: #19BEF0;
 }
  
 .date-filter-apply {
-  background-color: var(--color-light-mode);
+  background-color: #19BEF0;
   color: white;
   border: none;
 }
  
 .date-filter-apply:hover {
-  background-color: var(--gantt-primary-hover);
+  background-color: #17ACE0; 
 }
 
-/* Make sure icon colors are correct in both modes */
 .date-filter-button .MuiSvgIcon-root {
   font-size: 16px;
   margin-right: 4px;
@@ -909,12 +941,10 @@ section .section-description {
   color: #555;
 }
 
-/* Calendar icon style for date inputs */
 .date-filter-input::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
-/* Placeholder styling */
 .date-filter-input::placeholder {
   color: #999;
 }
@@ -922,18 +952,14 @@ section .section-description {
 .date-filter-input.dark-mode::placeholder {
   color: #999;
 }
-
 /* =========================================================================
-   13.1. Custom Gantt task type styles
+   13.2. Custom Gantt task type styles
    ========================================================================= */
 
-
-/* Default progress bar color for all tasks */
 .wx-gantt .wx-progress-percent {
     background-color: #ffc107;
   }
   
-  /* Style rules for the "narrow" type */
   .wx-gantt .wx-bar.wx-task.narrow {
     background-color: #676a81;
     color: transparent;
@@ -951,8 +977,7 @@ section .section-description {
   .wx-gantt .wx-bar.wx-task.narrow .wx-link .wx-inner {
     border-radius: 0px;
   }
-  
-  /* Style rules for the "progress" type */
+ 
   .wx-gantt .wx-bar.wx-task.progress {
     background-color: transparent;
     color: var(--wx-color-font);
@@ -965,8 +990,7 @@ section .section-description {
   .wx-gantt .wx-bar.wx-task.progress .wx-progress-wrapper {
     border-radius: 50px;
   }
-  
-  /* Style rules for the "urgent" type */
+
   .wx-gantt .wx-bar.wx-task.urgent {
     background-color: #f49a82;
     border: 1px solid #f45e36;
@@ -974,8 +998,7 @@ section .section-description {
   .wx-gantt .wx-bar.wx-task.urgent .wx-progress-percent {
     background-color: #f45e36;
   }
-  
-  /* Style rules for the "round" type */
+
   .wx-gantt .wx-bar.wx-task.round {
     background-color: #9c27b0;
     border-radius: 20px;
@@ -1004,8 +1027,7 @@ section .section-description {
     height: 20px !important;
     width: auto;
   }
-  
-  /* Mobile Navigation Drawer Styling */
+
   .mobile-drawer-header {
     color: white;
     display: flex;
@@ -1032,8 +1054,7 @@ section .section-description {
   .drawer-menu-icon {
     min-width: 40px;
   }
-  
-  /* Animation for drawer items */
+
   @keyframes fadeInRight {
     from {
       opacity: 0;
@@ -1049,8 +1070,7 @@ section .section-description {
     animation: fadeInRight 0.3s ease forwards;
     animation-delay: calc(0.05s * var(--item-index, 0));
   }
-  
-  /* Better mobile menu button */
+
   .mobile-menu-button {
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 8px;
@@ -1060,18 +1080,16 @@ section .section-description {
   .mobile-menu-button:hover {
     background-color: rgba(255, 255, 255, 0.2);
   }
-  
-  /* Media queries for responsive padding */
+
   @media (min-width: 960px) {
     .toolbar {
       padding: 0 24px;
     }
   }
-  
-  /* Footer adjustments for mobile */
+
   @media (max-width: 767px) {
     .MuiDrawer-paper .MuiBox-root:last-child {
-      padding-bottom: 70px !important; /* Ensure enough space for the footer with floating button */
+      padding-bottom: 70px !important;
     }
   }
 
@@ -1083,16 +1101,14 @@ section .section-description {
   overflow-x: auto;
   overflow-y: hidden;
   position: relative;
-  padding-bottom: 4px; /* Small space for scrollbar */
-  margin-bottom: -2px; /* Compensate for padding */
+  padding-bottom: 4px; 
+  margin-bottom: -2px; 
 }
 
-/* Hide default scrollbar buttons */
 .tag-scroll-container::-webkit-scrollbar-button {
   display: none; 
 }
 
-/* Make the scrollbar thin and minimal */
 .tag-scroll-container::-webkit-scrollbar {
   height: 3px; 
   width: auto;
@@ -1100,12 +1116,12 @@ section .section-description {
 }
 
 .tag-scroll-container::-webkit-scrollbar-track {
-  background: transparent; /* Transparent track */
+  background: transparent; 
   border-radius: 0;
 }
 
 .tag-scroll-container::-webkit-scrollbar-thumb {
-  background: rgba(70, 191, 232, 0.6); /* Slightly transparent thumb */
+  background: rgba(70, 191, 232, 0.6); 
   border-radius: 3px;
   border: none;
 }
@@ -1114,28 +1130,23 @@ section .section-description {
   background: rgba(70, 191, 232, 0.8); 
 }
 
-/* Remove corner pieces */
 .tag-scroll-container::-webkit-scrollbar-corner {
   display: none;
 }
 
-/* For Firefox - make scrollbar thin with no buttons */
 .tag-scroll-container {
   scrollbar-width: thin;
   scrollbar-color: rgba(70, 191, 232, 0.6) transparent;
 }
 
-
 .tag-scroll-container {
   -ms-overflow-style: none;
 }
 
-/* Only show the scrollbar when needed */
 .tag-scroll-container:not(:hover)::-webkit-scrollbar-thumb {
   background: rgba(70, 191, 232, 0.4); 
 }
 
-/* Dark mode adjustments */
 .home-container.dark-mode .tag-scroll-container::-webkit-scrollbar-thumb {
   background: rgba(70, 191, 232, 0.6);
 }
@@ -1143,3 +1154,4 @@ section .section-description {
 .home-container.dark-mode .tag-scroll-container {
   scrollbar-color: rgba(70, 191, 232, 0.6) transparent;
 }
+

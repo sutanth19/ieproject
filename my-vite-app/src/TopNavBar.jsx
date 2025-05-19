@@ -35,6 +35,7 @@ import BuildIcon from '@mui/icons-material/Build';
 import TopicIcon from '@mui/icons-material/Topic';
 import HomeIcon from '@mui/icons-material/Home';
 import AppsIcon from '@mui/icons-material/Apps';
+import LoginIcon from '@mui/icons-material/Login';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from './themes/ThemeContext';
 
@@ -441,7 +442,8 @@ function TopNavBar() {
             <Navigation />
           </Stack>
 
-          <Stack direction="row" spacing={1} justifyContent={{ justifyContent: "space-between" }}>
+       <Stack direction="row" spacing={1} justifyContent={{ justifyContent: "space-between" }}>
+
             <AppsToggle />
             <IconThemeToggle mode={darkMode} onClick={toggleDarkMode} />
             <IconButton

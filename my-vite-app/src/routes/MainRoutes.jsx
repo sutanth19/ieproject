@@ -6,23 +6,15 @@ import Topic from '../Page/Home/Topic';
 import Login from '../Page/Auth/Login';
 import RegisterPage from '../Page/Auth/Register';
 import GanttView from '../Page/Gantt/GanttView';
-import AdminRoutes from './AdminRoutes';  
-import { useAuth } from '../Page/Auth/AuthContext';
+import AdminRoutes from './AdminRoutes';
 
-
+// Simplified route that always allows access
 const ProtectedAdminRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth();
-  
-  if (import.meta.env.DEV) {
-    return children;
-  }
-  
-  return isAuthenticated ? children : <Navigate to="/home" replace />;
+  return children;
 };
 
 const MainRoutes = ({ loginKey = 0 }) => {
   const location = useLocation();
-  const { handleLoginSuccess } = useAuth();
 
   return (
     <Routes>
@@ -49,9 +41,6 @@ const MainRoutes = ({ loginKey = 0 }) => {
       <Route path="/login" element={
         <Login 
           key={`login-${loginKey}`}
-          onLoginSuccess={() => {
-            if (handleLoginSuccess) handleLoginSuccess();
-          }} 
         />
       } />
       

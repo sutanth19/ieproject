@@ -2,7 +2,6 @@ import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import { getTokenFromCookies, isTokenExpired } from './../Page/Auth/tokenUtils';
 
-// Log environment variables (only in DEV)
 const logEnvironmentVariables = () => {
   console.log('===== Environment Variables =====');
   console.log('VITE_AUTH_API_KEY:', import.meta.env.VITE_AUTH_API_KEY);
@@ -37,12 +36,11 @@ const api = axios.create({
   },
 });
 
-// ✅ Add retry logic here
 axiosRetry(api, {
   retries: 2,
   retryDelay: (retryCount) => {
     console.log(`Retrying request... attempt #${retryCount}`);
-    return retryCount * 1000; // 1s per retry
+    return retryCount * 1000; 
   },
   retryCondition: (error) => {
     return (
@@ -52,7 +50,6 @@ axiosRetry(api, {
   },
 });
 
-// Request interceptor
 api.interceptors.request.use(
   (config) => {
     console.log(`Making ${config.method.toUpperCase()} request to: ${config.baseURL}${config.url}`);
@@ -88,7 +85,6 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor
 api.interceptors.response.use(
   (response) => {
     console.log(`Response from ${response.config.url}:`, {

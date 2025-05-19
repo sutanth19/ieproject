@@ -30,12 +30,12 @@ const GanttToolbar = ({
   const [localStartDate, setLocalStartDate] = useState(startDate || '');
   const [localEndDate, setLocalEndDate] = useState(endDate || '');
   
-  // Check if filter is active
+
   const isFilterActive = Boolean(startDate || endDate);
   const openFilterPopover = Boolean(filterAnchorEl);
   const filterId = openFilterPopover ? 'filter-popover' : undefined;
 
-  // Format date for display
+
   const formatDateForDisplay = (dateString) => {
     if (!dateString) return '';
     
@@ -51,7 +51,6 @@ const GanttToolbar = ({
     }
   };
 
-  // Format date for input
   const formatDateForInput = (date) => {
     if (!date) return '';
     if (typeof date === 'string') return date;
@@ -62,17 +61,15 @@ const GanttToolbar = ({
     return `${year}-${month}-${day}`;
   };
 
-  // Handle filter button click
+
   const handleFilterClick = (event) => {
     setFilterAnchorEl(event.currentTarget);
   };
 
-  // Handle filter popover close
   const handleFilterClose = () => {
     setFilterAnchorEl(null);
   };
 
-  // Handle local date changes
   const handleLocalStartDateChange = (e) => {
     setLocalStartDate(e.target.value);
   };
@@ -81,7 +78,6 @@ const GanttToolbar = ({
     setLocalEndDate(e.target.value);
   };
 
-  // Apply filter and close popover
   const handleApplyFilter = () => {
     if (onStartDateChange) {
       const event = { target: { value: localStartDate } };
@@ -97,7 +93,6 @@ const GanttToolbar = ({
     handleFilterClose();
   };
 
-  // Reset filter and close popover
   const handleResetFilter = () => {
     setLocalStartDate('');
     setLocalEndDate('');
@@ -108,13 +103,11 @@ const GanttToolbar = ({
 
   return (
     <Box className={`gantt-toolbar-container ${darkMode ? 'dark-mode' : ''}`}>
-      {/* Header Title */}
       <Box className={`gantt-toolbar-header ${darkMode ? 'dark-mode' : ''}`}>
         <Typography component="h1" className="gantt-toolbar-title">
           IE Gantt Chart
         </Typography>
         
-        {/* Simple Controls */}
         <Box className="gantt-toolbar-controls">
           {isFilterActive && (
             <Box className="gantt-toolbar-filter-tag">
@@ -131,7 +124,6 @@ const GanttToolbar = ({
           )}
 
           <Box className="gantt-toolbar-actions">
-            {/* Filter */}
             <Tooltip title="Filter">
               <IconButton
                 aria-describedby={filterId}
@@ -143,7 +135,6 @@ const GanttToolbar = ({
               </IconButton>
             </Tooltip>
 
-            {/* Zoom Out */}
             <Tooltip title="Zoom Out">
               <IconButton
                 size="small"
@@ -170,7 +161,6 @@ const GanttToolbar = ({
         </Box>
       </Box>
       
-      {/* Filter Popover */}
       <Popover
         id={filterId}
         open={openFilterPopover}
@@ -189,7 +179,6 @@ const GanttToolbar = ({
         }}
       >
         <Box className="date-filter-container">
-          {/* Popover Header */}
           <Box className="date-filter-header">
             <Typography variant="subtitle2" className="date-filter-title">
               <FilterListIcon fontSize="small" />
@@ -206,7 +195,6 @@ const GanttToolbar = ({
           
           {/* Filter Form */}
           <Box className={`date-filter-form ${darkMode ? 'dark-mode' : ''}`}>
-            {/* Start Date */}
             <Box className="date-filter-form-group">
               <Typography variant="body2" className={`date-filter-form-label ${darkMode ? 'dark-mode' : ''}`}>
                 Start Date
@@ -219,7 +207,6 @@ const GanttToolbar = ({
               />
             </Box>
             
-            {/* End Date */}
             <Box className="date-filter-form-group">
               <Typography variant="body2" className={`date-filter-form-label ${darkMode ? 'dark-mode' : ''}`}>
                 End Date
@@ -232,7 +219,6 @@ const GanttToolbar = ({
               />
             </Box>
             
-            {/* Action Buttons */}
             <Box className="date-filter-actions">
               <button 
                 className={`date-filter-button date-filter-reset ${darkMode ? 'dark-mode' : ''}`}

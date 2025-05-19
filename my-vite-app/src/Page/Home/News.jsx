@@ -13,7 +13,7 @@ import '../Css/Global.css'
 
 import newsIcon from './../../assets/news_dark1.svg';
 import notificationIcon from './../../assets/notification_dark1.svg';
-
+import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
 const newsContent = [
     {
         type: "news",
@@ -65,6 +65,7 @@ const groupedContent = newsContent.reduce((acc, item) => {
     return acc;
 }, {});
 
+
 const News = () => {
     return (
         <Box>
@@ -86,7 +87,12 @@ const News = () => {
                             return (
                                 <Card
                                     key={index}
-                                    sx={{ display: 'flex', mb: index !== items.length - 1 ? 2 : 0 }}
+                                    sx={{ 
+                                        display: 'flex', 
+                                        mb: index !== items.length - 1 ? 2 : 0,
+                                        borderLeft: "4px solid #46BFE8",
+                                        borderRadius: '5px'
+                                    }}
                                     elevation={0}
                                 >
                                     <CardActionArea sx={{ width: '20%', borderRadius: 0 }} disableRipple>
@@ -111,7 +117,7 @@ const News = () => {
                                                     sx={{ 
                                                         flex: 1, 
                                                         minWidth: 0,
-                                                        // No gradients or extra indicators
+                                                        // No gradients 
                                                         '&::after': {
                                                             display: 'none'
                                                         },
@@ -121,6 +127,7 @@ const News = () => {
                                                         },
                                                         // Simple background
                                                         backgroundColor: 'transparent'
+                                                        
                                                     }}
                                                 >
                                                     <Stack
