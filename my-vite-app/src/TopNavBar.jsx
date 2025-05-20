@@ -14,7 +14,6 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
-import Popover from '@mui/material/Popover';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Menu from '@mui/material/Menu';
@@ -35,11 +34,13 @@ import BuildIcon from '@mui/icons-material/Build';
 import TopicIcon from '@mui/icons-material/Topic';
 import HomeIcon from '@mui/icons-material/Home';
 import AppsIcon from '@mui/icons-material/Apps';
-import LoginIcon from '@mui/icons-material/Login';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from './themes/ThemeContext';
 
 import jabilLogo from './assets/jabil2.svg';
+import cpsLogo from './assets/img/cps_logo.png';
+import esticLogo from './assets/img/estic_logo.png';
+import ieToolsLogo from './assets/img/ietools_logo.png';
 import './Page/Css/Global.css';
 
 function Navigation() {
@@ -50,18 +51,27 @@ function Navigation() {
     {
       parent: 'Topic',
       child: [
-        { title: 'Productivity', thumbnail: '', url: '/topics/productivity' },
-        { title: 'Product', thumbnail: '', url: '/topics/product' },
-        { title: 'Infrastructure', thumbnail: '', url: '/topics/infrastructure' },
-        { title: 'Moonshine', thumbnail: '', url: '/topics/moonshine' },
+        { title: 'Productivity', thumbnail: '', url: '/maintenance' },
+        { title: 'Product', thumbnail: '', url: '/maintenance' },
+        { title: 'Infrastructure', thumbnail: '', url: '/maintenance' },
+        { title: 'Moonshine', thumbnail: '', url: '/maintenance' },
       ],
     },
     {
       parent: 'Training',
       child: [
-        { title: 'Workday', thumbnail: '', url: '/training/workday' },
-        { title: 'IE Webbinar', thumbnail: '', url: '/training/webbinar' },
-        { title: 'e-Jabilization', thumbnail: '', url: '/training/ejabilization' },
+        { 
+          title: 'Workday', thumbnail: '', url: '/training/workday',externalUrl: 'https://wd5.myworkday.com/jabil/learning',
+          isExternal: true 
+        },
+        { 
+          title: 'IE Webinars', thumbnail: '', url: '/training/webbinar', externalUrl: 'https://jabil.sharepoint.com/sites/IEPortal/SitePages/IE-Webinars.aspx',
+          isExternal: true 
+        },
+        { 
+          title: 'e-Jabilization', thumbnail: '', url: '/training/ejabilization',externalUrl: 'http://jpertdf01/eJabilization/UserLogin.aspx',
+          isExternal: true 
+        },
       ],
     },
     {
@@ -70,8 +80,44 @@ function Navigation() {
     {
       parent: 'Project',
       child: [
-        { title: 'List', thumbnail: '', url: '/project/list' },
+        { title: 'List', thumbnail: '', url: '/maintenance' },
         { title: 'Gantt', thumbnail: '', url: '/project/gantt' },
+      ],
+    },
+     {
+      parent: 'PenWeb',
+      child: [
+{ 
+        title: 'Site Master Layout', thumbnail: '', url: '/penweb/sitemasterlayout', 
+        externalUrl: 'https://jabil-my.sharepoint.com/:f:/p/mohamad_syafezy/EuNIeEHcmPBKoig7Gd3LlekB6P5XkE1H-Kc7nqk9QcFcrQ?e=wT6Bm8',
+        isExternal: true 
+      },
+      { 
+        title: 'Production Cookbook Line Setup', thumbnail: '', url: '/penweb/productioncookbooklinesetup', 
+        externalUrl: 'https://jabil-my.sharepoint.com/:f:/p/mohamad_syafezy/EpUCUiUGggpOvjGx6u2lw9ABacPNxg1QhbtzeFnMnGhvhg?e=gJ11CD',
+        isExternal: true 
+      },
+      { 
+        title: 'Product And Process', thumbnail: '', url: '/penweb/productandprocess', 
+        externalUrl: 'https://jabil-my.sharepoint.com/personal/thanabalan_subramaniam_jabil_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fthanabalan%5Fsubramaniam%5Fjabil%5Fcom%2FDocuments%2FProduct%20%26%20Process&ct=1724305476553&or=Teams%2DHL&ga=1&LOF=1',
+        isExternal: true 
+      },
+      { 
+        title: 'Core Function', thumbnail: '', 
+        url: '/penweb/corefunction', 
+        externalUrl: 'https://jabil-my.sharepoint.com/:f:/r/personal/choihui_law_jabil_com/Documents/Core%20Function?csf=1&web=1&e=7frLat',
+        isExternal: true 
+      },
+      { 
+        title: 'Infra Support', thumbnail: '', url: '/penweb/infrasupport', 
+        externalUrl: 'https://jabil-my.sharepoint.com/my?id=%2Fpersonal%2Famirul%5Fabdulhadi%5Fjabil%5Fcom%2FDocuments%2FSHARING%5FMOONSHINE%5FPM%5FCAL&OR=Teams%2DHL&CT=1728632311015&clickparams=eyJBcHBOYW1lIjoiVGVhbXMtRGVza3RvcCIsIkFwcFZlcnNpb24iOiI0OS8yNDA5MDEwMTQyMSIsIkhhc0ZlZGVyYXRlZFVzZXIiOmZhbHNlfQ%3D%3D',
+        isExternal: true 
+      },
+      { 
+        title: 'Site Area Statement', thumbnail: '', url: '/penweb/siteareastatement', 
+        externalUrl: 'https://jabil-my.sharepoint.com/personal/mohamad_syafezy_jabil_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fmohamad%5Fsyafezy%5Fjabil%5Fcom%2FDocuments%2FSITE%20AREA%20STATEMENT&ct=1744075639499&or=Teams%2DHL&ga=1&LOF=1',
+        isExternal: true
+      }
       ],
     },
   ];
@@ -80,10 +126,14 @@ function Navigation() {
     return location.pathname.toLowerCase() === path.toLowerCase();
   };
 
-  const handleNavigation = (url) => {
-    setTimeout(() => {
-      navigate(url);
-    }, 0);
+  const handleNavigation = (url, isExternal, externalUrl) => {
+    if (isExternal && externalUrl) {
+      window.open(externalUrl, '_blank', 'noopener,noreferrer');
+    } else {
+      setTimeout(() => {
+        navigate(url);
+      }, 0);
+    }
   };
 
   return (
@@ -142,12 +192,13 @@ function Navigation() {
                 <MenuList>
                 {child.map((item) => (
                   <MenuItem 
-                  key={item.title}
-                  onClick={() => {
-                    popupState.close();
-                    handleNavigation(item.url)
-                  }}
-                  >{item.title}
+                    key={item.title}
+                    onClick={() => {
+                      popupState.close();
+                      handleNavigation(item.url, item.isExternal, item.externalUrl);
+                    }}
+                  >
+                    {item.title}
                   </MenuItem>
                 ))}
                 </MenuList>
@@ -160,6 +211,7 @@ function Navigation() {
     </>
   );
 }
+
 
 function IconThemeToggle({ mode, onClick }) {
   let icon = mode ? <LightModeIcon /> : <DarkModeIcon />;
@@ -214,20 +266,20 @@ function AppsToggle() {
   };
 
   const handleNavigation = (url) => {
-    navigate(`/${url}`);
+    // Check if the URL is external (starts with http)
+    if (url.startsWith('http')) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    } else {
+      // For internal routes
+      navigate(`/${url}`);
+    }
   };
 
   const appList = [
-    { name: 'CPS', thumbnail: 'https://play-lh.googleusercontent.com/ZyWNGIfzUyoajtFcD7NhMksHEZh37f-MkHVGr5Yfefa-IX7yj9SMfI82Z7a2wpdKCA', url: 'topic' },
-    { name: 'app2', thumbnail: null, url: 'app2' },
-    { name: 'app3', thumbnail: null, url: 'app3' },
-    { name: 'app3', thumbnail: null, url: 'app3' },
-    { name: 'app3', thumbnail: null, url: 'app3' },
-    { name: 'app3', thumbnail: null, url: 'app3' },
-    { name: 'app3', thumbnail: null, url: 'app3' },
-    { name: 'app3', thumbnail: null, url: 'app3' },
-    { name: 'app3', thumbnail: null, url: 'app3' },
-    { name: 'app3', thumbnail: null, url: 'app3' },
+    { name: 'CPS', thumbnail: cpsLogo, url: 'http://mypenm0iesvr01/cps'},
+    { name: 'ETS1C', thumbnail: esticLogo, url: 'http://mypenm0iesvr01/est1c/'},
+    { name: 'IE TOOLS', thumbnail: ieToolsLogo, url: 'http://mypenm0iesvr01/ietools/dashboard' },
+
   ]
 
   const sizeDropMenu = 60 * 4.7;
@@ -296,16 +348,18 @@ function AppsToggle() {
           }}
         >
 
+          {/* 
           <Box>
-            <Stack direction='row' justifyContent={{ justifyContent: 'space-between' }}>
-              <Typography variant='subtitle2'>
+            <Stack direction="row" justifyContent={{ justifyContent: 'space-between' }}>
+              <Typography variant="subtitle2">
                 Recently used
               </Typography>
-              <Link href='app/all' variant='caption'>
+              <Link href="app/all" variant="caption">
                 View all
               </Link>
             </Stack>
-          </Box>
+          </Box> 
+         */}
 
           <Box
             sx={{
@@ -332,7 +386,7 @@ function AppsToggle() {
                         <Card
                           className={`card ${darkMode ? 'dark-mode' : ''}`}
                           sx={{
-                            height: '75px',
+                            height: '70px',
                             width: '75px',
                           }}
                           variant='outlined'
@@ -348,11 +402,17 @@ function AppsToggle() {
                             onClick={() => handleNavigation(item.url)}
                           >
                             {item.thumbnail ? (
-                              <img
-                                src={item.thumbnail}
-                                alt={item.name}
-                                style={{ width: '32px', height: '32px' }}
-                              />
+                            <img
+                              src={item.thumbnail}
+                              alt={item.name}
+                              style={{
+                                maxWidth: '40px',
+                                maxHeight: '40px',
+                                objectFit: 'contain',
+                                display: 'block',
+                                margin: 'auto'
+                              }}
+                            />
                             ) : (
                               <InsertEmoticonRoundedIcon />
                             )}
@@ -402,7 +462,6 @@ function TopNavBar() {
     { name: 'Home', icon: <HomeIcon />, path: '/home' },
     { name: 'Topic', icon: <ArticleIcon />, path: '/home', sectionId: 'topic' },
     { name: 'Training', icon: <BuildIcon />, path: '/home', sectionId: 'training' },
-    { name: 'Resources', icon: <TopicIcon />, path: '/about' },
   ];
 
   // Improved active state detection

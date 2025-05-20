@@ -112,8 +112,21 @@ const Iedb = () => {
                         </Typography>
                         <Stack direction="row" justifyContent={{ justifyContent: "space-between" }} alignItems={{ alignItems: "flex-end" }}>
                             <Stack direction="row" spacing={2}>
-                                <Button size="large" variant="contained" fullWidth="false">IEDB</Button>
-                                <Button size="large" variant="contained" fullWidth="false">IE Tools</Button>
+                               <Button
+                                size="large"
+                                variant="contained"
+                                onClick={() => window.open('https://iedb3-prd.jblapps.com/home', '_blank')}
+                            >
+                                IEDB
+                            </Button>
+
+                            <Button
+                                size="large"
+                                variant="contained"
+                                onClick={() => window.open('http://mypenm0iesvr01/ietools/dashboard', '_blank')}
+                            >
+                                IE Tools
+                            </Button>
                             </Stack>
                             <Typography sx={{display: {xs : "none"}}} variant="caption">
                                 Last updated: {lastUpdated || 'Loading...'}

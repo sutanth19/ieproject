@@ -21,28 +21,28 @@ const topicsData = [
     icon: <FaChartLine className="topic-icon-style topic-green" />,
     title: "Productivity",
     thumbnail: 'https://www.workday.com/content/dam/web/zz/images/logos/workday/workday-logo.svg',
-    route: "/topics/productivity",
+    route: "/maintenance",
     description: "{{productivity description here}}"
   },
   {
     icon: <FaIndustry className="topic-icon-style topic-blue" />,
     title: "Product",
     thumbnail: 'https://www.workday.com/content/dam/web/zz/images/logos/workday/workday-logo.svg',
-    route: "/topics/productProcess",
+    route: "/maintenance",
     description: "{{product & process description here}}"
   },
   {
     icon: <FaTools className="topic-icon-style topic-orange" />,
     title: "Infrastructure",
     thumbnail: 'https://www.workday.com/content/dam/web/zz/images/logos/workday/workday-logo.svg',
-    route: "/topics/InfraStandardization",
+    route: "/maintenance",
     description: "{{infra description here}}"
   },
   {
     icon: <FaLightbulb className="topic-icon-style topic-yellow" />,
     title: "Moonshine",
     thumbnail: 'https://www.workday.com/content/dam/web/zz/images/logos/workday/workday-logo.svg',
-    route: "/topics/Moonshine",
+    route: "/maintenance",
     description: "{{moonshine description here}}"
   },
 ];
@@ -153,7 +153,11 @@ const Topic = () => {
                   </CardContent>
                 </div>
                 <CardActions>
-                  <Button size="small" color="primary">
+                  <Button 
+                    size="small" 
+                    color="primary"
+                    onClick={() => navigate(item.route)}
+                  >
                     Learn more
                   </Button>
                 </CardActions>

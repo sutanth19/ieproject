@@ -7,6 +7,7 @@ import Login from '../Page/Auth/Login';
 import RegisterPage from '../Page/Auth/Register';
 import GanttView from '../Page/Gantt/GanttView';
 import AdminRoutes from './AdminRoutes';
+import Maintenance from '../Page/Maintenance/Maintenance';
 
 // Simplified route that always allows access
 const ProtectedAdminRoute = ({ children }) => {
@@ -47,6 +48,8 @@ const MainRoutes = ({ loginKey = 0 }) => {
       {/* Registration */}
       <Route path="/register" element={<RegisterPage />} />
       
+      <Route path="/maintenance" element={<Maintenance />} />
+
       {/* Catch all - redirect to home page instead of login */}
       <Route path="*" element={<Navigate to="/home" replace />} />
     </Routes>

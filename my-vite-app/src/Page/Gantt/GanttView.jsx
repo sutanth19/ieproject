@@ -32,7 +32,7 @@ const MyGanttComponent = () => {
   
   useEffect(() => {
     const isDarkMode = document.body.classList.contains('dark-mode') || 
-                      localStorage.getItem('darkMode') === 'true';
+    localStorage.getItem('darkMode') === 'true';
     setDarkMode(isDarkMode);
   }, []);
 
