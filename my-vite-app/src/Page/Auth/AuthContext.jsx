@@ -13,7 +13,6 @@ export const useAuth = () => {
   return context;
 };
 
-// Auth Provider component
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -21,16 +20,13 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [token, setToken] = useState(null);
 
-  // Check if the user is already logged 
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
         const savedToken = localStorage.getItem('authToken');
         
         if (savedToken) {
-          // Validate token expired
           if (isTokenExpired(savedToken)) {
-            // Token expired clear everything
             setUser(null);
             setIsLoggedIn(false);
             localStorage.removeItem('authToken');
@@ -40,15 +36,13 @@ export const AuthProvider = ({ children }) => {
           }
           
           setToken(savedToken);
-          
-          // Extract user info directly from token
+        
           const userInfo = getUserInfoFromToken(savedToken);
           if (userInfo) {
             setUser(userInfo);
             setIsLoggedIn(true);
             console.log('User data extracted from token:', userInfo);
           } else {
-            // If token is invalid 
             setUser(null);
             setIsLoggedIn(false);
             localStorage.removeItem('authToken');
@@ -56,12 +50,10 @@ export const AuthProvider = ({ children }) => {
             console.log('Failed to extract user data from token');
           }
         } else {
-          // Check for token in cookies
           const cookieToken = getTokenFromCookies();
           if (cookieToken && !isTokenExpired(cookieToken)) {
             setToken(cookieToken);
             
-            // Take user info from cookie token
             const userInfo = getUserInfoFromToken(cookieToken);
             if (userInfo) {
               setUser(userInfo);
@@ -130,7 +122,6 @@ export const AuthProvider = ({ children }) => {
         setToken(loginToken);
         console.log('Token stored in localStorage');
         
-        // Extract user info directly from token
         const userInfo = getUserInfoFromToken(loginToken);
         if (userInfo) {
           setUser(userInfo);
@@ -173,10 +164,8 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     setLoading(true);
     try {
-      // Try to call logout API
       await authAPI.logout();
       
-      // Regardless of the response, clear everything
       setUser(null);
       setIsLoggedIn(false);
       localStorage.removeItem('authToken');
@@ -195,13 +184,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Function to handle login success
   const handleLoginSuccess = async () => {
     try {
-      // Check  token in localStorage
       const currentToken = localStorage.getItem('authToken');
       if (currentToken) {
-        // Extract user info from token
         const userInfo = getUserInfoFromToken(currentToken);
         if (userInfo) {
           setUser(userInfo);
@@ -219,10 +205,8 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Check if user is authenticated
   const isAuthenticated = !!user || isLoggedIn || !!token;
 
-  // Consolidated auth context value
   const value = {
     user,
     isAuthenticated,

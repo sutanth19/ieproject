@@ -13,6 +13,11 @@ import Stack from '@mui/material/Stack';
 import { FaChartLine, FaIndustry, FaTools, FaLightbulb } from "react-icons/fa";
 import { useTheme } from "./../../themes/ThemeContext";
 import { useNavigate } from "react-router-dom";
+import Lottie from "lottie-react";
+import productivityAnimation from "../../assets/img/Productivity.json";
+import infrastructureAnimation from "../../assets/img/Infrastructure.json";
+import productAnimation from "../../assets/img/product.json";
+
 import '../Css/Global.css';
 
 const topicsData = [
@@ -20,28 +25,28 @@ const topicsData = [
   {
     icon: <FaChartLine className="topic-icon-style topic-green" />,
     title: "Productivity",
-    thumbnail: 'https://www.workday.com/content/dam/web/zz/images/logos/workday/workday-logo.svg',
+    animation: productivityAnimation,
     route: "/maintenance",
     description: "{{productivity description here}}"
   },
   {
     icon: <FaIndustry className="topic-icon-style topic-blue" />,
     title: "Product",
-    thumbnail: 'https://www.workday.com/content/dam/web/zz/images/logos/workday/workday-logo.svg',
+    animation: productAnimation,
     route: "/maintenance",
     description: "{{product & process description here}}"
   },
   {
     icon: <FaTools className="topic-icon-style topic-orange" />,
     title: "Infrastructure",
-    thumbnail: 'https://www.workday.com/content/dam/web/zz/images/logos/workday/workday-logo.svg',
+    animation: infrastructureAnimation,
     route: "/maintenance",
     description: "{{infra description here}}"
   },
   {
     icon: <FaLightbulb className="topic-icon-style topic-yellow" />,
     title: "Moonshine",
-    thumbnail: 'https://www.workday.com/content/dam/web/zz/images/logos/workday/workday-logo.svg',
+    animation: productivityAnimation,
     route: "/maintenance",
     description: "{{moonshine description here}}"
   },
@@ -130,17 +135,25 @@ const Topic = () => {
                 justifyContent: "space-between"
               }}>
                 <div>
-                  <CardMedia
-                    sx={{
-                      maxWidth: '100%',
-                      objectFit: 'cover',
-                      objectPosition: "center",
-                      backgroundColor: 'white',
-                    }}
-                    component="img"
-                    image={item.thumbnail ? item.thumbnail : null}
-                    alt='img'
-                  />
+                <Card 
+                  sx={{ 
+                    width: "100%", 
+                    height: 150, 
+                    backgroundColor: "white", 
+                    padding: 1, 
+                    boxShadow: "none", 
+                    borderRadius: 0 
+                  }} 
+                  elevation={0}
+                >
+                  <CardContent sx={{ padding: 0, height: "100%" }}>
+                    <Lottie 
+                      animationData={item.animation} 
+                      loop={true}
+                      style={{ height: "100%", width: "100%", objectFit: "contain" }}
+                    />
+                  </CardContent>
+                </Card>
                   <CardContent
                     sx={{ display: { xs: 'none', sm: 'block' } }}
                   >

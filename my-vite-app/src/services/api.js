@@ -13,7 +13,6 @@ const logEnvironmentVariables = () => {
 
 if (import.meta.env.DEV) logEnvironmentVariables();
 
-// Load env values
 const API_KEY = import.meta.env.VITE_AUTH_API_KEY;
 const API_TIMEOUT = parseInt(import.meta.env.VITE_API_TIMEOUT) || 5000;
 const API_BASE_URL =
@@ -27,7 +26,6 @@ console.log('- Base URL:', API_BASE_URL);
 console.log('- Timeout:', API_TIMEOUT);
 console.log('- API Key Available:', !!API_KEY);
 
-// Create axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: API_TIMEOUT,

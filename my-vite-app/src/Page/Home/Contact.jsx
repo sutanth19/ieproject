@@ -24,25 +24,21 @@ const Contact = ({ onClose }) => {
     }));
   };
   
-  // Close modal handler
   const handleClose = () => {
     if (typeof onClose === 'function') {
       onClose();
     }
   };
   
-  // Click outside to close (optional)
   const handleOutsideClick = (e) => {
     if (e.target === e.currentTarget) {
       handleClose();
     }
   };
   
-  // Form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Basic validation
     if (!formData.name || !formData.email || !formData.message) {
       showNotification('error', 'Please complete all fields');
       return;
