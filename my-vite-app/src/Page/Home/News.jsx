@@ -136,7 +136,7 @@ const News = () => {
                                                         sx={{ 
                                                             flexWrap: 'nowrap', 
                                                             minWidth: 'max-content',
-                                                            py: 0.5 
+                                                            py: 0.5  
                                                         }}
                                                     >
                                                         {item.tag.map((tag, idx) => (

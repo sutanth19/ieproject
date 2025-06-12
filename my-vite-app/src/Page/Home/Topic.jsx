@@ -17,7 +17,6 @@ import Lottie from "lottie-react";
 import productivityAnimation from "../../assets/img/Productivity.json";
 import infrastructureAnimation from "../../assets/img/Infrastructure.json";
 import productAnimation from "../../assets/img/product.json";
-
 import '../Css/Global.css';
 
 const topicsData = [

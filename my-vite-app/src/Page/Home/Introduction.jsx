@@ -38,7 +38,6 @@ const Introduction = () => {
         },
     ];
 
-
     return (
         <Box>
             <Grid container spacing={2}>
