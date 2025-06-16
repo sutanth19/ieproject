@@ -80,7 +80,7 @@ function Navigation() {
     {
       parent: 'Project',
       child: [
-        { title: 'List', thumbnail: '', url: '/maintenance' },
+        { title: 'List', thumbnail: '', url: '/project/list' },
         { title: 'Gantt', thumbnail: '', url: '/project/gantt' },
       ],
     },

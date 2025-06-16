@@ -31,7 +31,6 @@ const Iedb = () => {
     const [error, setError] = useState(null);
     const [lastUpdated, setLastUpdated] = useState(null);
 
-
     useEffect(() => {
         const fetchIedbData = async () => {
             try {
@@ -40,7 +39,12 @@ const Iedb = () => {
                 
                 if (response.data) {
                     setIedbData(response.data);
-                    setLastUpdated(new Date().toLocaleString());
+                    
+                    // Get dateUpdated from the first item (since all items have the same date)
+                    const apiDate = response.data[0]?.dateUpdated;
+                    
+                    setLastUpdated(apiDate || new Date().toLocaleString());
+                    console.log('Using API date:', apiDate);
                 }
                 setError(null);
             } catch (err) {
@@ -100,7 +104,7 @@ const Iedb = () => {
                     </Stack>
                 </Grid>
                 <Grid size={{ sm: 12, md: 8 }}>
-                    <Stack spacing={5} direction="column">
+                    <Stack spacing={5} direction="column" sx={{ height: '100%' }}>
                         <Typography variant="h3" className="section-title">
                             IEDB 3.0
                         </Typography>
@@ -110,7 +114,9 @@ const Iedb = () => {
                         <Typography variant="subtitle1">
                             Explore more cycle time's data collected by using tools below
                         </Typography>
-                        <Stack direction="row" justifyContent={{ justifyContent: "space-between" }} alignItems={{ alignItems: "flex-end" }}>
+                        
+                        {/* Main content area with flex layout */}
+                        <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                             <Stack direction="row" spacing={2}>
                                <Button
                                 size="large"
@@ -128,10 +134,15 @@ const Iedb = () => {
                                 IE Tools
                             </Button>
                             </Stack>
-                            <Typography sx={{display: {xs : "none"}}} variant="caption">
-                                Last updated: {lastUpdated || 'Loading...'}
-                            </Typography>
-                        </Stack>
+                            
+                            <Box sx={{ display: { xs: "none", sm: "block" }, alignSelf: 'flex-end' }}>
+                                <Typography variant="caption">
+                                    {lastUpdated || 'Loading...'}
+                                </Typography>
+                            </Box>
+                        </Box>
+                        
+
                     </Stack>
                 </Grid>
             </Grid>

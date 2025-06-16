@@ -25,7 +25,7 @@ const topicsData = [
     icon: <FaChartLine className="topic-icon-style topic-green" />,
     title: "Productivity",
     animation: productivityAnimation,
-    route: "/maintenance",
+    route: "/topics/productivity",
     description: "{{productivity description here}}"
   },
   {
