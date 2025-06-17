@@ -1155,3 +1155,566 @@ section .section-description {
   scrollbar-color: rgba(70, 191, 232, 0.6) transparent;
 }
 
+/* =========================================================================
+   16. TOPICS CAROUSEL STYLES
+   ========================================================================= */
+
+/* Keyframe for fade-in-up animation */
+@keyframes carouselFadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Carousel container */
+.carousel-container {
+  width: 100%;
+  height: 380px;
+  position: relative;
+  overflow: hidden;
+  background: var(--section-background-light-mode);
+  border-radius: 10px;
+}
+
+.carousel-container.dark-mode {
+  background: linear-gradient(to bottom, var(--section-background-dark-mode), var(--section-stripe-background-dark-mode));
+}
+
+/* Mobile responsive carousel container */
+@media (max-width: 600px) {
+  .carousel-container {
+    height: 450px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+}
+
+/* Each slide */
+.carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  opacity: 0;
+  transform: translateX(10px) scale(0.9);
+  transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+  z-index: 0;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+  transform: scale(1);
+  z-index: 1;
+  animation: carouselFadeInUp 0.8s ease-in-out;
+}
+
+/* Mobile layout for slides */
+@media (max-width: 600px) {
+  .carousel-slide {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+}
+
+/* Left side image container */
+.carousel-image-section {
+  width: 70%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (max-width: 600px) {
+  .carousel-image-section {
+    width: 100%;
+    height: 200px;
+    border-radius: 12px 12px 0 0;
+  }
+}
+
+/* Slide image */
+.carousel-slide-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .carousel-slide-image {
+    object-position: center top;
+  }
+}
+
+/* Right side content container */
+.carousel-content-section {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 48px;
+  text-align: left;
+  background-color: var(--section-stripe-background-light-mode);
+  font-family: 'Roboto', sans-serif;
+}
+
+.carousel-content-section.dark-mode {
+  background-color: var(--card-background-color-dark-mode);
+}
+
+@media (max-width: 600px) {
+  .carousel-content-section {
+    width: 100%;
+    padding: 24px;
+    height: auto;
+    background-color: var(--section-background-light-mode);
+    border-radius: 0 0 12px 12px;
+  }
+  
+  .carousel-content-section.dark-mode {
+    background-color: var(--card-background-color-dark-mode);
+  }
+}
+
+/* Title styling */
+.carousel-title {
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  margin-bottom: 16px !important;
+  color: var(--section-color-light-mode) !important;
+}
+
+.carousel-container.dark-mode .carousel-title {
+  color: var(--section-color-dark-mode) !important;
+}
+
+@media (max-width: 600px) {
+  .carousel-title {
+    text-align: center !important;
+    width: 100%;
+    font-size: 1.5rem !important;
+  }
+}
+
+/* Description styling */
+.carousel-description {
+  font-weight: 300 !important;
+  line-height: 1.6 !important;
+  margin-top: 8px !important;
+  color: rgba(51, 51, 51, 0.6) !important;
+}
+
+.carousel-container.dark-mode .carousel-description {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+@media (max-width: 600px) {
+  .carousel-description {
+    text-align: center !important;
+    width: 100%;
+    font-size: 0.95rem !important;
+  }
+}
+
+/* Button styling */
+.carousel-button {
+  background-color: var(--primary-button-color) !important;
+  color: white !important;
+  text-transform: none !important;
+  margin-top: 16px !important;
+  padding: 12px 24px !important;
+  font-size: 1rem !important;
+  align-self: flex-start !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  transition: var(--standard-transition) !important;
+  box-shadow: var(--button-shadow) !important;
+}
+
+.carousel-button:hover {
+  background-color: var(--primary-button-hover) !important;
+  box-shadow: var(--button-shadow-hover) !important;
+}
+
+@media (max-width: 600px) {
+  .carousel-button {
+    padding: 9.6px 20px !important;
+    border-radius: 8px !important;
+    align-self: center !important;
+    width: 80% !important;
+    margin-top: 24px !important;
+    box-shadow: var(--button-shadow) !important;
+  }
+}
+
+/* Navigation arrows */
+.carousel-arrow {
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  color: var(--primary-button-color) !important;
+  opacity: 0.8 !important;
+  z-index: 3 !important;
+  transition: transform 0.3s ease, opacity 0.3s ease !important;
+  background-color: transparent !important;
+}
+
+.carousel-arrow:hover {
+  opacity: 1 !important;
+  transform: translateY(-50%) scale(1.1) !important;
+  background-color: transparent !important;
+}
+
+.carousel-arrow-left {
+  left: 20px !important;
+}
+
+.carousel-arrow-right {
+  right: 20px !important;
+}
+
+@media (max-width: 600px) {
+  .carousel-arrow {
+    top: 100px !important;
+    width: 36px !important;
+    height: 36px !important;
+  }
+  
+  .carousel-arrow-left {
+    left: 10px !important;
+  }
+  
+  .carousel-arrow-right {
+    right: 10px !important;
+  }
+  
+  .carousel-arrow .MuiSvgIcon-root {
+    font-size: 1.5rem !important;
+    color: #ffffff !important;
+    filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.5)) !important;
+  }
+}
+
+/* Dots container */
+.carousel-dots-container {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  gap: 8px;
+  z-index: 4;
+}
+
+@media (max-width: 600px) {
+  .carousel-dots-container {
+    bottom: auto;
+    top: 180px;
+    left: 50%;
+    transform: translateX(-50%);
+    gap: 10px;
+  }
+}
+
+/* Individual dot */
+.carousel-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba(33, 150, 243, 0.5);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.carousel-dot.active {
+  background-color: var(--primary-button-color);
+}
+
+.carousel-dot:hover {
+  transform: scale(1.2);
+}
+
+@media (max-width: 600px) {
+  .carousel-dot {
+    width: 12px;
+    height: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+}
+
+/* =========================================================================
+   17. TOPICS LAYOUT STYLES
+   ========================================================================= */
+
+/* Training section container */
+.training-section {
+  width: 100%;
+  padding-top: 16px;
+  padding-bottom: 4px;
+  box-sizing: border-box;
+  background-color: var(--section-background-light-mode);
+  color: var(--section-color-light-mode);
+}
+
+.training-section.dark-mode {
+  background-color: var(--section-background-dark-mode);
+  color: var(--section-color-dark-mode);
+}
+
+/* Training container */
+.training-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 12px;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .training-container {
+    padding: 0 8px;
+  }
+}
+
+/* Carousel section */
+.carousel-section {
+  margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+  .carousel-section {
+    margin-bottom: 8px;
+  }
+}
+
+/* Mobile tabs container */
+.mobile-tabs-container {
+  max-width: 100%;
+  background-color: #ffffff;
+  margin-bottom: 16px;
+  margin-top: 8px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.mobile-tabs-container.dark-mode {
+  background-color: var(--card-background-color-dark-mode);
+}
+
+.mobile-tabs-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Left sidebar */
+.left-sidebar {
+  width: 30%;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  color: var(--section-color-light-mode);
+  min-height: 90vh;
+}
+
+.left-sidebar.dark-mode {
+  background-color: var(--card-background-color-dark-mode);
+  border: none;
+  color: var(--section-color-dark-mode);
+}
+
+/* Sidebar title */
+.sidebar-title {
+  margin-bottom: 24px !important;
+  font-weight: bold !important;
+  text-align: center !important;
+  color: var(--section-color-light-mode) !important;
+}
+
+.sidebar-title.dark-mode {
+  color: var(--section-color-dark-mode) !important;
+}
+
+/* Navigation item */
+.nav-item {
+  border-radius: 8px !important;
+  margin-bottom: 8px !important;
+  color: var(--section-color-light-mode) !important;
+  background-color: transparent !important;
+  transition: var(--standard-transition) !important;
+}
+
+.nav-item.dark-mode {
+  color: var(--section-color-dark-mode) !important;
+}
+
+.nav-item.selected {
+  color: #3B82F6 !important;
+  background-color: rgba(59,130,246,0.1) !important;
+}
+
+.nav-item:hover {
+  background-color: rgba(59,130,246,0.1) !important;
+  color: #3B82F6 !important;
+}
+
+/* Navigation item icon */
+.nav-item-icon {
+  background-color: transparent !important;
+  color: var(--section-color-light-mode) !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  min-width: 40px !important;
+}
+
+.nav-item-icon.dark-mode {
+  color: var(--section-color-dark-mode) !important;
+}
+
+.nav-item-icon.selected {
+  color: #3B82F6 !important;
+}
+
+/* Main content area */
+.main-content {
+  width: 70%;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  color: var(--section-color-light-mode);
+  min-height: 80vh;
+}
+
+.main-content.dark-mode {
+  background-color: var(--card-background-color-dark-mode);
+  border: none;
+  color: var(--section-color-dark-mode);
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    width: 100%;
+    padding: 12px;
+    min-height: auto;
+  }
+}
+
+/* Content title */
+.content-title {
+  margin-bottom: 24px !important;
+  font-weight: bold !important;
+  text-align: center !important;
+  color: var(--section-color-light-mode) !important;
+}
+
+.content-title.dark-mode {
+  color: var(--section-color-dark-mode) !important;
+}
+
+/* Empty content placeholder */
+.empty-content {
+  color: #666 !important;
+  text-align: center !important;
+}
+
+.empty-content.dark-mode {
+  color: #ccc !important;
+}
+
+/* Tab label styling */
+.tab-label {
+  display: flex !important;
+  align-items: center !important;
+  min-width: max-content !important;
+  color: var(--section-color-light-mode) !important;
+}
+
+.tab-label.dark-mode {
+  color: var(--section-color-dark-mode) !important;
+}
+
+.tab-label.selected {
+  color: #3B82F6 !important;
+}
+
+/* Tab icon styling */
+.tab-icon {
+  margin-right: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Individual tab styling */
+.topic-tab {
+  text-transform: none !important;
+  color: var(--section-color-light-mode) !important;
+  font-weight: normal !important;
+  font-size: 0.9rem !important;
+  min-height: 48px !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
+
+.topic-tab.dark-mode {
+  color: var(--section-color-dark-mode) !important;
+}
+
+.topic-tab.selected {
+  color: #3B82F6 !important;
+  font-weight: bold !important;
+}
+
+/* Grid container responsive adjustments */
+.topics-grid-container {
+  min-height: calc(100vh - 60px);
+  padding-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .topics-grid-container {
+    min-height: auto;
+  }
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+  .left-sidebar {
+    display: none;
+  }
+}
+
+/* Custom scrollbar for mobile tabs */
+.mobile-tabs-scrollable {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.mobile-tabs-scrollable::-webkit-scrollbar {
+  display: none;
+}
+
+/* MUI Tabs indicator color override */
+.topics-tabs .MuiTabs-indicator {
+  background-color: #3B82F6 !important;
+}
+
+.topics-tabs .MuiTabs-flexContainer {
+  gap: 4px !important;
+}
+
+/* Selected tab state override */
+.topics-tabs .MuiTab-root.Mui-selected {
+  color: #3B82F6 !important;
+}

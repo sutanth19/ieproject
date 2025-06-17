@@ -26,28 +26,28 @@ const topicsData = [
     title: "Productivity",
     animation: productivityAnimation,
     route: "/topics/productivity",
-    description: "{{productivity description here}}"
+    description: "Explore all the information, guide and much more to analyze and enhance your production line."
   },
   {
     icon: <FaIndustry className="topic-icon-style topic-blue" />,
     title: "Product",
     animation: productAnimation,
-    route: "/maintenance",
-    description: "{{product & process description here}}"
+    route: "/topics/product",
+    description: "Get to know your product and process baseline to fulfill production requirement especially on HLA."
   },
   {
     icon: <FaTools className="topic-icon-style topic-orange" />,
     title: "Infrastructure",
     animation: infrastructureAnimation,
-    route: "/maintenance",
-    description: "{{infra description here}}"
+    route: "/topics/infrastructure",
+    description: "A guidance for all on how to setup a line production, CAD drawing and plant standardization."
   },
   {
     icon: <FaLightbulb className="topic-icon-style topic-yellow" />,
     title: "Moonshine",
     animation: productivityAnimation,
-    route: "/maintenance",
-    description: "{{moonshine description here}}"
+    route: "/topics/moonshine",
+    description: "Meet us the team that cover from workstation fabrication to AGV related in the production line."
   },
 ];
 

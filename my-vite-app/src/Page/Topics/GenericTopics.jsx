@@ -1,19 +1,28 @@
-// src/Page/Topics/GenericTopics.jsx
-
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'; // To get topic from URL
+import { useParams } from 'react-router-dom'; 
 import { useTheme } from './../../themes/ThemeContext';
 import TopicsLayout from './TopicsSharedComponent/TopicsLayout';
 import TopicsCarousel from './TopicsSharedComponent/TopicsCarousel';
 
-// Mock data that will eventually come from your API/database
+const PlaceholderIcon = () => (
+  <div
+    style={{
+      width: 24,
+      height: 24,
+      backgroundColor: 'currentColor',
+      borderRadius: '50%'
+    }}
+  />
+);
+
+// Mock data API
 const TOPICS_DATA = {
   'infrastructure-standardization': {
     navItems: [
-      { text: 'Network Setup', iconColor: '#4caf50' },
-      { text: 'System Configurations', iconColor: '#2196f3' },
-      { text: 'Automation & Tools', iconColor: '#ff9800' },
-      { text: 'Compliance & Standards', iconColor: '#ffeb3b' }
+      { text: 'Network Setup', icon: <PlaceholderIcon /> },
+      { text: 'System Configurations', icon: <PlaceholderIcon /> },
+      { text: 'Automation & Tools', icon: <PlaceholderIcon /> },
+      { text: 'Compliance & Standards', icon: <PlaceholderIcon /> }
     ],
     slides: [
       {
@@ -35,13 +44,13 @@ const TOPICS_DATA = {
     defaultNav: 'Network Setup',
     carouselAriaLabel: 'Topics related to Infrastructure Standardization'
   },
-  
+
   'moonshine-offline-sustainment': {
     navItems: [
-      { text: 'System Uptime', iconColor: '#4caf50' },
-      { text: 'System Health', iconColor: '#2196f3' },
-      { text: 'Backup & Recovery', iconColor: '#ff9800' },
-      { text: 'System Reliability', iconColor: '#ffeb3b' }
+      { text: 'System Uptime', icon: <PlaceholderIcon /> },
+      { text: 'System Health', icon: <PlaceholderIcon /> },
+      { text: 'Backup & Recovery', icon: <PlaceholderIcon /> },
+      { text: 'System Reliability', icon: <PlaceholderIcon /> }
     ],
     slides: [
       {
@@ -66,13 +75,13 @@ const TOPICS_DATA = {
 
   'productivity': {
     navItems: [
-      { text: 'Insights', iconColor: '#4caf50' },
-      { text: 'Time Management', iconColor: '#2196f3' },
-      { text: 'Task Efficiency', iconColor: '#ff9800' },
-      { text: 'Productivity Tools', iconColor: '#9c27b0' },
-      { text: 'Focus Techniques', iconColor: '#f44336' },
-      { text: 'Quality of Work', iconColor: '#00bcd4' },
-      { text: 'Continuous Improvement', iconColor: '#ffeb3b' }
+      { text: 'Insights', icon: <PlaceholderIcon /> },
+      { text: 'Time Management', icon: <PlaceholderIcon /> },
+      { text: 'Task Efficiency', icon: <PlaceholderIcon /> },
+      { text: 'Productivity Tools', icon: <PlaceholderIcon /> },
+      { text: 'Focus Techniques', icon: <PlaceholderIcon /> },
+      { text: 'Quality of Work', icon: <PlaceholderIcon /> },
+      { text: 'Continuous Improvement', icon: <PlaceholderIcon /> }
     ],
     slides: [
       {
@@ -97,10 +106,10 @@ const TOPICS_DATA = {
 
   'product-process': {
     navItems: [
-      { text: 'Process Flow', iconColor: '#4caf50' },
-      { text: 'Material Handling', iconColor: '#2196f3' },
-      { text: 'Workflow Optimization', iconColor: '#ff9800' },
-      { text: 'Performance Metrics', iconColor: '#ffeb3b' }
+      { text: 'Process Flow', icon: <PlaceholderIcon /> },
+      { text: 'Material Handling', icon: <PlaceholderIcon /> },
+      { text: 'Workflow Optimization', icon: <PlaceholderIcon /> },
+      { text: 'Performance Metrics', icon: <PlaceholderIcon /> }
     ],
     slides: [
       {
@@ -126,79 +135,26 @@ const TOPICS_DATA = {
 
 const GenericTopics = () => {
   const { darkMode } = useTheme();
-  const { topicId } = useParams(); // Get topic from URL parameter
+  const { topicId } = useParams(); 
   const [selectedNav, setSelectedNav] = useState('');
   const [topicData, setTopicData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Simulate API call - replace this with actual API call later
   useEffect(() => {
-    const fetchTopicData = async () => {
-      try {
-        setLoading(true);
-        
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        // Get data from mock data (replace with actual API call)
-        const data = TOPICS_DATA[topicId];
-        
-        if (!data) {
-          throw new Error(`Topic "${topicId}" not found`);
-        }
-        
+    if (topicId) {
+      const data = TOPICS_DATA[topicId];
+      if (data) {
         setTopicData(data);
         setSelectedNav(data.defaultNav);
-        setError(null);
-      } catch (err) {
-        setError(err.message);
+      } else {
         setTopicData(null);
-      } finally {
-        setLoading(false);
       }
-    };
-
-    if (topicId) {
-      fetchTopicData();
     }
   }, [topicId]);
 
-  // Loading state
-  if (loading) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '50vh',
-        color: darkMode ? '#fff' : '#333'
-      }}>
-        Loading topic data...
-      </div>
-    );
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '50vh',
-        color: darkMode ? '#ff6b6b' : '#d32f2f'
-      }}>
-        Error: {error}
-      </div>
-    );
-  }
-
-  // No data state
   if (!topicData) {
     return (
       <div style={{ 
@@ -222,13 +178,11 @@ const GenericTopics = () => {
       CarouselComponent={
         <TopicsCarousel 
           slides={topicData.slides} 
-          carouselAriaLabel={topicData.carouselAriaLabel} 
+          carouselAriaLabel={topicData.carouselAriaLabel}
+          isDarkMode={darkMode}
         />
       }
-    >
-      {/* Add custom content rendering based on selectedNav if needed */}
-      {/* This is where you can add topic-specific content components */}
-    </TopicsLayout>
+    />
   );
 };
 

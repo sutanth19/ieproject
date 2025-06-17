@@ -28,7 +28,7 @@ const ProjectList = () => {
 
         setProjectData(mapped);
       } catch (error) {
-        console.error("❌ Failed to fetch project data:", error);
+        console.error("Failed to fetch project data:", error);
         setProjectData([]);
       }
     };
@@ -111,7 +111,7 @@ const ProjectList = () => {
                       p: 3, 
                     }}
                   >
-                    
+                    {/* Title & Avatar */}
                     <Box
                       display="flex"
                       alignItems="center"
@@ -121,8 +121,15 @@ const ProjectList = () => {
                     >
                       <Typography 
                         sx={{ 
-                          fontSize: 28, 
+                          fontSize: 22, // reduced from 28
                           fontWeight: 700,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                          lineHeight: 1.2,
+                          maxHeight: "48px"
                         }}
                       >
                         {item.title || "No Title"}
@@ -145,7 +152,7 @@ const ProjectList = () => {
                       </Box>
                     </Box>
 
-                
+                    {/* Owner */}
                     <Box mb={2}> 
                       <Typography 
                         component="span"
@@ -169,7 +176,7 @@ const ProjectList = () => {
                       </Typography>
                     </Box>
 
-                    {/* Description Section */}
+                    {/* Description */}
                     <Typography
                       sx={{
                         fontSize: 14,
@@ -180,7 +187,7 @@ const ProjectList = () => {
                         minHeight: "56px", 
                         overflow: "hidden",
                         display: "-webkit-box",
-                        WebkitLineClamp: 3, // Limit to 3 lines
+                        WebkitLineClamp: 3,
                         WebkitBoxOrient: "vertical",
                         textOverflow: "ellipsis",
                       }}
@@ -188,10 +195,10 @@ const ProjectList = () => {
                       {item.description || "No description provided."}
                     </Typography>
 
-                   
+                    {/* Spacer */}
                     <Box sx={{ flexGrow: 1 }} />
 
-                   
+                    {/* Start Date */}
                     <Box 
                       sx={{ 
                         display: "flex", 

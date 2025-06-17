@@ -62,6 +62,7 @@ function AppContent({ showHomePopup, setShowHomePopup, darkMode }) {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
+         overflow: 'hidden', // <--- ADD THIS
         backgroundColor: darkMode ? '#1e2a45' : '#f5f5f5',
         color: darkMode ? '#ffffff' : '#000000',
         transition: 'background-color 0.3s ease, color 0.3s ease',
