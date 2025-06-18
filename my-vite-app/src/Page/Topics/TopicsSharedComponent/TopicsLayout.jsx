@@ -58,7 +58,7 @@ const TopicsLayout = ({
 
   return (
     <div className={`training-section ${darkMode ? 'dark-mode' : ''}`}>
-      <Container maxWidth="xl"> {/* ✅ Wrapper added */}
+      <Container maxWidth="xl"> 
         <Grid container direction="column" className="topics-grid-container">
 
           {/* Carousel */}

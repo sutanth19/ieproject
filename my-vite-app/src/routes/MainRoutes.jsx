@@ -18,8 +18,7 @@ import AdminRoutes from './AdminRoutes';
 import GenericTopics from './../Page/Topics/GenericTopics';
 
 
-
-// Protected route wrapper (if needed later)
+// Protected route wrapper 
 const ProtectedAdminRoute = ({ children }) => {
   return children;
 };

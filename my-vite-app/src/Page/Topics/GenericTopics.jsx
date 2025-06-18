@@ -17,7 +17,7 @@ const PlaceholderIcon = () => (
 
 // Mock data API
 const TOPICS_DATA = {
-  'infrastructure-standardization': {
+  'infrastructure': {
     navItems: [
       { text: 'Network Setup', icon: <PlaceholderIcon /> },
       { text: 'System Configurations', icon: <PlaceholderIcon /> },
@@ -45,7 +45,7 @@ const TOPICS_DATA = {
     carouselAriaLabel: 'Topics related to Infrastructure Standardization'
   },
 
-  'moonshine-offline-sustainment': {
+  'moonshine': {
     navItems: [
       { text: 'System Uptime', icon: <PlaceholderIcon /> },
       { text: 'System Health', icon: <PlaceholderIcon /> },
@@ -104,7 +104,7 @@ const TOPICS_DATA = {
     carouselAriaLabel: 'Topics related to Productivity'
   },
 
-  'product-process': {
+  'product': {
     navItems: [
       { text: 'Process Flow', icon: <PlaceholderIcon /> },
       { text: 'Material Handling', icon: <PlaceholderIcon /> },
