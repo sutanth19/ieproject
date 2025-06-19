@@ -41,6 +41,7 @@ const ProjectList = () => {
       sx={{
         pt: { xs: "72px", md: "80px" },
         px: { xs: 2, md: 4 },
+        pb: 6,
         maxWidth: "1440px",
         mx: "auto",
         backgroundColor: darkMode
