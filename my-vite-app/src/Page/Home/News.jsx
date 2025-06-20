@@ -78,16 +78,16 @@ const createPairedRows = (newsContent) => {
 const pairedRows = createPairedRows(newsContent);
 
 const NewsCard = ({ item, isLast }) => {
-    if (!item) return <Box />; // Empty placeholder if no item
+    if (!item) return <Box />; 
     
     return (
         <Card
             sx={{ 
                 display: 'flex', 
-                mb: isLast ? 0 : 0.5, // Reduced from 2 to 0.5
+                mb: isLast ? 0 : 0.5, 
                 borderLeft: "4px solid #46BFE8",
                 borderRadius: '5px',
-                height: '100%' // This ensures the card fills the available height
+                height: '100%' 
             }}
             elevation={0}
         >
