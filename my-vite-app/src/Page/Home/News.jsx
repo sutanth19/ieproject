@@ -84,7 +84,7 @@ const NewsCard = ({ item, isLast }) => {
         <Card
             sx={{ 
                 display: 'flex', 
-                mb: isLast ? 0 : 2,
+                mb: isLast ? 0 : 0.5, // Reduced from 2 to 0.5
                 borderLeft: "4px solid #46BFE8",
                 borderRadius: '5px',
                 height: '100%' // This ensures the card fills the available height
@@ -166,7 +166,7 @@ const NewsCard = ({ item, isLast }) => {
 const News = () => {
     return (
         <Box>
-            <Grid container spacing={3} justifyContent="center">
+            <Grid container spacing={1} justifyContent="center"> {/* Reduced from spacing={3} to spacing={1} */}
                 <Grid size={{ xs: 12 }}>
                     <Stack direction='row' sx={{alignItems: 'baseline', justifyContent: 'space-between'}} >
                         <Typography variant="h3" className="section-title">
