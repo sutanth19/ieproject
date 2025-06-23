@@ -34,6 +34,7 @@ import BuildIcon from '@mui/icons-material/Build';
 import TopicIcon from '@mui/icons-material/Topic';
 import HomeIcon from '@mui/icons-material/Home';
 import AppsIcon from '@mui/icons-material/Apps';
+import AnnouncementIcon from '@mui/icons-material/Announcement';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from './themes/ThemeContext';
 
@@ -51,10 +52,10 @@ function Navigation() {
     {
       parent: 'Topic',
       child: [
-        { title: 'Productivity', thumbnail: '', url: '/maintenance' },
-        { title: 'Product', thumbnail: '', url: '/maintenance' },
-        { title: 'Infrastructure', thumbnail: '', url: '/maintenance' },
-        { title: 'Moonshine', thumbnail: '', url: '/maintenance' },
+        { title: 'Productivity', thumbnail: '', url: '/topics/productivity' },
+        { title: 'Product', thumbnail: '', url: '/topics/product' },
+        { title: 'Infrastructure', thumbnail: '', url: '/topics/infrastructure' },
+        { title: 'Moonshine', thumbnail: '', url: '/topics/moonshine' },
       ],
     },
     {
@@ -76,6 +77,7 @@ function Navigation() {
     },
     {
       parent: 'News'
+ 
     },
     {
       parent: 'Project',
@@ -122,8 +124,30 @@ function Navigation() {
     },
   ];
 
-  const isActiveLink = (path) => {
-    return location.pathname.toLowerCase() === path.toLowerCase();
+  // Enhanced active state detection
+  const isActiveParent = (parent, child) => {
+    const currentPath = location.pathname.toLowerCase();
+    const parentLower = parent.toLowerCase();
+    
+    // Check if current path matches the parent section
+    if (currentPath === `/${parentLower}`) {
+      return true;
+    }
+    
+    // Check if current path matches parent section with hash
+    if (currentPath === '/home' && location.hash.toLowerCase() === `#${parentLower}`) {
+      return true;
+    }
+    
+    // Check if current path matches any child route
+    if (child && child.length > 0) {
+      return child.some(childItem => {
+        const childPath = childItem.url?.toLowerCase();
+        return childPath && currentPath === childPath;
+      });
+    }
+    
+    return false;
   };
 
   const handleNavigation = (url, isExternal, externalUrl) => {
@@ -145,36 +169,43 @@ function Navigation() {
         });
 
         const hasChildren = child && child.length > 0;
-        const isActive = isActiveLink(`/${parent.toLowerCase()}`);
+        const isActive = isActiveParent(parent, child);
 
         return (
-          <React.Fragment key={parent}>
-            <Button {...(hasChildren ? bindHover(popupState) : {})}
-            
-              onClick={() => {
-                if (!hasChildren) {
-                  navigate(`/${parent.toLowerCase()}`);
-                }
-                else {
-                  navigate(`/home#${parent.toLocaleLowerCase()}`)
-                }
-                popupState.close();
-              }}
-              sx={{
-                display: { xs: 'none', md: 'flex' },
-                color: isActive ? '#4BAAD1' : '#FFF',
-                textTransform: 'none',
-                fontWeight: isActive ? 600 : 400,
-                fontSize: '0.95rem',
-                transition: 'all 0.2s ease',
-                backgroundColor: isActive ? 'rgba(255,255,255,0.05)' : 'transparent',
-                '&:hover': {
-                  backgroundColor: 'rgba(255,255,255,0.1)',
-                },
-              }}
-            >
-              {parent}
-            </Button>
+                        <React.Fragment key={parent}>
+              <Button 
+                {...(hasChildren ? bindHover(popupState) : {})}
+                onClick={() => {
+                  if (!hasChildren) {
+                    navigate(`/home#${parent.toLowerCase()}`);
+                  } else if (parent === 'Project') {
+                    navigate('/project/list');
+                  } else {
+                    navigate(`/home#${parent.toLowerCase()}`);
+                  }
+                  popupState.close();
+                }}
+                  sx={{
+                    display: { xs: 'none', md: 'flex' },
+                    color: isActive ? '#1976d2' : '#FFF', 
+                    textTransform: 'none',
+                    fontWeight: isActive ? 700 : 400,     
+                    fontSize: '0.95rem',
+                    backgroundColor: 'transparent',
+                    border: 'none',                      
+                    boxShadow: 'none',                  
+                    '&:hover': {
+                      backgroundColor: 'rgba(255,255,255,0.05)',
+                      color: '#1976d2',
+                    },
+                    '&.Mui-focusVisible': {
+                      backgroundColor: 'transparent',
+                    },
+                  }}
+
+                  >
+                    {parent}
+                  </Button>
 
             {hasChildren && (
               <HoverPopover
@@ -190,28 +221,42 @@ function Navigation() {
                 disableScrollLock
               >
                 <MenuList>
-                {child.map((item) => (
-                  <MenuItem 
-                    key={item.title}
-                    onClick={() => {
-                      popupState.close();
-                      handleNavigation(item.url, item.isExternal, item.externalUrl);
-                    }}
-                  >
-                    {item.title}
-                  </MenuItem>
-                ))}
+                  {child.map((item) => {
+                    // Check if this specific child item is active
+                    const isChildActive = location.pathname.toLowerCase() === item.url?.toLowerCase();
+                    
+                    return (
+                      <MenuItem 
+                        key={item.title}
+                        onClick={() => {
+                          popupState.close();
+                          handleNavigation(item.url, item.isExternal, item.externalUrl);
+                        }}
+                        sx={{
+                          backgroundColor: isChildActive ? 'rgba(75, 170, 209, 0.1)' : 'transparent',
+                          color: isChildActive ? '#4BAAD1' : 'inherit',
+                          fontWeight: isChildActive ? 600 : 400,
+                          borderLeft: isChildActive ? '4px solid #4BAAD1' : '4px solid transparent',
+                          '&:hover': {
+                            backgroundColor: isChildActive 
+                              ? 'rgba(75, 170, 209, 0.2)' 
+                              : 'rgba(0,0,0,0.04)',
+                          },
+                        }}
+                      >
+                        {item.title}
+                      </MenuItem>
+                    );
+                  })}
                 </MenuList>
               </HoverPopover>
             )}
-
           </React.Fragment>
         );
       })}
     </>
   );
 }
-
 
 function IconThemeToggle({ mode, onClick }) {
   let icon = mode ? <LightModeIcon /> : <DarkModeIcon />;
@@ -266,11 +311,9 @@ function AppsToggle() {
   };
 
   const handleNavigation = (url) => {
-    // Check if the URL is external (starts with http)
     if (url.startsWith('http')) {
       window.open(url, '_blank', 'noopener,noreferrer');
     } else {
-      // For internal routes
       navigate(`/${url}`);
     }
   };
@@ -279,7 +322,6 @@ function AppsToggle() {
     { name: 'CPS', thumbnail: cpsLogo, url: 'http://mypenm0iesvr01/cps'},
     { name: 'ETS1C', thumbnail: esticLogo, url: 'http://mypenm0iesvr01/est1c/'},
     { name: 'IE TOOLS', thumbnail: ieToolsLogo, url: 'http://mypenm0iesvr01/ietools/dashboard' },
-
   ]
 
   const sizeDropMenu = 60 * 4.7;
@@ -347,20 +389,6 @@ function AppsToggle() {
             maxWidth: '90%',
           }}
         >
-
-          {/* 
-          <Box>
-            <Stack direction="row" justifyContent={{ justifyContent: 'space-between' }}>
-              <Typography variant="subtitle2">
-                Recently used
-              </Typography>
-              <Link href="app/all" variant="caption">
-                View all
-              </Link>
-            </Stack>
-          </Box> 
-         */}
-
           <Box
             sx={{
               height: appList.length > 0 ? 55 * 4.4 : sizeDropMenu,
@@ -457,26 +485,31 @@ function TopNavBar() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Navigation items for the mobile drawer.
+  // Navigation items for the mobile drawer - includes News
   const navItems = [
     { name: 'Home', icon: <HomeIcon />, path: '/home' },
     { name: 'Topic', icon: <ArticleIcon />, path: '/home', sectionId: 'topic' },
     { name: 'Training', icon: <BuildIcon />, path: '/home', sectionId: 'training' },
+    { name: 'News', icon: <AnnouncementIcon />, path: '/home', sectionId: 'news' },
   ];
 
-  // Improved active state detection
   const isActiveLink = (path, sectionId) => {
-    // For path with section
+    const currentPath = location.pathname.toLowerCase();
+    
+
     if (sectionId) {
-      return location.pathname.toLowerCase() === path.toLowerCase() &&
-        location.hash.toLowerCase() === `#${sectionId}`.toLowerCase();
+      if (currentPath === path.toLowerCase() && 
+          location.hash.toLowerCase() === `#${sectionId}`.toLowerCase()) {
+        return true;
+      }
+      if (currentPath.startsWith(`/${sectionId}/`)) {
+        return true;
+      }
     }
-    // For path without section (pure path)
-    return location.pathname.toLowerCase() === path.toLowerCase() &&
-      (!location.hash || location.hash === '');
+    return currentPath === path.toLowerCase() && (!location.hash || location.hash === '');
   };
 
-  // Mobile drawer navigation: simply update the URL.
+  // Mobile drawer navigation
   const handleNavigation = (path, sectionId) => {
     setDrawerOpen(false);
     if (path === '/home' && sectionId) {
@@ -501,8 +534,7 @@ function TopNavBar() {
             <Navigation />
           </Stack>
 
-       <Stack direction="row" spacing={1} justifyContent={{ justifyContent: "space-between" }}>
-
+          <Stack direction="row" spacing={1} justifyContent={{ justifyContent: "space-between" }}>
             <AppsToggle />
             <IconThemeToggle mode={darkMode} onClick={toggleDarkMode} />
             <IconButton
@@ -567,11 +599,16 @@ function TopNavBar() {
                 key={item.name}
                 onClick={() => handleNavigation(item.path, item.sectionId)}
                 sx={{
-                  backgroundColor: isActive ? 'rgba(73, 172, 209, 0.1)' : 'transparent',
+                  backgroundColor: isActive ? 'rgba(75, 170, 209, 0.15)' : 'transparent',
                   borderLeft: isActive ? '4px solid #4BAAD1' : '4px solid transparent',
                   mb: 0.5,
                   borderRadius: '0 8px 8px 0',
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    backgroundColor: isActive 
+                      ? 'rgba(75, 170, 209, 0.25)' 
+                      : 'rgba(75, 170, 209, 0.05)',
+                  },
                 }}
                 button
               >
@@ -587,7 +624,7 @@ function TopNavBar() {
                   primary={item.name}
                   primaryTypographyProps={{
                     sx: {
-                      fontWeight: isActive ? 600 : 400,
+                      fontWeight: isActive ? 700 : 400,
                       color: isActive ? '#4BAAD1' : darkMode ? 'white' : '#333',
                     },
                   }}
@@ -597,16 +634,13 @@ function TopNavBar() {
           })}
         </List>
 
-        {/* Improved footer with padding for the up arrow button */}
+        {/* Footer */}
         <Box sx={{ mt: 'auto', p: 2, pb: 7, textAlign: 'center' }}>
           <Typography variant="caption" sx={{ color: darkMode ? '#aaa' : '#777' }}>
             © Jabil Penang IE Department - 2025
           </Typography>
         </Box>
       </Drawer>
-
-      {/* Offset for the fixed AppBar */}
-      {/* <Toolbar variant="dense" sx={{ minHeight: 50 }} /> */}
     </>
   );
 }
