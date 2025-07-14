@@ -1,0 +1,45 @@
+/* Notification button styling */
+.notification-button {
+    transition: transform 0.2s ease;
+  }
+  
+  .notification-button:hover {
+    transform: scale(1.1);
+  }
+  
+  /* Notification menu animation */
+  .MuiMenu-paper {
+    animation: slideIn 0.3s ease;
+  }
+  
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Enhanced hover effect for notification items */
+  .MuiListItem-root {
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Unread notification indicator styling */
+  .unread-notification {
+    position: relative;
+  }
+  
+  .unread-notification::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: #002b49;
+    border-radius: 2px;
+  }

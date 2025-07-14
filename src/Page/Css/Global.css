@@ -1,0 +1,1720 @@
+/* =========================================================================
+   VARIABLES - KEEP ALL VARIABLES 
+   ========================================================================= */
+:root {
+  --card-background-color-dark-mode: #1e2e4a;
+  --color-dark-mode: #002b49;
+  --color-light-mode: #46BFE8;
+  --section-background-dark-mode: rgb(18, 30, 52);
+  --section-stripe-background-dark-mode: #000f2b;
+  --section-background-light-mode: #e6e7e8;
+  --section-stripe-background-light-mode: rgb(236, 236, 236);
+  --section-color-dark-mode: white;
+  --section-color-light-mode: #333;
+  
+  /* Additional consistent values */
+  --border-accent-width: 4px;
+  --standard-transition: all 0.3s ease;
+  
+  /* Button colors */
+  --primary-button-color: #2196f3;
+  --primary-button-hover: #1976d2;
+  --button-shadow: 0 2px 4px rgba(33, 150, 243, 0.3);
+  --button-shadow-hover: 0 4px 8px rgba(33, 150, 243, 0.4);
+  
+  /* Gantt chart colors */
+  --gantt-primary-color: #19BEF0;
+  --gantt-primary-hover: #17ace0;
+  --gantt-background-overlay: rgba(255, 255, 255, 0.2);
+  --gantt-border-light: rgba(255, 255, 255, 0.3);
+}
+
+/* =========================================================================
+   1. GLOBAL CONTAINER & DARK MODE - USED IN HOME.JSX
+   ========================================================================= */
+.home-container {
+  width: 100%;
+  background-color: #ECECEC; /* Light-mode background */
+  color: #333;
+}
+
+.home-container.dark-mode {
+  background-color: #121e34; /* Dark-mode background */
+  color: #f8f8f8;
+}
+
+/* =========================================================================
+  2. SECTION STYLES - USED IN HOME.JSX
+  ========================================================================= */
+section > * {
+  margin: auto;
+  padding: 50px 0;
+}
+
+section:first-of-type > * {
+  padding: 0;
+}
+
+section:not(:first-of-type) > * {
+  padding-top: 50px;
+}
+
+@media (max-width: 768px) {
+  section > * {
+    max-width: 100%;
+    padding: 8px;
+  }
+}
+
+section {
+  background-color: var(--section-background-light-mode);
+  color: var(--section-color-light-mode);
+}
+
+/* stripe */
+section:nth-of-type(odd) {
+  background-color: var(--section-stripe-background-light-mode);
+  color: var(--section-color-light-mode);
+}
+
+section.dark-mode {
+  background-color: var(--section-background-dark-mode);
+  color: var(--section-color-dark-mode);
+}
+
+/* stripe dark mode */
+section:nth-of-type(odd).dark-mode {
+  background-color: var(--section-stripe-background-dark-mode);
+  color: var(--section-color-dark-mode);
+}
+
+section .section-title {
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+section .section-description {
+  padding-left: 1rem;
+  border-left: var(--border-accent-width) solid var(--color-light-mode);
+}
+
+/* =========================================================================
+   3. FONT & TEXT STYLES - USED IN IEDB.JSX AND OTHER COMPONENTS
+   ========================================================================= */
+.ie-description,
+.ie-text {
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+  margin-bottom: 24px;
+  color: #444444;
+}
+
+.home-container.dark-mode .ie-description,
+.home-container.dark-mode .ie-text {
+  color: #f8f8f8;
+}
+
+/* =========================================================================
+   4. CARD STYLES - COMMON CARD STYLES FOR ALL COMPONENTS
+   ========================================================================= */
+.card.dark-mode {
+  background-color: var(--card-background-color-dark-mode);
+}
+
+/* =========================================================================
+   5. IE JOB SCOPE CARDS - USED IN INTRODUCTION.JSX
+   ========================================================================= */
+.ie-job-scope {
+  transition: var(--standard-transition);
+  cursor: pointer;
+  animation: cardFadeIn 1s ease forwards;
+  border-left: var(--border-accent-width) solid var(--color-light-mode);
+}
+
+.home-container.dark-mode .ie-job-scope {
+  background-color: var(--card-background-color-dark-mode);
+  border-left: var(--border-accent-width) solid var(--color-light-mode);
+}
+
+/* =========================================================================
+   6. TRAINING CARDS - USED IN TRAINING.JSX
+   ========================================================================= */
+.training-card {
+  transition: var(--standard-transition);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.training-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* =========================================================================
+   7. ICONS STYLES - USED IN INTRODUCTION.JSX AND TOPIC.JSX
+   ========================================================================= */
+.ie-icon {
+  font-size: 2rem !important;
+  z-index: 1;
+  color: var(--color-dark-mode);
+  transition: transform 0.3s ease;
+}
+
+.home-container.dark-mode .ie-icon {
+  color: var(--color-light-mode);
+}
+
+.icon-style {
+  font-size: 1.8rem;
+  margin-right: 0.75rem;
+}
+
+/* Topic component icon styles */
+.topic-icon-style {
+  font-size: 1.8rem;
+  margin-right: 0.75rem;
+}
+
+/* =========================================================================
+   8. ANIMATIONS - USED IN IE JOB SCOPE CARDS
+   ========================================================================= */
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================================
+   9. UTILITY CLASSES - REUSABLE ACROSS COMPONENTS
+   ========================================================================= */
+/* Colors */
+.text-primary {
+  color: var(--color-light-mode);
+}
+
+.text-secondary {
+  color: var(--color-dark-mode);
+}
+
+/* Layout helpers */
+.border-left-accent {
+  border-left: var(--border-accent-width) solid var(--color-light-mode);
+  padding-left: 1rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* Hover effects */
+.hover-lift {
+  transition: transform 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+}
+
+/* =========================================================================
+   10. LOGIN & REGISTER STYLES - USED IN LOGIN.JSX AND REGISTER.JSX
+   ========================================================================= */
+/* Container layouts */
+.login-container, .register-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  background-color: var(--section-background-light-mode);
+}
+ 
+.login-container.dark-mode, .register-container.dark-mode {
+  background-color: var(--section-background-dark-mode);
+  color: var(--section-color-dark-mode);
+}
+ 
+.login-content-wrapper, .register-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  height: 100vh;
+}
+ 
+/* Card styles */
+.login-card, .register-card {
+  border-radius: 8px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  transition: var(--standard-transition);
+  animation: cardFadeIn 1s ease forwards;
+  border-left: var(--border-accent-width) solid var(--color-light-mode);
+  background-color: #fff;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+ 
+.login-card.dark-mode, .register-card.dark-mode {
+  background-color: var(--card-background-color-dark-mode);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  border-left: var(--border-accent-width) solid var(--color-light-mode);
+}
+ 
+@media (min-width: 600px) {
+  .login-card, .register-card {
+    max-width: 400px;
+  }
+}
+ 
+.login-card-content, .register-card-content {
+  padding: 16px;
+}
+ 
+@media (min-width: 600px) {
+  .login-card-content, .register-card-content {
+    padding: 30px;
+  }
+}
+ 
+.login-header, .register-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+ 
+.login-icon, .register-icon {
+  font-size: 40px;
+  color: var(--color-light-mode);
+  margin-bottom: 8px;
+}
+ 
+.login-title, .register-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--color-dark-mode);
+}
+ 
+.login-title.dark-mode, .register-title.dark-mode {
+  color: #fff;
+}
+ 
+.login-subtitle, .register-subtitle {
+  margin-bottom: 4px;
+  color: #666;
+}
+ 
+.login-subtitle.dark-mode, .register-subtitle.dark-mode {
+  color: #ccc;
+}
+ 
+/* Form styles */
+.login-form, .register-form {
+  width: 100%;
+  margin-top: 8px;
+}
+ 
+.form-field, .form-field-register {
+  margin-bottom: 16px;
+}
+ 
+.form-field-password, .form-field-role {
+  margin-bottom: 24px;
+}
+ 
+/* Input field styles */
+.input-field .MuiOutlinedInput-root fieldset,
+.select-field .MuiOutlinedInput-root fieldset {
+  transition: border-color 0.3s;
+  border-color: rgba(0, 0, 0, 0.23);
+  border-radius: 4px;
+}
+ 
+.input-field.dark-mode .MuiOutlinedInput-root fieldset,
+.select-field.dark-mode .MuiOutlinedInput-root fieldset {
+  border-color: rgba(255, 255, 255, 0.23);
+}
+ 
+.input-field .MuiOutlinedInput-root:hover fieldset,
+.select-field .MuiOutlinedInput-root:hover fieldset {
+  border-color: var(--color-light-mode);
+}
+ 
+.input-field .MuiOutlinedInput-root.Mui-focused fieldset,
+.select-field .MuiOutlinedInput-root.Mui-focused fieldset {
+  border-color: var(--color-light-mode);
+}
+ 
+.input-field .MuiInputLabel-root,
+.select-field .MuiInputLabel-root {
+  color: rgba(0, 0, 0, 0.6);
+}
+ 
+.input-field.dark-mode .MuiInputLabel-root,
+.select-field.dark-mode .MuiInputLabel-root {
+  color: rgba(255, 255, 255, 0.7);
+}
+ 
+.input-field .MuiInputLabel-root.Mui-focused,
+.select-field .MuiInputLabel-root.Mui-focused {
+  color: var(--color-light-mode);
+}
+ 
+.input-field .MuiInputBase-input,
+.select-field .MuiSelect-select {
+  color: inherit;
+}
+ 
+.input-field.dark-mode .MuiInputBase-input,
+.select-field.dark-mode .MuiSelect-select {
+  color: #fff;
+}
+ 
+/* Password field styles */
+.password-toggle-button {
+  color: inherit;
+}
+ 
+.password-toggle-button.dark-mode {
+  color: rgba(255, 255, 255, 0.7);
+}
+ 
+/* Select field styles */
+.select-field .MuiSvgIcon-root {
+  color: rgba(0, 0, 0, 0.54);
+}
+ 
+.select-field.dark-mode .MuiSvgIcon-root {
+  color: rgba(255, 255, 255, 0.7);
+}
+ 
+.login-button, .register-button {
+  padding-top: 12px;  
+  padding-bottom: 12px;
+  background-color: var(--primary-button-color);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 4px;
+  box-shadow: var(--button-shadow);
+  transition: var(--standard-transition);
+  letter-spacing: 0.5px;
+}
+ 
+.login-button:hover, .register-button:hover {
+  background-color: var(--primary-button-hover);
+  box-shadow: var(--button-shadow-hover);
+}
+ 
+.signup-text, .login-text {
+  margin-top: 24px;
+  text-align: center;
+  color: #666;
+  padding-top: 16px;
+}
+ 
+.signup-text.dark-mode, .login-text.dark-mode {
+  color: #bbb;
+}
+ 
+.signup-link, .login-link {
+  color: var(--primary-button-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+  margin-left: 4px;
+}
+ 
+.signup-link:hover, .login-link:hover {
+  color: var(--primary-button-hover);
+  text-decoration: underline;
+}
+ 
+.login-alert, .register-alert {
+  width: 100%;
+  max-width: 400px;
+}
+ 
+/* =========================================================================
+   11. SELECT MENU STYLES - USED IN LOGIN & REGISTER FORMS
+   ========================================================================= */
+.select-menu {
+  background-color: #fff;
+}
+ 
+.select-menu.dark-mode {
+  background-color: var(--card-background-color-dark-mode);
+  color: #fff;
+}
+ 
+.select-menu .menu-item {
+  padding: 8px 16px;
+}
+ 
+.select-menu .menu-item:hover {
+  background-color: rgba(75, 170, 209, 0.08);
+}
+ 
+.select-menu.dark-mode .menu-item:hover {
+  background-color: rgba(75, 170, 209, 0.15);
+}
+ 
+.select-menu .menu-item.selected {
+  background-color: rgba(75, 170, 209, 0.12);
+}
+ 
+.select-menu .menu-item.selected:hover {
+  background-color: rgba(75, 170, 209, 0.2);
+}
+ 
+.select-menu.dark-mode .menu-item.selected {
+  background-color: rgba(75, 170, 209, 0.2);
+}
+ 
+.select-menu.dark-mode .menu-item.selected:hover {
+  background-color: rgba(75, 170, 209, 0.3);
+}
+
+/* =========================================================================
+   12. GANTT TOOLBAR STYLES - USED IN GANTTTOOLBAR.JSX
+   ========================================================================= */
+/* Main container */
+.gantt-toolbar-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  transition: var(--standard-transition);
+  z-index: 10;
+  position: relative;
+}
+
+.gantt-toolbar-container.dark-mode {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+ 
+/* Header area */
+.gantt-toolbar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 12px;
+  background-color: var(--color-light-mode);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gantt-toolbar-header.dark-mode {
+  background-color: var(--color-dark-mode);
+}
+ 
+/* Title */
+.gantt-toolbar-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+}
+ 
+/* Controls container */
+.gantt-toolbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+ 
+/* Filter tag */
+.gantt-toolbar-filter-tag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  background-color: var(--gantt-background-overlay);
+  border: 1px solid var(--gantt-border-light);
+  border-radius: 3px;
+  margin-right: 6px;
+}
+ 
+.gantt-toolbar-filter-icon {
+  font-size: 14px !important;
+  color: #fff;
+}
+ 
+.gantt-toolbar-filter-text {
+  font-size: 11px;
+  color: #fff;
+  font-weight: 500;
+}
+ 
+.gantt-toolbar-actions {
+  display: flex;
+  align-items: center;
+}
+ 
+.gantt-toolbar-icon-button {
+  color: #fff !important;
+  padding: 4px;
+  margin: 0 1px;
+}
+
+.gantt-toolbar-icon-button .MuiSvgIcon-root {
+  font-size: 18px !important; 
+}
+ 
+.gantt-toolbar-icon-button:hover {
+  background-color: var(--gantt-background-overlay);
+}
+ 
+.gantt-toolbar-icon-button:disabled {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.date-filter-popover {
+  width: 280px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.date-filter-popover.dark-mode {
+  background-color: var(--color-dark-mode);
+}
+
+.date-filter-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.date-filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background-color: var(--gantt-primary-color);
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.date-filter-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.date-filter-title svg {
+  color: #fff;
+  font-size: 18px;
+}
+
+.date-filter-close {
+  padding: 4px;
+  color: #fff;
+}
+
+/* Form */
+.date-filter-form {
+  padding: 16px;
+  background-color: #fff;
+}
+
+.date-filter-form.dark-mode {
+  background-color: var(--color-dark-mode);
+  color: #fff;
+}
+
+.date-filter-form-group {
+  margin-bottom: 14px;
+}
+
+.date-filter-form-label {
+  margin-bottom: 4px;
+  color: #555;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.date-filter-form-label.dark-mode {
+  color: #ddd;
+}
+
+.date-filter-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.date-filter-input.dark-mode {
+  background-color: #2a2a3a;
+  border-color: #444;
+  color: #fff;
+}
+
+.date-filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.date-filter-button {
+  min-width: 80px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.date-filter-reset {
+  color: #555;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+}
+
+.date-filter-reset.dark-mode {
+  color: #ddd;
+  background-color: #2a2a3a;
+  border-color: #444;
+}
+
+.date-filter-apply {
+  background-color: var(--gantt-primary-color);
+  color: white;
+}
+
+.date-filter-apply:hover {
+  background-color: var(--gantt-primary-hover);
+}
+/* =========================================================================
+   12. GANTT TOOLBAR STYLES
+   ========================================================================= */
+/* Main container */
+.gantt-toolbar-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: 0; 
+  overflow: visible;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  transition: var(--standard-transition);
+  margin: 0; 
+  padding: 0; 
+}
+
+.gantt-toolbar-container.dark-mode {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+ 
+.gantt-toolbar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 12px;
+  background-color: #19BEF0; 
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gantt-toolbar-header.dark-mode {
+  background-color: #19BEF0;
+}
+ 
+.gantt-toolbar-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+.gantt-toolbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+ 
+.gantt-toolbar-filter-tag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  background-color: var(--gantt-background-overlay);
+  border: 1px solid var(--gantt-border-light);
+  border-radius: 3px;
+  margin-right: 6px;
+}
+ 
+.gantt-toolbar-filter-icon {
+  font-size: 14px !important;
+  color: #fff;
+}
+ 
+.gantt-toolbar-filter-text {
+  font-size: 11px;
+  color: #fff;
+  font-weight: 500;
+}
+ 
+.gantt-toolbar-actions {
+  display: flex;
+  align-items: center;
+}
+
+.gantt-toolbar-icon-button {
+  color: #fff;
+  padding: 4px; 
+  margin: 0 1px; 
+}
+
+
+.gantt-toolbar-icon-button .MuiSvgIcon-root {
+  font-size: 18px !important; 
+}
+ 
+.gantt-toolbar-icon-button:hover {
+  background-color: var(--gantt-background-overlay);
+}
+ 
+.gantt-toolbar-icon-button:disabled {
+  color: rgba(255, 255, 255, 0.5);
+}
+ 
+/* =========================================================================
+   13.1 DATE RANGE FILTER POPOVER STYLES
+   ========================================================================= */
+
+.date-filter-popover {
+  width: 320px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background-color: #fff;
+  border-left: var(--border-accent-width) solid #19BEF0;
+}
+
+.date-filter-popover.dark-mode {
+  background-color: #222;
+  color: var(--text-light);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+ 
+.date-filter-container {
+  display: flex;
+  flex-direction: column;
+}
+ 
+
+.date-filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #19BEF0; 
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
+.date-filter-form {
+  padding: 16px;
+  background-color: #fff;
+}
+
+
+.date-filter-form-group {
+  margin-bottom: 14px;
+}
+ 
+.date-filter-form-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-dark);
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.date-filter-form-label.dark-mode {
+  color: #fff;
+}
+ 
+.date-filter-input {
+  width: 100%;
+  font-size: 14px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.3s;
+  background-color: #fff;
+  color: #333;
+}
+
+.date-filter-input:hover {
+  border-color: #19BEF0;  
+}
+
+.date-filter-input:focus {
+  border-color: #19BEF0;  
+  outline: none;
+}
+
+.date-filter-input.dark-mode {
+  background-color: #fff;
+  border-color: #ccc;
+  color: #333; 
+}
+
+.date-filter-input.dark-mode:hover {
+  border-color: #19BEF0;  
+}
+
+.date-filter-input.dark-mode:focus {
+  border-color: #19BEF0;  
+}
+ 
+.date-filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+ 
+.date-filter-button {
+  min-width: 80px;
+  padding: 8px 16px;
+  font-size: 13px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: var(--standard-transition);
+  border: 1px solid transparent;
+  font-weight: 500;
+}
+ 
+.date-filter-reset {
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+}
+
+.date-filter-reset:hover {
+  background-color: rgba(25, 190, 240, 0.04); 
+  border-color: #19BEF0; 
+}
+
+.date-filter-reset.dark-mode {
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+}
+
+.date-filter-reset.dark-mode:hover {
+  background-color: #f8f8f8;
+  border-color: #19BEF0;
+}
+ 
+.date-filter-apply {
+  background-color: #19BEF0;
+  color: white;
+  border: none;
+}
+ 
+.date-filter-apply:hover {
+  background-color: #17ACE0; 
+}
+
+.date-filter-button .MuiSvgIcon-root {
+  font-size: 16px;
+  margin-right: 4px;
+  vertical-align: text-bottom;
+}
+
+.date-filter-reset .MuiSvgIcon-root {
+  color: #555;
+}
+
+.date-filter-reset.dark-mode .MuiSvgIcon-root {
+  color: #555;
+}
+
+.date-filter-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+
+.date-filter-input::placeholder {
+  color: #999;
+}
+
+.date-filter-input.dark-mode::placeholder {
+  color: #999;
+}
+/* =========================================================================
+   13.2. Custom Gantt task type styles
+   ========================================================================= */
+
+.wx-gantt .wx-progress-percent {
+    background-color: #ffc107;
+  }
+  
+  .wx-gantt .wx-bar.wx-task.narrow {
+    background-color: #676a81;
+    color: transparent;
+    height: 10px !important;
+    margin-top: 10px;
+    border: 1px solid #63667a;
+  }
+  .wx-gantt .wx-bar.wx-task.narrow .wx-progress-percent {
+    background-color: #1a2630;
+  }
+  .wx-gantt .wx-bar.wx-task.narrow .wx-link {
+    background-color: #384047;
+    border-radius: 0px;
+  }
+  .wx-gantt .wx-bar.wx-task.narrow .wx-link .wx-inner {
+    border-radius: 0px;
+  }
+ 
+  .wx-gantt .wx-bar.wx-task.progress {
+    background-color: transparent;
+    color: var(--wx-color-font);
+    border-radius: 50px;
+    border: 1px solid #00bcd4;
+  }
+  .wx-gantt .wx-bar.wx-task.progress .wx-progress-percent {
+    background-color: #00bcd4;
+  }
+  .wx-gantt .wx-bar.wx-task.progress .wx-progress-wrapper {
+    border-radius: 50px;
+  }
+
+  .wx-gantt .wx-bar.wx-task.urgent {
+    background-color: #f49a82;
+    border: 1px solid #f45e36;
+  }
+  .wx-gantt .wx-bar.wx-task.urgent .wx-progress-percent {
+    background-color: #f45e36;
+  }
+
+  .wx-gantt .wx-bar.wx-task.round {
+    background-color: #9c27b0;
+    border-radius: 20px;
+    color: white;
+  }
+  .wx-gantt .wx-bar.wx-task.round .wx-progress-percent {
+    background-color: #673ab7;
+    border-radius: 20px;
+  }
+  .wx-gantt .wx-bar.wx-task.round .wx-progress-wrapper {
+    border-radius: 20px;
+  }
+
+  /* =========================================================================
+   14. NavBar
+   ========================================================================= */
+
+   /* Navigation Bar Styling */
+.appBar {
+    width: 100%;
+    transition: all 0.3s ease;
+    background-color: #002b49;
+  }
+    
+  .logo {
+    height: 20px !important;
+    width: auto;
+  }
+
+  .mobile-drawer-header {
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+  }
+  
+  .drawer-menu-item {
+    border-radius: 8px;
+    margin: 4px 8px;
+    transition: all 0.2s ease;
+  }
+  
+  .drawer-menu-item:hover {
+    background-color: rgba(73, 172, 209, 0.08);
+  }
+  
+  .drawer-menu-item.active {
+    background-color: rgba(73, 172, 209, 0.1);
+    border-left: 4px solid #4BAAD1;
+  }
+  
+  .drawer-menu-icon {
+    min-width: 40px;
+  }
+
+  @keyframes fadeInRight {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .MuiDrawer-paper .MuiListItem-root {
+    animation: fadeInRight 0.3s ease forwards;
+    animation-delay: calc(0.05s * var(--item-index, 0));
+  }
+
+  .mobile-menu-button {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+  
+  .mobile-menu-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  @media (min-width: 960px) {
+    .toolbar {
+      padding: 0 24px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .MuiDrawer-paper .MuiBox-root:last-child {
+      padding-bottom: 70px !important;
+    }
+  }
+
+/* =========================================================================
+   15. TAG SCROLLBAR STYLES 
+   ========================================================================= */
+
+.tag-scroll-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  position: relative;
+  padding-bottom: 4px; 
+  margin-bottom: -2px; 
+}
+
+.tag-scroll-container::-webkit-scrollbar-button {
+  display: none; 
+}
+
+.tag-scroll-container::-webkit-scrollbar {
+  height: 3px; 
+  width: auto;
+  display: block !important; 
+}
+
+.tag-scroll-container::-webkit-scrollbar-track {
+  background: transparent; 
+  border-radius: 0;
+}
+
+.tag-scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(70, 191, 232, 0.6); 
+  border-radius: 3px;
+  border: none;
+}
+
+.tag-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(70, 191, 232, 0.8); 
+}
+
+.tag-scroll-container::-webkit-scrollbar-corner {
+  display: none;
+}
+
+.tag-scroll-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(70, 191, 232, 0.6) transparent;
+}
+
+.tag-scroll-container {
+  -ms-overflow-style: none;
+}
+
+.tag-scroll-container:not(:hover)::-webkit-scrollbar-thumb {
+  background: rgba(70, 191, 232, 0.4); 
+}
+
+.home-container.dark-mode .tag-scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(70, 191, 232, 0.6);
+}
+
+.home-container.dark-mode .tag-scroll-container {
+  scrollbar-color: rgba(70, 191, 232, 0.6) transparent;
+}
+
+/* =========================================================================
+   16. TOPICS CAROUSEL STYLES
+   ========================================================================= */
+
+/* Keyframe for fade-in-up animation */
+@keyframes carouselFadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Carousel container */
+.carousel-container {
+  width: 100%;
+  height: 380px;
+  position: relative;
+  overflow: hidden;
+  background: var(--section-background-light-mode);
+  border-radius: 10px;
+}
+
+.carousel-container.dark-mode {
+  background: linear-gradient(to bottom, var(--section-background-dark-mode), var(--section-stripe-background-dark-mode));
+}
+
+/* Mobile responsive carousel container */
+@media (max-width: 600px) {
+  .carousel-container {
+    height: 450px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+}
+
+/* Each slide */
+.carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  opacity: 0;
+  transform: translateX(10px) scale(0.9);
+  transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+  z-index: 0;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+  transform: scale(1);
+  z-index: 1;
+  animation: carouselFadeInUp 0.8s ease-in-out;
+}
+
+/* Mobile layout for slides */
+@media (max-width: 600px) {
+  .carousel-slide {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+}
+
+/* Left side image container */
+.carousel-image-section {
+  width: 70%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (max-width: 600px) {
+  .carousel-image-section {
+    width: 100%;
+    height: 200px;
+    border-radius: 12px 12px 0 0;
+  }
+}
+
+/* Slide image */
+.carousel-slide-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .carousel-slide-image {
+    object-position: center top;
+  }
+}
+
+/* Right side content container */
+.carousel-content-section {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 48px;
+  text-align: left;
+  background-color: var(--section-stripe-background-light-mode);
+  font-family: 'Roboto', sans-serif;
+}
+
+.carousel-content-section.dark-mode {
+  background-color: var(--card-background-color-dark-mode);
+}
+
+@media (max-width: 600px) {
+  .carousel-content-section {
+    width: 100%;
+    padding: 24px;
+    height: auto;
+    background-color: var(--section-background-light-mode);
+    border-radius: 0 0 12px 12px;
+  }
+  
+  .carousel-content-section.dark-mode {
+    background-color: var(--card-background-color-dark-mode);
+  }
+}
+
+/* Title styling */
+.carousel-title {
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  margin-bottom: 16px !important;
+  color: var(--section-color-light-mode) !important;
+}
+
+.carousel-container.dark-mode .carousel-title {
+  color: var(--section-color-dark-mode) !important;
+}
+
+@media (max-width: 600px) {
+  .carousel-title {
+    text-align: center !important;
+    width: 100%;
+    font-size: 1.5rem !important;
+  }
+}
+
+/* Description styling */
+.carousel-description {
+  font-weight: 300 !important;
+  line-height: 1.6 !important;
+  margin-top: 8px !important;
+  color: rgba(51, 51, 51, 0.6) !important;
+}
+
+.carousel-container.dark-mode .carousel-description {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+@media (max-width: 600px) {
+  .carousel-description {
+    text-align: center !important;
+    width: 100%;
+    font-size: 0.95rem !important;
+  }
+}
+
+/* Button styling */
+.carousel-button {
+  background-color: var(--primary-button-color) !important;
+  color: white !important;
+  text-transform: none !important;
+  margin-top: 16px !important;
+  padding: 12px 24px !important;
+  font-size: 1rem !important;
+  align-self: flex-start !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  transition: var(--standard-transition) !important;
+  box-shadow: var(--button-shadow) !important;
+}
+
+.carousel-button:hover {
+  background-color: var(--primary-button-hover) !important;
+  box-shadow: var(--button-shadow-hover) !important;
+}
+
+@media (max-width: 600px) {
+  .carousel-button {
+    padding: 9.6px 20px !important;
+    border-radius: 8px !important;
+    align-self: center !important;
+    width: 80% !important;
+    margin-top: 24px !important;
+    box-shadow: var(--button-shadow) !important;
+  }
+}
+
+/* Navigation arrows */
+.carousel-arrow {
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  color: var(--primary-button-color) !important;
+  opacity: 0.8 !important;
+  z-index: 3 !important;
+  transition: transform 0.3s ease, opacity 0.3s ease !important;
+  background-color: transparent !important;
+}
+
+.carousel-arrow:hover {
+  opacity: 1 !important;
+  transform: translateY(-50%) scale(1.1) !important;
+  background-color: transparent !important;
+}
+
+.carousel-arrow-left {
+  left: 20px !important;
+}
+
+.carousel-arrow-right {
+  right: 20px !important;
+}
+
+@media (max-width: 600px) {
+  .carousel-arrow {
+    top: 100px !important;
+    width: 36px !important;
+    height: 36px !important;
+  }
+  
+  .carousel-arrow-left {
+    left: 10px !important;
+  }
+  
+  .carousel-arrow-right {
+    right: 10px !important;
+  }
+  
+  .carousel-arrow .MuiSvgIcon-root {
+    font-size: 1.5rem !important;
+    color: #ffffff !important;
+    filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.5)) !important;
+  }
+}
+
+/* Dots container */
+.carousel-dots-container {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  gap: 8px;
+  z-index: 4;
+}
+
+@media (max-width: 600px) {
+  .carousel-dots-container {
+    bottom: auto;
+    top: 180px;
+    left: 50%;
+    transform: translateX(-50%);
+    gap: 10px;
+  }
+}
+
+/* Individual dot */
+.carousel-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba(33, 150, 243, 0.5);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.carousel-dot.active {
+  background-color: var(--primary-button-color);
+}
+
+.carousel-dot:hover {
+  transform: scale(1.2);
+}
+
+@media (max-width: 600px) {
+  .carousel-dot {
+    width: 12px;
+    height: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+}
+
+/* =========================================================================
+   17. TOPICS LAYOUT STYLES
+   ========================================================================= */
+
+/* Training section container */
+.training-section {
+  width: 100%;
+  padding-top: 16px;
+  padding-bottom: 4px;
+  box-sizing: border-box;
+  background-color: var(--section-background-light-mode);
+  color: var(--section-color-light-mode);
+}
+
+.training-section.dark-mode {
+  background-color: var(--section-background-dark-mode);
+  color: var(--section-color-dark-mode);
+}
+
+/* Training container */
+.training-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 12px;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .training-container {
+    padding: 0 8px;
+  }
+}
+
+/* Carousel section */
+.carousel-section {
+  margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+  .carousel-section {
+    margin-bottom: 8px;
+  }
+}
+
+/* Mobile tabs container */
+.mobile-tabs-container {
+  max-width: 100%;
+  background-color: #ffffff;
+  margin-bottom: 16px;
+  margin-top: 8px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.mobile-tabs-container.dark-mode {
+  background-color: var(--card-background-color-dark-mode);
+}
+
+.mobile-tabs-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Left sidebar */
+.left-sidebar {
+  width: 30%;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  color: var(--section-color-light-mode);
+  min-height: 90vh;
+}
+
+.left-sidebar.dark-mode {
+  background-color: var(--card-background-color-dark-mode);
+  border: none;
+  color: var(--section-color-dark-mode);
+}
+
+/* Sidebar title */
+.sidebar-title {
+  margin-bottom: 24px !important;
+  font-weight: bold !important;
+  text-align: center !important;
+  color: var(--section-color-light-mode) !important;
+}
+
+.sidebar-title.dark-mode {
+  color: var(--section-color-dark-mode) !important;
+}
+
+/* Navigation item */
+.nav-item {
+  border-radius: 8px !important;
+  margin-bottom: 8px !important;
+  color: var(--section-color-light-mode) !important;
+  background-color: transparent !important;
+  transition: var(--standard-transition) !important;
+}
+
+.nav-item.dark-mode {
+  color: var(--section-color-dark-mode) !important;
+}
+
+.nav-item.selected {
+  color: #3B82F6 !important;
+  background-color: rgba(59,130,246,0.1) !important;
+}
+
+.nav-item:hover {
+  background-color: rgba(59,130,246,0.1) !important;
+  color: #3B82F6 !important;
+}
+
+/* Navigation item icon */
+.nav-item-icon {
+  background-color: transparent !important;
+  color: var(--section-color-light-mode) !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  min-width: 40px !important;
+}
+
+.nav-item-icon.dark-mode {
+  color: var(--section-color-dark-mode) !important;
+}
+
+.nav-item-icon.selected {
+  color: #3B82F6 !important;
+}
+
+/* Main content area */
+.main-content {
+  width: 70%;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  color: var(--section-color-light-mode);
+  min-height: 80vh;
+}
+
+.main-content.dark-mode {
+  background-color: var(--card-background-color-dark-mode);
+  border: none;
+  color: var(--section-color-dark-mode);
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    width: 100%;
+    padding: 12px;
+    min-height: auto;
+  }
+}
+
+/* Content title */
+.content-title {
+  margin-bottom: 24px !important;
+  font-weight: bold !important;
+  text-align: center !important;
+  color: var(--section-color-light-mode) !important;
+}
+
+.content-title.dark-mode {
+  color: var(--section-color-dark-mode) !important;
+}
+
+/* Empty content placeholder */
+.empty-content {
+  color: #666 !important;
+  text-align: center !important;
+}
+
+.empty-content.dark-mode {
+  color: #ccc !important;
+}
+
+/* Tab label styling */
+.tab-label {
+  display: flex !important;
+  align-items: center !important;
+  min-width: max-content !important;
+  color: var(--section-color-light-mode) !important;
+}
+
+.tab-label.dark-mode {
+  color: var(--section-color-dark-mode) !important;
+}
+
+.tab-label.selected {
+  color: #3B82F6 !important;
+}
+
+/* Tab icon styling */
+.tab-icon {
+  margin-right: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Individual tab styling */
+.topic-tab {
+  text-transform: none !important;
+  color: var(--section-color-light-mode) !important;
+  font-weight: normal !important;
+  font-size: 0.9rem !important;
+  min-height: 48px !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
+
+.topic-tab.dark-mode {
+  color: var(--section-color-dark-mode) !important;
+}
+
+.topic-tab.selected {
+  color: #3B82F6 !important;
+  font-weight: bold !important;
+}
+
+/* Grid container responsive adjustments */
+.topics-grid-container {
+  min-height: calc(100vh - 60px);
+  padding-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .topics-grid-container {
+    min-height: auto;
+  }
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+  .left-sidebar {
+    display: none;
+  }
+}
+
+/* Custom scrollbar for mobile tabs */
+.mobile-tabs-scrollable {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.mobile-tabs-scrollable::-webkit-scrollbar {
+  display: none;
+}
+
+/* MUI Tabs indicator color override */
+.topics-tabs .MuiTabs-indicator {
+  background-color: #3B82F6 !important;
+}
+
+.topics-tabs .MuiTabs-flexContainer {
+  gap: 4px !important;
+}
+
+/* Selected tab state override */
+.topics-tabs .MuiTab-root.Mui-selected {
+  color: #3B82F6 !important;
+}
