@@ -1,11 +1,11 @@
-// src/Page/Admin/Dashboard/Dashboard.jsx
+// src/Page/Admin/Dashboard/Dashboard.tsx
 import React from 'react';
 
-const Dashboard = () => {
+const Dashboard: React.FC = () => {
   return (
     <div style={{ padding: '10px' }}>
       <h2>WLC DASHBOARD</h2>
-      <p>Put  Dashboard content here.</p>
+      <p>Put Dashboard content here.</p>
     </div>
   );
 };

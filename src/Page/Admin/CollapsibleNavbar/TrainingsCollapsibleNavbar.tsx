@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';  // <-- ADDED: Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -21,20 +21,39 @@ import SchoolIcon from '@mui/icons-material/School';
 import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-// Highlight color constants
-const highlightColor = '#4BAAD1';
-const highlightBgLight = 'rgba(75,170,209,0.15)';
-const highlightBgDark = 'rgba(75,170,209,0.2)';
+// Type definitions
+interface TrainingSubmenuItem {
+  text: string;
+  icon: React.ReactElement;
+  path: string;
+}
 
-const TrainingsCollapsibleNavbar = ({ darkMode, isDrawerCollapsed, isActiveLink, setSelectedItem }) => {
-  const navigate = useNavigate(); // <-- ADDED: Initialize navigate
-  const [openTrainings, setOpenTrainings] = useState(false);
-  const [openPopup, setOpenPopup] = useState(false);
-  const trainingsButtonRef = useRef(null);
-  const popperRef = useRef(null);
+interface TrainingsCollapsibleNavbarProps {
+  darkMode: boolean;
+  isDrawerCollapsed: boolean;
+  isActiveLink: (path: string) => boolean;
+  setSelectedItem: (path: string) => void;
+}
+
+// Highlight color constants
+const highlightColor: string = '#4BAAD1';
+const highlightBgLight: string = 'rgba(75,170,209,0.15)';
+const highlightBgDark: string = 'rgba(75,170,209,0.2)';
+
+const TrainingsCollapsibleNavbar: React.FC<TrainingsCollapsibleNavbarProps> = ({
+  darkMode,
+  isDrawerCollapsed,
+  isActiveLink,
+  setSelectedItem
+}) => {
+  const navigate = useNavigate();
+  const [openTrainings, setOpenTrainings] = useState<boolean>(false);
+  const [openPopup, setOpenPopup] = useState<boolean>(false);
+  const trainingsButtonRef = useRef<HTMLDivElement>(null);
+  const popperRef = useRef<HTMLDivElement>(null);
   
   // Define trainings submenu items
-  const trainingsSubmenu = [
+  const trainingsSubmenu: TrainingSubmenuItem[] = [
     { 
       text: 'Workday', 
       icon: <WorkIcon fontSize="small" />, 
@@ -57,7 +76,7 @@ const TrainingsCollapsibleNavbar = ({ darkMode, isDrawerCollapsed, isActiveLink,
     }
   ];
   
-  const handleTrainingsClick = () => {
+  const handleTrainingsClick = (): void => {
     if (isDrawerCollapsed) {
       setOpenPopup(!openPopup);
     } else {
@@ -65,30 +84,30 @@ const TrainingsCollapsibleNavbar = ({ darkMode, isDrawerCollapsed, isActiveLink,
     }
   };
 
-  // ADDED: New function for expanded menu clicks to update state and navigate
-  const handleSubItemClick = (path) => {
+  // Function for expanded menu clicks to update state and navigate
+  const handleSubItemClick = (path: string): void => {
     setSelectedItem(path);
     navigate(path);
   };
 
-  // UPDATED: Modified to call navigate as well
-  const handlePopupItemClick = (path) => {
+  // Function for popup item clicks
+  const handlePopupItemClick = (path: string): void => {
     setSelectedItem(path);
     setOpenPopup(false);
     navigate(path);
   };
 
-  const handleClickAway = () => {
+  const handleClickAway = (): void => {
     setOpenPopup(false);
   };
 
-  const handleMouseEnter = () => {
+  const handleMouseEnter = (): void => {
     if (isDrawerCollapsed) {
       setOpenPopup(true);
     }
   };
   
-  const handleMouseLeave = () => {
+  const handleMouseLeave = (): void => {
     if (isDrawerCollapsed) {
       // Small delay to allow mouse to move to the popup if that's where its going
       setTimeout(() => {
@@ -100,14 +119,14 @@ const TrainingsCollapsibleNavbar = ({ darkMode, isDrawerCollapsed, isActiveLink,
     }
   };
 
-  const handlePopperMouseEnter = () => {
+  const handlePopperMouseEnter = (): void => {
     // Keep popup open when mouse is over the popper
     if (isDrawerCollapsed) {
       setOpenPopup(true);
     }
   };
 
-  const handlePopperMouseLeave = () => {
+  const handlePopperMouseLeave = (): void => {
     // Close popup when mouse leaves the popper
     if (isDrawerCollapsed) {
       setOpenPopup(false);
@@ -115,13 +134,13 @@ const TrainingsCollapsibleNavbar = ({ darkMode, isDrawerCollapsed, isActiveLink,
   };
 
   // Helper function to check if mouse is over the popper
-  const isMouseOverPopper = () => {
+  const isMouseOverPopper = (): boolean => {
     if (!popperRef.current) return false;
     
     const popperElement = popperRef.current;
     const rect = popperElement.getBoundingClientRect();
-    const x = event.clientX;
-    const y = event.clientY;
+    const x = (event as MouseEvent).clientX;
+    const y = (event as MouseEvent).clientY;
     
     return (
       x >= rect.left &&
@@ -201,8 +220,8 @@ const TrainingsCollapsibleNavbar = ({ darkMode, isDrawerCollapsed, isActiveLink,
       {/* Submenu Items for expanded drawer */}
       <Collapse in={!isDrawerCollapsed && openTrainings} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          {trainingsSubmenu.map((subItem) => {
-            const isSubItemActive = isActiveLink(subItem.path);
+          {trainingsSubmenu.map((subItem: TrainingSubmenuItem) => {
+            const isSubItemActive: boolean = isActiveLink(subItem.path);
             return (
               <ListItem key={subItem.text} disablePadding sx={{
                 display: 'block',
@@ -210,7 +229,6 @@ const TrainingsCollapsibleNavbar = ({ darkMode, isDrawerCollapsed, isActiveLink,
                 mb: 0.5,
               }}>
                 <ListItemButton
-                  // UPDATED: Use new handler to update selected state and navigate
                   onClick={() => handleSubItemClick(subItem.path)}
                   sx={{
                     minHeight: 40,
@@ -334,8 +352,8 @@ const TrainingsCollapsibleNavbar = ({ darkMode, isDrawerCollapsed, isActiveLink,
                   Trainings
                 </Box>
                 <List sx={{ p: 1 }}>
-                  {trainingsSubmenu.map((subItem) => {
-                    const isSubItemActive = isActiveLink(subItem.path);
+                  {trainingsSubmenu.map((subItem: TrainingSubmenuItem) => {
+                    const isSubItemActive: boolean = isActiveLink(subItem.path);
                     return (
                       <ListItem key={subItem.text} disablePadding>
                         <ListItemButton
@@ -400,6 +418,6 @@ const TrainingsCollapsibleNavbar = ({ darkMode, isDrawerCollapsed, isActiveLink,
       </ClickAwayListener>
     </React.Fragment>
   );
-}
+};
 
 export default TrainingsCollapsibleNavbar;

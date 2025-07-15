@@ -6,6 +6,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
@@ -14,9 +15,17 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
-const Notifications = () => {
+// Type definitions
+interface Notification {
+  id: number;
+  message: string;
+  time: string;
+  read: boolean;
+}
+
+const Notifications: React.FC = () => {
   // Notification state
-  const [notifications, setNotifications] = useState([
+  const [notifications, setNotifications] = useState<Notification[]>([
     { 
       id: 1, 
       message: 'New production report available', 
@@ -38,24 +47,29 @@ const Notifications = () => {
   ]);
   
   // Menu state for notifications dropdown
-  const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
-  const notificationMenuOpen = Boolean(notificationAnchorEl);
+  const [notificationAnchorEl, setNotificationAnchorEl] = useState<null | HTMLElement>(null);
+  const notificationMenuOpen: boolean = Boolean(notificationAnchorEl);
   
-  const handleNotificationClick = (event) => {
+  const handleNotificationClick = (event: React.MouseEvent<HTMLElement>): void => {
     setNotificationAnchorEl(event.currentTarget);
   };
   
-  const handleNotificationClose = () => {
+  const handleNotificationClose = (): void => {
     setNotificationAnchorEl(null);
   };
   
-  const handleNotificationRead = (id) => {
+  const handleNotificationRead = (id: number): void => {
     setNotifications(notifications.map(notification => 
       notification.id === id ? { ...notification, read: true } : notification
     ));
   };
   
-  const unreadCount = notifications.filter(notification => !notification.read).length;
+  const handleNotificationItemClick = (id: number): void => {
+    handleNotificationRead(id);
+    handleNotificationClose();
+  };
+  
+  const unreadCount: number = notifications.filter(notification => !notification.read).length;
 
   return (
     <>
@@ -124,21 +138,12 @@ const Notifications = () => {
           </MenuItem>
         ) : (
           <List sx={{ p: 0 }}>
-            {notifications.map((notification) => (
+            {notifications.map((notification: Notification) => (
               <React.Fragment key={notification.id}>
                 <ListItem
-                  button
-                  alignItems="flex-start"
-                  onClick={() => {
-                    handleNotificationRead(notification.id);
-                    handleNotificationClose();
-                  }}
+                  disablePadding
                   sx={{
                     backgroundColor: notification.read ? 'transparent' : 'rgba(0, 43, 73, 0.05)',
-                    transition: 'background-color 0.3s',
-                    '&:hover': {
-                      backgroundColor: 'rgba(0, 43, 73, 0.1)'
-                    },
                     position: 'relative',
                     '&::before': !notification.read ? {
                       content: '""',
@@ -152,23 +157,34 @@ const Notifications = () => {
                     } : {}
                   }}
                 >
-                  <ListItemAvatar>
-                    <Avatar sx={{ backgroundColor: '#002b49' }}>
-                      <NotificationsIcon fontSize="small" />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={notification.message}
-                    secondary={notification.time}
-                    primaryTypographyProps={{
-                      fontWeight: notification.read ? 400 : 600,
-                      variant: 'body2'
+                  <ListItemButton
+                    alignItems="flex-start"
+                    onClick={() => handleNotificationItemClick(notification.id)}
+                    sx={{
+                      transition: 'background-color 0.3s',
+                      '&:hover': {
+                        backgroundColor: 'rgba(0, 43, 73, 0.1)'
+                      }
                     }}
-                    secondaryTypographyProps={{
-                      variant: 'caption',
-                      color: 'text.secondary'
-                    }}
-                  />
+                  >
+                    <ListItemAvatar>
+                      <Avatar sx={{ backgroundColor: '#002b49' }}>
+                        <NotificationsIcon fontSize="small" />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={notification.message}
+                      secondary={notification.time}
+                      primaryTypographyProps={{
+                        fontWeight: notification.read ? 400 : 600,
+                        variant: 'body2'
+                      }}
+                      secondaryTypographyProps={{
+                        variant: 'caption',
+                        color: 'text.secondary'
+                      }}
+                    />
+                  </ListItemButton>
                 </ListItem>
                 <Divider component="li" />
               </React.Fragment>

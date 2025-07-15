@@ -25,14 +25,33 @@ const highlightColor = '#4BAAD1';
 const highlightBgLight = 'rgba(75,170,209,0.15)';
 const highlightBgDark = 'rgba(75,170,209,0.2)';
 
-const TopicsCollapsibleNavbar = ({ darkMode, isDrawerCollapsed, isActiveLink, setSelectedItem }) => {
-  const [openTopics, setOpenTopics] = useState(false);
-  const [openPopup, setOpenPopup] = useState(false);
-  const topicsButtonRef = useRef(null);
-  const popperRef = useRef(null);
+// Type definitions
+interface TopicsSubmenuItem {
+  text: string;
+  icon: React.ReactElement;
+  path: string;
+}
+
+interface TopicsCollapsibleNavbarProps {
+  darkMode: boolean;
+  isDrawerCollapsed: boolean;
+  isActiveLink: (path: string) => boolean;
+  setSelectedItem: (path: string) => void;
+}
+
+const TopicsCollapsibleNavbar: React.FC<TopicsCollapsibleNavbarProps> = ({ 
+  darkMode, 
+  isDrawerCollapsed, 
+  isActiveLink, 
+  setSelectedItem 
+}) => {
+  const [openTopics, setOpenTopics] = useState<boolean>(false);
+  const [openPopup, setOpenPopup] = useState<boolean>(false);
+  const topicsButtonRef = useRef<HTMLDivElement>(null);
+  const popperRef = useRef<HTMLDivElement>(null);
   
   // Define topics submenu items
-  const topicsSubmenu = [
+  const topicsSubmenu: TopicsSubmenuItem[] = [
     { 
       text: 'Productivity', 
       icon: <AutoGraphIcon fontSize="small" />, 
@@ -53,10 +72,9 @@ const TopicsCollapsibleNavbar = ({ darkMode, isDrawerCollapsed, isActiveLink, se
       icon: <LightbulbIcon fontSize="small" />, 
       path: '/admin/topics/moonshine',
     }
-    
   ];
   
-  const handleTopicsClick = () => {
+  const handleTopicsClick = (): void => {
     if (isDrawerCollapsed) {
       setOpenPopup(!openPopup);
     } else {
@@ -64,22 +82,22 @@ const TopicsCollapsibleNavbar = ({ darkMode, isDrawerCollapsed, isActiveLink, se
     }
   };
 
-  const handlePopupItemClick = (path) => {
+  const handlePopupItemClick = (path: string): void => {
     setSelectedItem(path);
     setOpenPopup(false);
   };
 
-  const handleClickAway = () => {
+  const handleClickAway = (): void => {
     setOpenPopup(false);
   };
 
-  const handleMouseEnter = () => {
+  const handleMouseEnter = (): void => {
     if (isDrawerCollapsed) {
       setOpenPopup(true);
     }
   };
   
-  const handleMouseLeave = () => {
+  const handleMouseLeave = (): void => {
     if (isDrawerCollapsed) {
       // Small delay to allow mouse to move to the popup if that's where its going
       setTimeout(() => {
@@ -91,14 +109,14 @@ const TopicsCollapsibleNavbar = ({ darkMode, isDrawerCollapsed, isActiveLink, se
     }
   };
 
-  const handlePopperMouseEnter = () => {
+  const handlePopperMouseEnter = (): void => {
     // Keep popup open when mouse is over the popper
     if (isDrawerCollapsed) {
       setOpenPopup(true);
     }
   };
 
-  const handlePopperMouseLeave = () => {
+  const handlePopperMouseLeave = (): void => {
     // Close popup when mouse leaves the popper
     if (isDrawerCollapsed) {
       setOpenPopup(false);
@@ -106,13 +124,13 @@ const TopicsCollapsibleNavbar = ({ darkMode, isDrawerCollapsed, isActiveLink, se
   };
 
   // Helper function to check if mouse is over the popper
-  const isMouseOverPopper = () => {
+  const isMouseOverPopper = (): boolean => {
     if (!popperRef.current) return false;
     
     const popperElement = popperRef.current;
     const rect = popperElement.getBoundingClientRect();
-    const x = event.clientX;
-    const y = event.clientY;
+    const x = (window.event as MouseEvent)?.clientX || 0;
+    const y = (window.event as MouseEvent)?.clientY || 0;
     
     return (
       x >= rect.left &&
@@ -192,7 +210,7 @@ const TopicsCollapsibleNavbar = ({ darkMode, isDrawerCollapsed, isActiveLink, se
       {/* Submenu Items for expanded drawer */}
       <Collapse in={!isDrawerCollapsed && openTopics} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          {topicsSubmenu.map((subItem) => {
+          {topicsSubmenu.map((subItem: TopicsSubmenuItem) => {
             const isSubItemActive = isActiveLink(subItem.path);
             return (
               <ListItem key={subItem.text} disablePadding sx={{
@@ -324,7 +342,7 @@ const TopicsCollapsibleNavbar = ({ darkMode, isDrawerCollapsed, isActiveLink, se
                   Topics
                 </Box>
                 <List sx={{ p: 1 }}>
-                  {topicsSubmenu.map((subItem) => {
+                  {topicsSubmenu.map((subItem: TopicsSubmenuItem) => {
                     const isSubItemActive = isActiveLink(subItem.path);
                     return (
                       <ListItem key={subItem.text} disablePadding>

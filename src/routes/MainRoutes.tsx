@@ -7,6 +7,7 @@ import Login from '../Page/Auth/Login';
 import RegisterPage from '../Page/Auth/Register';
 import GanttView from '../Page/Gantt/GanttView';
 import ProjectList from '../Page/Gantt/List';
+import GenetalListDetails from '../Page/Gantt/GenericListDetail';
 import Maintenance from '../Page/Maintenance/Maintenance';
 import AdminRoutes from './AdminRoutes';
 import GenericTopics from '../Page/Topics/GenericTopics';
@@ -34,6 +35,7 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ loginKey = 0 }) => {
       <Route path="/topics/:topicId" element={<GenericTopics />} />
       <Route path="/gantt" element={<GanttView />} />
       <Route path="/project/list" element={<ProjectList />} />
+      <Route path="/project/:projectName" element={<GenetalListDetails />} />
       <Route path="/project/gantt" element={<GanttView />} />
       <Route
         path="/admin/*"

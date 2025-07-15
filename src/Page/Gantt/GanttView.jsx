@@ -1,68 +1,12 @@
-// src/components/MyGanttComponent.tsx
+// src/components/MyGanttComponent.jsx
 import React, { useRef, useEffect, useState } from "react";
 import { Gantt, Willow } from "wx-react-gantt";
 import "wx-react-gantt/dist/gantt.css";
 import "../Css/Global.css";
-import api from "../../services/api";
-import GanttToolbar from "./GanttToolbar";
+import api from "./../../services/api";
+import GanttToolbar from "./GanttToolbar"; 
 
-// Type definitions
-interface RawTask {
-  id: string;
-  parentId: string;
-  text: string;
-  startDatetime: string;
-  endDatetime: string;
-  progress: number;
-  taskType: string;
-  guid: string;
-}
-
-interface RawLink {
-  sourceId: string;
-  targetId: string;
-  linkType: string;
-}
-
-interface ProcessedTask {
-  id: number;
-  parent: number | null;
-  text: string;
-  start: Date;
-  duration: number;
-  progress: number;
-  type: string;
-}
-
-interface ProcessedLink {
-  id: number;
-  source: number;
-  target: number;
-  type: string;
-}
-
-interface TaskType {
-  id: string;
-  label: string;
-}
-
-interface Scale {
-  unit: string;
-  step: number;
-  format: string;
-}
-
-interface ApiResponse {
-  digitalProject?: RawTask[];
-  digitalProjectLink?: RawLink[];
-}
-
-interface ApiParams {
-  startDatetime: string;
-  endDatetime: string;
-}
-
-const IconStyleLoader: React.FC = () => {
+const IconStyleLoader = () => {
   useEffect(() => {
     const href = "https://cdn.svar.dev/fonts/wxi/wx-icons.css";
     if (!document.querySelector(`link[href="${href}"]`)) {
@@ -75,16 +19,16 @@ const IconStyleLoader: React.FC = () => {
   return null;
 };
 
-const MyGanttComponent: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [containerHeight, setContainerHeight] = useState<string>("100vh");
-  const [rawTasks, setRawTasks] = useState<RawTask[]>([]);
-  const [rawLinks, setRawLinks] = useState<RawLink[]>([]);
-  const [zoomLevel, setZoomLevel] = useState<number>(2);
-  const maxZoomLevel: number = 6;
-  const [startDate, setStartDate] = useState<string>("");
-  const [endDate, setEndDate] = useState<string>("");
-  const [darkMode, setDarkMode] = useState<boolean>(false);
+const MyGanttComponent = () => {
+  const containerRef = useRef(null);
+  const [containerHeight, setContainerHeight] = useState("100vh");
+  const [rawTasks, setRawTasks] = useState([]);
+  const [rawLinks, setRawLinks] = useState([]);
+  const [zoomLevel, setZoomLevel] = useState(2);
+  const maxZoomLevel = 6;
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
   
   useEffect(() => {
     const isDarkMode = document.body.classList.contains('dark-mode') || 
@@ -92,33 +36,33 @@ const MyGanttComponent: React.FC = () => {
     setDarkMode(isDarkMode);
   }, []);
 
+
   useEffect(() => {
     const defaultStartDate = "2025-04-01T00:00:00Z";
     const defaultEndDate = "2025-12-31T23:59:59Z";
     
-    const params: ApiParams = {
+    const params = {
       startDatetime: startDate || defaultStartDate,
       endDatetime: endDate || defaultEndDate,
     };
 
     api
-      .get<ApiResponse>("/api/project", { params })
+      .get("/api/project", { params })
       .then((res) => {
         const data = res.data;
         setRawTasks(data.digitalProject || []);
         setRawLinks(data.digitalProjectLink || []);
       })
-      .catch((err: Error) => {
+      .catch((err) => {
         console.error("Failed to load Gantt data:", err);
       });
   }, [startDate, endDate]); 
 
   useEffect(() => {
-    const updateHeight = (): void => {
+    const updateHeight = () => {
       if (containerRef.current) {
         const vh = window.innerHeight;
-        const navBarElement = document.querySelector('.appBar') as HTMLElement;
-        const navBarHeight = navBarElement?.offsetHeight || 64; 
+        const navBarHeight = document.querySelector('.appBar')?.offsetHeight || 64; 
         const top = containerRef.current.getBoundingClientRect().top;
         setContainerHeight(`${Math.max(400, vh - top - 20)}px`);
       }
@@ -128,7 +72,7 @@ const MyGanttComponent: React.FC = () => {
     return () => window.removeEventListener("resize", updateHeight);
   }, []);
 
-  const tasks: ProcessedTask[] = rawTasks.map((item: RawTask) => {
+  const tasks = rawTasks.map((item) => {
     const start = new Date(item.startDatetime);
     const end = new Date(item.endDatetime);
     const duration =
@@ -145,10 +89,11 @@ const MyGanttComponent: React.FC = () => {
     };
   });
 
-  const links: ProcessedLink[] = rawLinks
-    .map((lnk: RawLink, idx: number) => {
-      const src = rawTasks.find((t: RawTask) => t.guid === lnk.sourceId);
-      const tgt = rawTasks.find((t: RawTask) => t.guid === lnk.targetId);
+
+  const links = rawLinks
+    .map((lnk, idx) => {
+      const src = rawTasks.find((t) => t.guid === lnk.sourceId);
+      const tgt = rawTasks.find((t) => t.guid === lnk.targetId);
       if (!src || !tgt) return null;
       return {
         id: idx + 1,
@@ -157,9 +102,9 @@ const MyGanttComponent: React.FC = () => {
         type: lnk.linkType, 
       };
     })
-    .filter((link): link is ProcessedLink => link !== null);
+    .filter(Boolean);
 
-  const taskTypes: TaskType[] = [
+  const taskTypes = [
     { id: "task", label: "Task" },
     { id: "summary", label: "Summary" },
     { id: "milestone", label: "Milestone" },
@@ -169,7 +114,8 @@ const MyGanttComponent: React.FC = () => {
     { id: "round", label: "Rounded" },
   ];
 
-  const getScalesForZoomLevel = (level: number): Scale[] => {
+
+  const getScalesForZoomLevel = (level) => {
     switch (level) {
       case 0:
         return [
@@ -214,32 +160,34 @@ const MyGanttComponent: React.FC = () => {
     }
   };
 
-  const handleZoomIn = (): void => {
+
+  const handleZoomIn = () => {
     if (zoomLevel < maxZoomLevel) {
       setZoomLevel(zoomLevel + 1);
     }
   };
 
-  const handleZoomOut = (): void => {
+  const handleZoomOut = () => {
     if (zoomLevel > 0) {
       setZoomLevel(zoomLevel - 1);
     }
   };
   
-  const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleStartDateChange = (e) => {
     setStartDate(e.target.value);
   };
 
-  const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleEndDateChange = (e) => {
     setEndDate(e.target.value);
   };
 
-  const handleFilterReset = (): void => {
+  const handleFilterReset = () => {
     setStartDate("");
     setEndDate("");
   };
 
-  const containerStyle: React.CSSProperties = {
+ 
+  const containerStyle = {
     marginTop: "70px",
     width: "100%",
     height: containerHeight,
@@ -251,13 +199,13 @@ const MyGanttComponent: React.FC = () => {
     overflow: "hidden",
   };
   
-  const ganttWrapperStyle: React.CSSProperties = {
+  const ganttWrapperStyle = {
     flex: "1 1 auto",
     minHeight: 0,
     overflow: "hidden",
   };
 
-  const scales: Scale[] = getScalesForZoomLevel(zoomLevel);
+  const scales = getScalesForZoomLevel(zoomLevel);
 
   return (
     <>
@@ -274,15 +222,16 @@ const MyGanttComponent: React.FC = () => {
           onEndDateChange={handleEndDateChange}
           onFilterReset={handleFilterReset}
           darkMode={darkMode}
+          
         />
-        <div style={ganttWrapperStyle}>
+        <Willow style={ganttWrapperStyle}>
           <Gantt
             tasks={tasks}
             links={links}
             scales={scales}
             taskTypes={taskTypes}
           />
-        </div>
+        </Willow>
       </div>
     </>
   );

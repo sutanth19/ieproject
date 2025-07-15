@@ -1,5 +1,5 @@
-// CarouselForm.jsx
-import React, { useState, useEffect } from "react";
+// CarouselForm.tsx
+import React, { useState, useEffect, DragEvent, FormEvent, ChangeEvent } from "react";
 import { alpha, useTheme } from "@mui/material/styles";
 
 // MUI components
@@ -23,20 +23,44 @@ import UploadIcon from "@mui/icons-material/Upload";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CloseIcon from "@mui/icons-material/Close";
 
-const CarouselForm = ({ open, editingItem, onCancel, onSubmit }) => {
+interface CarouselItem {
+  guid_id: string;
+  title: string;
+  subTitle: string;
+  image?: string;
+}
+
+interface CarouselFormData {
+  title: string;
+  subTitle: string;
+}
+
+interface CarouselFormProps {
+  open: boolean;
+  editingItem: CarouselItem | null;
+  onCancel: () => void;
+  onSubmit: (data: CarouselFormData, file: File | null) => Promise<void>;
+}
+
+const CarouselForm: React.FC<CarouselFormProps> = ({ 
+  open, 
+  editingItem, 
+  onCancel, 
+  onSubmit 
+}) => {
   const theme = useTheme();
   const isEditing = Boolean(editingItem);
 
   // local state
-  const [title, setTitle] = useState("");
-  const [subTitle, setSubTitle] = useState("");
-  const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState(null);
-  const [drag, setDrag] = useState(false);
+  const [title, setTitle] = useState<string>("");
+  const [subTitle, setSubTitle] = useState<string>("");
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [drag, setDrag] = useState<boolean>(false);
 
   /* Populate form when "Edit" pressed */
   useEffect(() => {
-    if (isEditing) {
+    if (isEditing && editingItem) {
       setTitle(editingItem.title);
       setSubTitle(editingItem.subTitle);
       setPreview(
@@ -47,38 +71,54 @@ const CarouselForm = ({ open, editingItem, onCancel, onSubmit }) => {
     } else {
       reset();
     }
-  }, [editingItem]);
+  }, [editingItem, isEditing]);
 
-  const reset = () => {
+  const reset = (): void => {
     setTitle("");
     setSubTitle("");
     setFile(null);
     setPreview(null);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     onSubmit({ title, subTitle }, file).catch(() => {});
   };
 
+  const handleFileChange = (selectedFile: File): void => {
+    setFile(selectedFile);
+    setPreview(URL.createObjectURL(selectedFile));
+  };
+
+  const handleFileInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      handleFileChange(selectedFile);
+    }
+  };
+
+  const handleRemovePreview = (): void => {
+    setFile(null);
+    setPreview(null);
+  };
+
   /* drag‑and‑drop helpers */
   const dragProps = {
-    onDragEnter: (e) => {
+    onDragEnter: (e: DragEvent<HTMLDivElement>) => {
       e.preventDefault();
       setDrag(true);
     },
-    onDragOver: (e) => e.preventDefault(),
-    onDragLeave: (e) => {
+    onDragOver: (e: DragEvent<HTMLDivElement>) => e.preventDefault(),
+    onDragLeave: (e: DragEvent<HTMLDivElement>) => {
       e.preventDefault();
       setDrag(false);
     },
-    onDrop: (e) => {
+    onDrop: (e: DragEvent<HTMLDivElement>) => {
       e.preventDefault();
       setDrag(false);
-      if (e.dataTransfer.files[0]) {
-        const f = e.dataTransfer.files[0];
-        setFile(f);
-        setPreview(URL.createObjectURL(f));
+      const droppedFile = e.dataTransfer.files[0];
+      if (droppedFile) {
+        handleFileChange(droppedFile);
       }
     },
   };
@@ -175,7 +215,7 @@ const CarouselForm = ({ open, editingItem, onCancel, onSubmit }) => {
                   <TextField
                     fullWidth
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
                     variant="outlined"
                     size="medium"
                     InputProps={{
@@ -222,7 +262,7 @@ const CarouselForm = ({ open, editingItem, onCancel, onSubmit }) => {
                     multiline
                     rows={2}
                     value={subTitle}
-                    onChange={(e) => setSubTitle(e.target.value)}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setSubTitle(e.target.value)}
                     variant="outlined"
                     InputProps={{
                       sx: {
@@ -306,10 +346,7 @@ const CarouselForm = ({ open, editingItem, onCancel, onSubmit }) => {
                       width: 32,
                       height: 32,
                     }}
-                    onClick={() => {
-                      setFile(null);
-                      setPreview(null);
-                    }}
+                    onClick={handleRemovePreview}
                   >
                     <CloseIcon fontSize="small" />
                   </IconButton>
@@ -370,13 +407,7 @@ const CarouselForm = ({ open, editingItem, onCancel, onSubmit }) => {
                       type="file"
                       accept="image/*"
                       hidden
-                      onChange={(e) => {
-                        if (e.target.files[0]) {
-                          const f = e.target.files[0];
-                          setFile(f);
-                          setPreview(URL.createObjectURL(f));
-                        }
-                      }}
+                      onChange={handleFileInputChange}
                     />
                   </Button>
                 </>

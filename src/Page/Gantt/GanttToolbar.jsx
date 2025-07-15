@@ -13,21 +13,7 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import TuneIcon from '@mui/icons-material/Tune';
 import './../Css/Global.css'; 
 
-interface GanttToolbarProps {
-  onZoomIn: () => void;
-  onZoomOut: () => void;
-  currentZoomLevel?: number;
-  maxZoomLevel?: number;
-  startDate?: string;
-  endDate?: string;
-  onStartDateChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onEndDateChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onFilterApply?: () => void;
-  onFilterReset?: () => void;
-  darkMode?: boolean;
-}
-
-const GanttToolbar: React.FC<GanttToolbarProps> = ({
+const GanttToolbar = ({
   onZoomIn,
   onZoomOut,
   currentZoomLevel = 4,
@@ -40,15 +26,17 @@ const GanttToolbar: React.FC<GanttToolbarProps> = ({
   onFilterReset,
   darkMode = false
 }) => {
-  const [filterAnchorEl, setFilterAnchorEl] = useState<HTMLElement | null>(null);
-  const [localStartDate, setLocalStartDate] = useState<string>(startDate || '');
-  const [localEndDate, setLocalEndDate] = useState<string>(endDate || '');
+  const [filterAnchorEl, setFilterAnchorEl] = useState(null);
+  const [localStartDate, setLocalStartDate] = useState(startDate || '');
+  const [localEndDate, setLocalEndDate] = useState(endDate || '');
   
-  const isFilterActive: boolean = Boolean(startDate || endDate);
-  const openFilterPopover: boolean = Boolean(filterAnchorEl);
-  const filterId: string | undefined = openFilterPopover ? 'filter-popover' : undefined;
 
-  const formatDateForDisplay = (dateString: string): string => {
+  const isFilterActive = Boolean(startDate || endDate);
+  const openFilterPopover = Boolean(filterAnchorEl);
+  const filterId = openFilterPopover ? 'filter-popover' : undefined;
+
+
+  const formatDateForDisplay = (dateString) => {
     if (!dateString) return '';
     
     try {
@@ -63,7 +51,7 @@ const GanttToolbar: React.FC<GanttToolbarProps> = ({
     }
   };
 
-  const formatDateForInput = (date: string | Date): string => {
+  const formatDateForInput = (date) => {
     if (!date) return '';
     if (typeof date === 'string') return date;
     
@@ -73,30 +61,31 @@ const GanttToolbar: React.FC<GanttToolbarProps> = ({
     return `${year}-${month}-${day}`;
   };
 
-  const handleFilterClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
+
+  const handleFilterClick = (event) => {
     setFilterAnchorEl(event.currentTarget);
   };
 
-  const handleFilterClose = (): void => {
+  const handleFilterClose = () => {
     setFilterAnchorEl(null);
   };
 
-  const handleLocalStartDateChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleLocalStartDateChange = (e) => {
     setLocalStartDate(e.target.value);
   };
 
-  const handleLocalEndDateChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleLocalEndDateChange = (e) => {
     setLocalEndDate(e.target.value);
   };
 
-  const handleApplyFilter = (): void => {
+  const handleApplyFilter = () => {
     if (onStartDateChange) {
-      const event = { target: { value: localStartDate } } as React.ChangeEvent<HTMLInputElement>;
+      const event = { target: { value: localStartDate } };
       onStartDateChange(event);
     }
     
     if (onEndDateChange) {
-      const event = { target: { value: localEndDate } } as React.ChangeEvent<HTMLInputElement>;
+      const event = { target: { value: localEndDate } };
       onEndDateChange(event);
     }
     
@@ -104,7 +93,7 @@ const GanttToolbar: React.FC<GanttToolbarProps> = ({
     handleFilterClose();
   };
 
-  const handleResetFilter = (): void => {
+  const handleResetFilter = () => {
     setLocalStartDate('');
     setLocalEndDate('');
     
@@ -128,7 +117,7 @@ const GanttToolbar: React.FC<GanttToolbarProps> = ({
                   ? `${formatDateForDisplay(startDate)} - ${formatDateForDisplay(endDate)}`
                   : startDate 
                     ? `From ${formatDateForDisplay(startDate)}`
-                    : `Until ${formatDateForDisplay(endDate || '')}`
+                    : `Until ${formatDateForDisplay(endDate)}`
                 }
               </Typography>
             </Box>
@@ -157,6 +146,7 @@ const GanttToolbar: React.FC<GanttToolbarProps> = ({
               </IconButton>
             </Tooltip>
 
+            {/* Zoom In */}
             <Tooltip title="Zoom In">
               <IconButton
                 size="small"
@@ -203,6 +193,7 @@ const GanttToolbar: React.FC<GanttToolbarProps> = ({
             </IconButton>
           </Box>
           
+          {/* Filter Form */}
           <Box className={`date-filter-form ${darkMode ? 'dark-mode' : ''}`}>
             <Box className="date-filter-form-group">
               <Typography variant="body2" className={`date-filter-form-label ${darkMode ? 'dark-mode' : ''}`}>
