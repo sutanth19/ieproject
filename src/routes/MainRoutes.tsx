@@ -11,6 +11,7 @@ import GenetalListDetails from '../Page/Gantt/GenericListDetail';
 import Maintenance from '../Page/Maintenance/Maintenance';
 import AdminRoutes from './AdminRoutes';
 import GenericTopics from '../Page/Topics/GenericTopics';
+import LexicalPlayground from '../Page/Lexical'; // Add this import
 
 interface ProtectedAdminRouteProps {
   children: React.ReactNode;
@@ -37,6 +38,7 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ loginKey = 0 }) => {
       <Route path="/project/list" element={<ProjectList />} />
       <Route path="/project/:projectName" element={<GenetalListDetails />} />
       <Route path="/project/gantt" element={<GanttView />} />
+      <Route path="/lexical" element={<LexicalPlayground />} /> {/* Add this route */}
       <Route
         path="/admin/*"
         element={

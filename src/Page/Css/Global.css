@@ -1718,3 +1718,61 @@ section .section-description {
 .topics-tabs .MuiTab-root.Mui-selected {
   color: #3B82F6 !important;
 }
+
+/* Add this CSS to ensure tables display properly */
+.lexical-editor table {
+  border-collapse: collapse;
+  border: 1px solid #d1d5db;
+  width: 100%;
+  margin: 16px 0;
+  table-layout: fixed;
+}
+
+.lexical-editor td,
+.lexical-editor th {
+  border: 1px solid #d1d5db;
+  padding: 8px 12px;
+  min-width: 80px;
+  position: relative;
+  vertical-align: top;
+  word-wrap: break-word;
+}
+
+.lexical-editor th {
+  background-color: #f9fafb;
+  font-weight: 600;
+}
+
+.lexical-editor tr {
+  border-bottom: 1px solid #d1d5db;
+}
+
+/* Table selection styles */
+.lexical-editor .TableNode__selection {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.lexical-editor .TableNode__tableSelected {
+  outline: 2px solid #3b82f6;
+}
+
+/* Horizontal rule styles */
+.lexical-editor hr {
+  border: none;
+  border-top: 1px solid #d1d5db;
+  margin: 16px 0;
+  height: 1px;
+}
+
+/* Make sure tables are visible */
+.lexical-editor .TableNode {
+  margin: 16px 0;
+}
+
+.lexical-editor .TableRowNode {
+  display: table-row;
+}
+
+.lexical-editor .TableCellNode {
+  display: table-cell;
+}
