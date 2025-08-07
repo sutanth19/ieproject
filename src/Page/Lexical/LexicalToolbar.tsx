@@ -1,5 +1,5 @@
-// Updated LexicalToolbar.tsx with Fixed Image Support
-import React, { useCallback, useEffect, useState } from 'react';
+// Enhanced LexicalToolbar.tsx with image alignment detection and control
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import {
   $getSelection,
@@ -15,6 +15,10 @@ import {
   $isTextNode,
   INDENT_CONTENT_COMMAND,
   OUTDENT_CONTENT_COMMAND,
+  $isElementNode,
+  ElementNode,
+  LexicalNode,
+  $getNodeByKey,
 } from 'lexical';
 import {
   INSERT_ORDERED_LIST_COMMAND,
@@ -33,12 +37,18 @@ import {
 import {
   FORMAT_ELEMENT_COMMAND,
 } from 'lexical';
-
-// Import the image functionality
-import { INSERT_IMAGE_COMMAND } from './ImageCommands';
+import { useTheme } from './../../themes/ThemeContext';
+import { INSERT_IMAGE_COMMAND, SET_IMAGE_ALIGNMENT_COMMAND } from './ImageCommands';
 import { ImageUploadModal } from './ImageUploadModal';
-
-// MUI Icons
+import { INSERT_LINK_COMMAND } from './LinkCommands';
+import { LinkModal } from './LinkModal';
+import { $isLinkNode } from './LinkNode';
+import { INSERT_CODE_BLOCK_COMMAND } from './CodeBlockCommands';
+import { CodeBlockModal } from './CodeBlockModal';
+import { ToolbarButton } from './ToolbarButton';
+import { ToolbarDropdown } from './ToolbarDropdown';
+import { ToolbarDivider } from './ToolbarDivider';
+import { $isImageNode, ImageNode } from './ImageNode'; // Import ImageNode
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatItalicIcon from '@mui/icons-material/FormatItalic';
 import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
@@ -62,78 +72,62 @@ import ImageIcon from '@mui/icons-material/Image';
 import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
 import FormatClearIcon from '@mui/icons-material/FormatClear';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import DataObjectIcon from '@mui/icons-material/DataObject';
 
-interface ToolbarButtonProps {
-  onClick: () => void;
-  disabled?: boolean;
-  active?: boolean;
-  children: React.ReactNode;
-  title?: string;
-  size?: 'small' | 'medium';
+const useScrollDetection = (threshold: number = 50, editorRef?: React.RefObject<HTMLDivElement | null>) => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [shouldStick, setShouldStick] = useState(false);
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setIsScrolled(scrollY > threshold);
+      
+      if (editorRef?.current) {
+        const editorRect = editorRef.current.getBoundingClientRect();
+        const editorTopInViewport = editorRect.top;
+        setShouldStick(editorTopInViewport <= 10);
+      } else {
+        setShouldStick(scrollY > threshold);
+      }
+    };
+
+    handleScroll();
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, [threshold, editorRef]);
+
+  return { isScrolled, shouldStick };
+};
+
+interface ComprehensiveLexicalToolbarProps {
+  isDarkMode?: boolean;
+  stickyOffset?: number;
+  showMobileCompact?: boolean;
+  editorRef?: React.RefObject<HTMLDivElement | null>;
 }
 
-const ToolbarButton: React.FC<ToolbarButtonProps> = ({
-  onClick,
-  disabled = false,
-  active = false,
-  children,
-  title,
-  size = 'small',
-}) => (
-  <button
-    onClick={onClick}
-    disabled={disabled}
-    title={title}
-    style={{
-      padding: '8px',
-      border: 'none',
-      borderRadius: '6px',
-      backgroundColor: active ? '#3b82f6' : 'transparent',
-      color: active ? 'white' : '#4b5563',
-      cursor: disabled ? 'not-allowed' : 'pointer',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      transition: 'all 0.15s ease',
-      opacity: disabled ? 0.4 : 1,
-      minWidth: '36px',
-      height: '36px',
-      position: 'relative'
-    }}
-    onMouseEnter={(e) => {
-      if (!disabled && !active) {
-        e.currentTarget.style.backgroundColor = '#f1f5f9';
-        e.currentTarget.style.color = '#1e293b';
-      }
-    }}
-    onMouseLeave={(e) => {
-      if (!disabled && !active) {
-        e.currentTarget.style.backgroundColor = 'transparent';
-        e.currentTarget.style.color = '#4b5563';
-      }
-    }}
-  >
-    {children}
-  </button>
-);
-
-const ToolbarDivider: React.FC = () => (
-  <div style={{ 
-    width: '1px', 
-    height: '28px', 
-    backgroundColor: '#e2e8f0', 
-    margin: '0 4px',
-    flexShrink: 0
-  }} />
-);
-
-const ComprehensiveLexicalToolbar: React.FC = () => {
+const ComprehensiveLexicalToolbar: React.FC<ComprehensiveLexicalToolbarProps> = ({ 
+  isDarkMode = false,
+  stickyOffset = 0,
+  showMobileCompact = true,
+  editorRef,
+}) => {
+  const { darkMode } = useTheme();
   const [editor] = useLexicalComposerContext();
-  
-  // Add state for image modal
+  const toolbarRef = useRef<HTMLDivElement>(null);
+  const { isScrolled, shouldStick } = useScrollDetection(100, editorRef);
+  const isCurrentlyDarkMode = darkMode;
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
-  
-  // State management
+  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
+  const [isCodeBlockModalOpen, setIsCodeBlockModalOpen] = useState(false);
+  const [selectedText, setSelectedText] = useState('');
   const [activeFormats, setActiveFormats] = useState({
     bold: false,
     italic: false,
@@ -150,8 +144,119 @@ const ComprehensiveLexicalToolbar: React.FC = () => {
   const [fontSize, setFontSize] = useState('14');
   const [fontFamily, setFontFamily] = useState('');
   const [elementFormat, setElementFormat] = useState('left');
+  const [isLink, setIsLink] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // NEW: Image selection state
+  const [selectedImageNode, setSelectedImageNode] = useState<ImageNode | null>(null);
+  const [selectedImageAlignment, setSelectedImageAlignment] = useState<'left' | 'center' | 'right'>('left');
 
-  // Helper functions
+  // NEW: Global image selection handler
+  useEffect(() => {
+    const handleImageSelection = (event: CustomEvent) => {
+      const { imageNode, isSelected } = event.detail;
+      
+      if (isSelected && imageNode) {
+        // Image is selected
+        editor.update(() => {
+          const node = $getNodeByKey(imageNode.getKey()) as ImageNode;
+          if (node) {
+            setSelectedImageNode(node);
+            setSelectedImageAlignment(node.getAlignment());
+          }
+        });
+      } else {
+        // Image is deselected
+        setSelectedImageNode(null);
+        setSelectedImageAlignment('left');
+      }
+    };
+
+    // Listen for custom image selection events
+    window.addEventListener('imageSelectionChange', handleImageSelection as EventListener);
+    
+    return () => {
+      window.removeEventListener('imageSelectionChange', handleImageSelection as EventListener);
+    };
+  }, [editor]);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const fontFamilyOptions = [
+    { value: '', label: 'Default' },
+    { value: 'Arial', label: 'Arial' },
+    { value: 'Georgia', label: 'Georgia' },
+    { value: 'Times New Roman', label: 'Times' },
+    { value: 'Courier New', label: 'Courier' },
+    { value: 'Helvetica', label: 'Helvetica' },
+    { value: 'Verdana', label: 'Verdana' },
+    { value: 'Tahoma', label: 'Tahoma' },
+    { value: 'Trebuchet MS', label: 'Trebuchet' },
+  ];
+
+  const fontSizeOptions = [
+    { value: '10', label: '10px' },
+    { value: '12', label: '12px' },
+    { value: '14', label: '14px' },
+    { value: '16', label: '16px' },
+    { value: '18', label: '18px' },
+    { value: '20', label: '20px' },
+    { value: '24', label: '24px' },
+    { value: '28', label: '28px' },
+    { value: '32', label: '32px' },
+    { value: '36', label: '36px' },
+  ];
+
+  const blockTypeOptions = [
+    { value: 'paragraph', label: 'Paragraph' },
+    { value: 'h1', label: 'Heading 1' },
+    { value: 'h2', label: 'Heading 2' },
+    { value: 'h3', label: 'Heading 3' },
+    { value: 'h4', label: 'Heading 4' },
+    { value: 'h5', label: 'Heading 5' },
+    { value: 'h6', label: 'Heading 6' },
+    { value: 'quote', label: 'Quote' },
+  ];
+
+  // NEW: Check if image is selected - IMPROVED
+  const checkImageSelection = useCallback(() => {
+    const selection = $getSelection();
+    if ($isRangeSelection(selection)) {
+      // Check all nodes in selection for images
+      const nodes = selection.getNodes();
+      for (const node of nodes) {
+        if ($isImageNode(node)) {
+          setSelectedImageNode(node as ImageNode);
+          setSelectedImageAlignment((node as ImageNode).getAlignment());
+          return true;
+        }
+        
+        // Also check parent nodes (in case image is in a container)
+        let parent = node.getParent();
+        while (parent) {
+          if ($isImageNode(parent)) {
+            setSelectedImageNode(parent as ImageNode);
+            setSelectedImageAlignment((parent as ImageNode).getAlignment());
+            return true;
+          }
+          parent = parent.getParent();
+        }
+      }
+    }
+    
+    setSelectedImageNode(null);
+    setSelectedImageAlignment('left');
+    return false;
+  }, []);
+
   const applyFontSize = useCallback((size: string) => {
     editor.update(() => {
       const selection = $getSelection();
@@ -206,47 +311,62 @@ const ComprehensiveLexicalToolbar: React.FC = () => {
   const updateToolbar = useCallback(() => {
     const selection = $getSelection();
     if ($isRangeSelection(selection)) {
-      setActiveFormats({
-        bold: selection.hasFormat('bold'),
-        italic: selection.hasFormat('italic'),
-        underline: selection.hasFormat('underline'),
-        strikethrough: selection.hasFormat('strikethrough'),
-        code: selection.hasFormat('code'),
-        subscript: selection.hasFormat('subscript'),
-        superscript: selection.hasFormat('superscript'),
-      });
-
-      getCurrentFontStyles();
-
-      const anchorNode = selection.anchor.getNode();
-      const element = anchorNode.getKey() === 'root' 
-        ? anchorNode 
-        : anchorNode.getTopLevelElementOrThrow();
+      // Check if image is selected
+      const isImageSelected = checkImageSelection();
       
-      const elementKey = element.getKey();
-      const elementDOM = editor.getElementByKey(elementKey);
-      
-      if (elementDOM !== null) {
-        if ($isListNode(element)) {
-          const parentList = element;
-          const type = parentList.getListType();
-          setBlockType(type === 'bullet' ? 'bullet' : 'number');
-        } else {
-          const type = element.getType();
-          if (type === 'quote') {
-            setBlockType('quote');
-          } else if (type === 'heading') {
-            const tag = (element as any).getTag();
-            setBlockType(tag);
+      if (!isImageSelected) {
+        // Normal text selection logic
+        setActiveFormats({
+          bold: selection.hasFormat('bold'),
+          italic: selection.hasFormat('italic'),
+          underline: selection.hasFormat('underline'),
+          strikethrough: selection.hasFormat('strikethrough'),
+          code: selection.hasFormat('code'),
+          subscript: selection.hasFormat('subscript'),
+          superscript: selection.hasFormat('superscript'),
+        });
+
+        getCurrentFontStyles();
+
+        const node = selection.anchor.getNode();
+        const parent = node.getParent();
+        setIsLink($isLinkNode(parent));
+
+        const anchorNode = selection.anchor.getNode();
+        const element = anchorNode.getKey() === 'root' 
+          ? anchorNode 
+          : anchorNode.getTopLevelElementOrThrow();
+        
+        const elementKey = element.getKey();
+        const elementDOM = editor.getElementByKey(elementKey);
+        
+        if (elementDOM !== null) {
+          if ($isListNode(element)) {
+            const parentList = element;
+            const type = parentList.getListType();
+            if (type === 'check') {
+              setBlockType('check');
+            } else if (type === 'bullet') {
+              setBlockType('bullet');
+            } else {
+              setBlockType('number');
+            }
           } else {
-            setBlockType('paragraph');
+            const type = element.getType();
+            if (type === 'quote') {
+              setBlockType('quote');
+            } else if (type === 'heading') {
+              const tag = (element as any).getTag();
+              setBlockType(tag);
+            } else {
+              setBlockType('paragraph');
+            }
           }
         }
       }
     }
-  }, [editor, getCurrentFontStyles]);
+  }, [editor, getCurrentFontStyles, checkImageSelection]);
 
-  // Register update listeners
   useEffect(() => {
     return editor.registerUpdateListener(({ editorState }) => {
       editorState.read(() => {
@@ -291,14 +411,26 @@ const ComprehensiveLexicalToolbar: React.FC = () => {
     };
   }, [editor]);
 
-  // Command functions
   const formatText = (format: TextFormatType) => {
     editor.dispatchCommand(FORMAT_TEXT_COMMAND, format);
   };
 
+  // ENHANCED: Format element with image support
   const formatElement = (format: 'left' | 'center' | 'right' | 'justify') => {
-    editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, format);
-    setElementFormat(format);
+    if (selectedImageNode) {
+      // Format image alignment
+      if (format !== 'justify') { // Images don't support justify
+        editor.dispatchCommand(SET_IMAGE_ALIGNMENT_COMMAND, {
+          nodeKey: selectedImageNode.getKey(),
+          alignment: format as 'left' | 'center' | 'right'
+        });
+        setSelectedImageAlignment(format as 'left' | 'center' | 'right');
+      }
+    } else {
+      // Format text element alignment
+      editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, format);
+      setElementFormat(format);
+    }
   };
 
   const insertList = (listType: 'bullet' | 'number' | 'check') => {
@@ -306,30 +438,47 @@ const ComprehensiveLexicalToolbar: React.FC = () => {
       editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
     } else if (listType === 'number') {
       editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined);
-    } else {
+    } else if (listType === 'check') {
       editor.dispatchCommand(INSERT_CHECK_LIST_COMMAND, undefined);
     }
   };
 
   const formatHeading = (headingSize: string) => {
     editor.update(() => {
-      const selection = $getSelection();
-      if ($isRangeSelection(selection)) {
-        const anchorNode = selection.anchor.getNode();
-        const element = anchorNode.getKey() === 'root' 
-          ? anchorNode 
-          : anchorNode.getTopLevelElementOrThrow();
-        
-        if (headingSize === 'h1' || headingSize === 'h2' || headingSize === 'h3' || 
-            headingSize === 'h4' || headingSize === 'h5' || headingSize === 'h6') {
-          const heading = $createHeadingNode(headingSize as HeadingTagType);
-          element.replace(heading);
-        } else if (headingSize === 'quote') {
-          const quote = $createQuoteNode();
-          element.replace(quote);
-        } else {
-          const paragraph = $createParagraphNode();
-          element.replace(paragraph);
+      try {
+        const selection = $getSelection();
+        if ($isRangeSelection(selection)) {
+          const anchorNode = selection.anchor.getNode();
+          const element = anchorNode.getKey() === 'root' 
+            ? anchorNode 
+            : anchorNode.getTopLevelElementOrThrow();
+          
+          let newNode: ElementNode;
+          
+          if (headingSize === 'h1' || headingSize === 'h2' || headingSize === 'h3' || 
+              headingSize === 'h4' || headingSize === 'h5' || headingSize === 'h6') {
+            newNode = $createHeadingNode(headingSize as HeadingTagType);
+          } else if (headingSize === 'quote') {
+            newNode = $createQuoteNode();
+          } else {
+            newNode = $createParagraphNode();
+          }
+          
+          if ($isElementNode(element)) {
+            const children = element.getChildren();
+            children.forEach((child: LexicalNode) => {
+              newNode.append(child);
+            });
+          }
+          
+          element.replace(newNode);
+          newNode.selectEnd();
+        }
+      } catch (error) {
+        console.warn('Error formatting heading:', error);
+        const selection = $getSelection();
+        if ($isRangeSelection(selection)) {
+          selection.insertText('');
         }
       }
     });
@@ -385,7 +534,6 @@ const ComprehensiveLexicalToolbar: React.FC = () => {
     applyFontFamily(newFamily);
   };
 
-  // NEW: Image insertion functions
   const openImageModal = () => {
     setIsImageModalOpen(true);
   };
@@ -394,185 +542,331 @@ const ComprehensiveLexicalToolbar: React.FC = () => {
     editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
       src: imageData.src,
       altText: imageData.altText,
-      maxWidth: 800, // Default max width
+      maxWidth: 300,
     });
     setIsImageModalOpen(false);
   };
 
+  const openLinkModal = () => {
+    editor.update(() => {
+      const selection = $getSelection();
+      if ($isRangeSelection(selection)) {
+        setSelectedText(selection.getTextContent());
+      }
+    });
+    setIsLinkModalOpen(true);
+  };
+
+  const handleLinkInsert = (linkData: { url: string; text: string }) => {
+    editor.dispatchCommand(INSERT_LINK_COMMAND, {
+      url: linkData.url,
+      text: linkData.text,
+    });
+    setIsLinkModalOpen(false);
+  };
+
+  const openCodeBlockModal = () => {
+    setIsCodeBlockModalOpen(true);
+  };
+
+  const handleCodeBlockInsert = (codeData: { code: string; language: string }) => {
+    editor.dispatchCommand(INSERT_CODE_BLOCK_COMMAND, {
+      code: codeData.code,
+      language: codeData.language,
+    });
+    setIsCodeBlockModalOpen(false);
+  };
+
+  const getToolbarStyles = (): React.CSSProperties => ({
+    position: shouldStick ? 'fixed' : 'sticky',
+    top: shouldStick ? `${stickyOffset}px` : '0px',
+    left: shouldStick ? '0' : 'auto',
+    right: shouldStick ? '0' : 'auto',
+    width: shouldStick ? '100%' : 'auto',
+    zIndex: shouldStick ? 1000 : 1000, 
+    minHeight: shouldStick ? (isMobile ? '80px' : '120px') : (isMobile ? '48px' : '56px'),
+    height: 'auto',
+    maxHeight: shouldStick ? '150px' : 'none',
+    display: 'flex',
+    alignItems: shouldStick ? 'flex-start' : 'center', 
+    alignContent: shouldStick ? 'flex-start' : 'center',
+    justifyContent: 'flex-start',
+    gap: isMobile ? '2px' : '4px',
+    padding: shouldStick 
+      ? (isMobile ? '8px 16px' : '12px 16px') 
+      : (isMobile ? '6px 12px' : '8px 16px'),
+    
+    borderBottom: `1px solid ${isCurrentlyDarkMode ? '#374151' : '#e2e8f0'}`,
+    backgroundColor: isCurrentlyDarkMode ? '#1e2e4a' : '#ffffff',
+    borderTopLeftRadius: shouldStick ? '0px' : '8px',
+    borderTopRightRadius: shouldStick ? '0px' : '8px',
+    borderBottomLeftRadius: '0px',
+    borderBottomRightRadius: '0px',
+    
+    boxShadow: shouldStick 
+      ? (isCurrentlyDarkMode ? '0 8px 25px rgba(0, 0, 0, 0.5)' : '0 8px 25px rgba(0, 0, 0, 0.2)')
+      : (isScrolled 
+          ? (isCurrentlyDarkMode ? '0 4px 12px rgba(0, 0, 0, 0.4)' : '0 4px 12px rgba(0, 0, 0, 0.15)')
+          : (isCurrentlyDarkMode ? '0 2px 8px rgba(0, 0, 0, 0.3)' : '0 2px 8px rgba(0, 0, 0, 0.1)')),
+
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    backdropFilter: shouldStick ? 'blur(12px)' : 'blur(8px)',
+
+    flexWrap: 'wrap',
+    overflow: 'visible',
+    overflowX: 'visible',
+    overflowY: 'visible',
+
+    ...(shouldStick && {
+      marginBottom: '0px',
+      borderLeft: 'none',
+      borderRight: 'none',
+    })
+  });
+
+  // NEW: Get current alignment based on selection type
+  const getCurrentAlignment = () => {
+    if (selectedImageNode) {
+      return selectedImageAlignment;
+    }
+    return elementFormat;
+  };
+
+  if (isMobile && showMobileCompact) {
+    return (
+      <>
+        <div 
+          ref={toolbarRef}
+          className={`lexical-toolbar mobile-compact ${isCurrentlyDarkMode ? 'dark-mode' : ''} ${shouldStick ? 'floating' : ''}`}
+          style={getToolbarStyles()}
+        >
+          <div style={{ display: 'flex', gap: '2px', alignItems: 'center' }}>
+            <ToolbarButton onClick={undo} disabled={!canUndo} title="Undo" isDarkMode={isCurrentlyDarkMode}>
+              <UndoIcon fontSize="small" />
+            </ToolbarButton>
+            <ToolbarButton onClick={redo} disabled={!canRedo} title="Redo" isDarkMode={isCurrentlyDarkMode}>
+              <RedoIcon fontSize="small" />
+            </ToolbarButton>
+          </div>
+
+          <ToolbarDivider isDarkMode={isCurrentlyDarkMode} />
+
+          <ToolbarDropdown
+            value={blockType}
+            onChange={formatHeading}
+            options={blockTypeOptions}
+            isDarkMode={isCurrentlyDarkMode}
+            width="100px"
+          />
+
+          <ToolbarDivider isDarkMode={isCurrentlyDarkMode} />
+
+          <div style={{ display: 'flex', gap: '2px' }}>
+            <ToolbarButton
+              onClick={() => formatText('bold')}
+              active={activeFormats.bold}
+              title="Bold"
+              isDarkMode={isCurrentlyDarkMode}
+            >
+              <FormatBoldIcon fontSize="small" />
+            </ToolbarButton>
+            
+            <ToolbarButton
+              onClick={() => formatText('italic')}
+              active={activeFormats.italic}
+              title="Italic"
+              isDarkMode={isCurrentlyDarkMode}
+            >
+              <FormatItalicIcon fontSize="small" />
+            </ToolbarButton>
+
+            <ToolbarButton
+              onClick={openLinkModal}
+              active={isLink}
+              title="Link"
+              isDarkMode={isCurrentlyDarkMode}
+            >
+              <LinkIcon fontSize="small" />
+            </ToolbarButton>
+          </div>
+        </div>
+
+        {shouldStick && (
+          <div style={{ height: '64px' }} />
+        )}
+
+        <ImageUploadModal
+          isOpen={isImageModalOpen}
+          onClose={() => setIsImageModalOpen(false)}
+          onInsert={handleImageInsert}
+          isDarkMode={isCurrentlyDarkMode}
+        />
+
+        <LinkModal
+          isOpen={isLinkModalOpen}
+          onClose={() => setIsLinkModalOpen(false)}
+          onInsert={handleLinkInsert}
+          initialText={selectedText}
+          isDarkMode={isCurrentlyDarkMode}
+        />
+
+        <CodeBlockModal
+          isOpen={isCodeBlockModalOpen}
+          onClose={() => setIsCodeBlockModalOpen(false)}
+          onInsert={handleCodeBlockInsert}
+          isDarkMode={isCurrentlyDarkMode}
+        />
+      </>
+    );
+  }
+
   return (
     <>
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '1px',
-        padding: '8px 16px',
-        borderBottom: '1px solid #e2e8f0',
-        backgroundColor: '#ffffff',
-        borderTopLeftRadius: '8px',
-        borderTopRightRadius: '8px',
-        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
-        flexWrap: 'wrap',
-        minHeight: '56px',
-        overflow: 'hidden'
-      }}>
-        {/* History Controls */}
-        <div style={{ display: 'flex', gap: '1px', marginRight: '8px' }}>
-          <ToolbarButton onClick={undo} disabled={!canUndo} title="Undo (Ctrl+Z)">
+      <div 
+        ref={toolbarRef}
+        className={`lexical-toolbar ${isCurrentlyDarkMode ? 'dark-mode' : ''} ${isScrolled ? 'scrolled' : ''} ${shouldStick ? 'floating' : ''}`}
+        style={getToolbarStyles()}
+      >
+        <div style={{ display: 'flex', gap: '2px', marginRight: '4px' }}>
+          <ToolbarButton onClick={undo} disabled={!canUndo} title="Undo (Ctrl+Z)" isDarkMode={isCurrentlyDarkMode}>
             <UndoIcon fontSize="small" />
           </ToolbarButton>
-          <ToolbarButton onClick={redo} disabled={!canRedo} title="Redo (Ctrl+Y)">
+          <ToolbarButton onClick={redo} disabled={!canRedo} title="Redo (Ctrl+Y)" isDarkMode={isCurrentlyDarkMode}>
             <RedoIcon fontSize="small" />
           </ToolbarButton>
         </div>
 
-        <ToolbarDivider />
+        <ToolbarDivider isDarkMode={isCurrentlyDarkMode} />
+        
+        {/* Show different controls based on selection type */}
+        {!selectedImageNode && (
+          <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginRight: '4px' }}>
+            <ToolbarDropdown
+              value={blockType}
+              onChange={formatHeading}
+              options={blockTypeOptions}
+              isDarkMode={isCurrentlyDarkMode}
+              width="120px"
+              title="Block Type"
+            />
 
-        {/* Block Type & Font Controls */}
-        <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginRight: '8px' }}>
-          <select
-            value={blockType}
-            onChange={(e) => formatHeading(e.target.value)}
-            style={{
-              padding: '6px 10px',
-              border: '1px solid #cbd5e1',
-              borderRadius: '6px',
-              fontSize: '14px',
-              minWidth: '120px',
-              backgroundColor: 'white',
-              color: '#374151',
-              cursor: 'pointer',
-              outline: 'none',
-              transition: 'border-color 0.2s'
-            }}
-            onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-            onBlur={(e) => e.target.style.borderColor = '#cbd5e1'}
-          >
-            <option value="paragraph">Paragraph</option>
-            <option value="h1">Heading 1</option>
-            <option value="h2">Heading 2</option>
-            <option value="h3">Heading 3</option>
-            <option value="h4">Heading 4</option>
-            <option value="h5">Heading 5</option>
-            <option value="h6">Heading 6</option>
-            <option value="quote">Quote</option>
-          </select>
+            <ToolbarDropdown
+              value={fontFamily}
+              onChange={handleFontFamilyChange}
+              options={fontFamilyOptions}
+              isDarkMode={isCurrentlyDarkMode}
+              width="110px"
+              title="Font Family"
+            />
 
-          <select
-            value={fontFamily}
-            onChange={(e) => handleFontFamilyChange(e.target.value)}
-            style={{
-              padding: '6px 10px',
-              border: '1px solid #cbd5e1',
-              borderRadius: '6px',
-              fontSize: '14px',
-              minWidth: '110px',
-              backgroundColor: 'white',
-              color: '#374151',
-              cursor: 'pointer',
-              outline: 'none',
-              transition: 'border-color 0.2s'
-            }}
-            onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-            onBlur={(e) => e.target.style.borderColor = '#cbd5e1'}
-          >
-            <option value="">Default</option>
-            <option value="Arial">Arial</option>
-            <option value="Georgia">Georgia</option>
-            <option value="Times New Roman">Times</option>
-            <option value="Courier New">Courier</option>
-            <option value="Helvetica">Helvetica</option>
-          </select>
+            <ToolbarDropdown
+              value={fontSize}
+              onChange={handleFontSizeChange}
+              options={fontSizeOptions}
+              isDarkMode={isCurrentlyDarkMode}
+              width="70px"
+              title="Font Size"
+            />
+          </div>
+        )}
 
-          <select
-            value={fontSize}
-            onChange={(e) => handleFontSizeChange(e.target.value)}
-            style={{
-              padding: '6px 8px',
-              border: '1px solid #cbd5e1',
-              borderRadius: '6px',
-              fontSize: '14px',
-              width: '65px',
-              backgroundColor: 'white',
-              color: '#374151',
-              cursor: 'pointer',
-              outline: 'none',
-              transition: 'border-color 0.2s'
-            }}
-            onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-            onBlur={(e) => e.target.style.borderColor = '#cbd5e1'}
-          >
-            <option value="10">10</option>
-            <option value="12">12</option>
-            <option value="14">14</option>
-            <option value="16">16</option>
-            <option value="18">18</option>
-            <option value="20">20</option>
-            <option value="24">24</option>
-            <option value="32">32</option>
-          </select>
-        </div>
+        {/* Image selection indicator */}
+        {selectedImageNode && (
+          <div style={{ 
+            display: 'flex', 
+            gap: '6px', 
+            alignItems: 'center', 
+            marginRight: '4px',
+            padding: '4px 8px',
+            backgroundColor: isCurrentlyDarkMode ? 'rgba(70, 191, 232, 0.2)' : 'rgba(70, 191, 232, 0.1)',
+            borderRadius: '4px',
+            border: '1px solid var(--color-light-mode)'
+          }}>
+            <ImageIcon fontSize="small" style={{ color: 'var(--color-light-mode)' }} />
+            <span style={{ 
+              fontSize: '12px', 
+              fontWeight: 500,
+              color: 'var(--color-light-mode)'
+            }}>
+              Image Selected
+            </span>
+          </div>
+        )}
 
-        <ToolbarDivider />
+        <ToolbarDivider isDarkMode={isCurrentlyDarkMode} />
 
-        {/* Text Formatting */}
-        <div style={{ display: 'flex', gap: '1px', marginRight: '8px' }}>
+        {/* Text formatting - disabled when image is selected */}
+        <div style={{ display: 'flex', gap: '2px', marginRight: '4px' }}>
           <ToolbarButton
             onClick={() => formatText('bold')}
-            active={activeFormats.bold}
+            active={!selectedImageNode && activeFormats.bold}
             title="Bold (Ctrl+B)"
+            isDarkMode={isCurrentlyDarkMode}
+            disabled={!!selectedImageNode}
           >
             <FormatBoldIcon fontSize="small" />
           </ToolbarButton>
           
           <ToolbarButton
             onClick={() => formatText('italic')}
-            active={activeFormats.italic}
+            active={!selectedImageNode && activeFormats.italic}
             title="Italic (Ctrl+I)"
+            isDarkMode={isCurrentlyDarkMode}
+            disabled={!!selectedImageNode}
           >
             <FormatItalicIcon fontSize="small" />
           </ToolbarButton>
           
           <ToolbarButton
             onClick={() => formatText('underline')}
-            active={activeFormats.underline}
+            active={!selectedImageNode && activeFormats.underline}
             title="Underline (Ctrl+U)"
+            isDarkMode={isCurrentlyDarkMode}
+            disabled={!!selectedImageNode}
           >
             <FormatUnderlinedIcon fontSize="small" />
           </ToolbarButton>
           
           <ToolbarButton
             onClick={() => formatText('strikethrough')}
-            active={activeFormats.strikethrough}
+            active={!selectedImageNode && activeFormats.strikethrough}
             title="Strikethrough"
+            isDarkMode={isCurrentlyDarkMode}
+            disabled={!!selectedImageNode}
           >
             <FormatStrikethroughIcon fontSize="small" />
           </ToolbarButton>
 
           <ToolbarButton
             onClick={() => formatText('code')}
-            active={activeFormats.code}
+            active={!selectedImageNode && activeFormats.code}
             title="Inline Code"
+            isDarkMode={isCurrentlyDarkMode}
+            disabled={!!selectedImageNode}
           >
             <CodeIcon fontSize="small" />
           </ToolbarButton>
         </div>
 
-        <ToolbarDivider />
+        <ToolbarDivider isDarkMode={isCurrentlyDarkMode} />
 
-        {/* Text Style */}
-        <div style={{ display: 'flex', gap: '1px', marginRight: '8px' }}>
+        <div style={{ display: 'flex', gap: '2px', marginRight: '4px' }}>
           <ToolbarButton
             onClick={() => formatText('subscript')}
-            active={activeFormats.subscript}
+            active={!selectedImageNode && activeFormats.subscript}
             title="Subscript"
+            isDarkMode={isCurrentlyDarkMode}
+            disabled={!!selectedImageNode}
           >
             <SubscriptIcon fontSize="small" />
           </ToolbarButton>
           
           <ToolbarButton
             onClick={() => formatText('superscript')}
-            active={activeFormats.superscript}
+            active={!selectedImageNode && activeFormats.superscript}
             title="Superscript"
+            isDarkMode={isCurrentlyDarkMode}
+            disabled={!!selectedImageNode}
           >
             <SuperscriptIcon fontSize="small" />
           </ToolbarButton>
@@ -580,69 +874,85 @@ const ComprehensiveLexicalToolbar: React.FC = () => {
           <ToolbarButton
             onClick={clearFormatting}
             title="Clear Formatting"
+            isDarkMode={isCurrentlyDarkMode}
+            disabled={!!selectedImageNode}
           >
             <FormatClearIcon fontSize="small" />
           </ToolbarButton>
         </div>
 
-        <ToolbarDivider />
-
-        {/* Alignment */}
-        <div style={{ display: 'flex', gap: '1px', marginRight: '8px' }}>
+        <ToolbarDivider isDarkMode={isCurrentlyDarkMode} />
+        
+        {/* ENHANCED: Alignment buttons work for both text and images */}
+        <div style={{ display: 'flex', gap: '2px', marginRight: '4px' }}>
           <ToolbarButton
             onClick={() => formatElement('left')}
-            active={elementFormat === 'left'}
-            title="Align Left"
+            active={getCurrentAlignment() === 'left'}
+            title={selectedImageNode ? "Align Image Left" : "Align Left"}
+            isDarkMode={isCurrentlyDarkMode}
           >
             <FormatAlignLeftIcon fontSize="small" />
           </ToolbarButton>
           
           <ToolbarButton
             onClick={() => formatElement('center')}
-            active={elementFormat === 'center'}
-            title="Align Center"
+            active={getCurrentAlignment() === 'center'}
+            title={selectedImageNode ? "Center Image" : "Align Center"}
+            isDarkMode={isCurrentlyDarkMode}
           >
             <FormatAlignCenterIcon fontSize="small" />
           </ToolbarButton>
           
           <ToolbarButton
             onClick={() => formatElement('right')}
-            active={elementFormat === 'right'}
-            title="Align Right"
+            active={getCurrentAlignment() === 'right'}
+            title={selectedImageNode ? "Align Image Right" : "Align Right"}
+            isDarkMode={isCurrentlyDarkMode}
           >
             <FormatAlignRightIcon fontSize="small" />
           </ToolbarButton>
           
           <ToolbarButton
             onClick={() => formatElement('justify')}
-            active={elementFormat === 'justify'}
+            active={!selectedImageNode && getCurrentAlignment() === 'justify'}
             title="Justify"
+            isDarkMode={isCurrentlyDarkMode}
+            disabled={!!selectedImageNode} // Images don't support justify
           >
             <FormatAlignJustifyIcon fontSize="small" />
           </ToolbarButton>
         </div>
 
-        <ToolbarDivider />
+        <ToolbarDivider isDarkMode={isCurrentlyDarkMode} />
 
-        {/* Lists & Indentation */}
-        <div style={{ display: 'flex', gap: '1px', marginRight: '8px' }}>
+        {/* List and indent controls - disabled when image is selected */}
+        <div style={{ display: 'flex', gap: '2px', marginRight: '4px' }}>
           <ToolbarButton
             onClick={() => insertList('bullet')}
+            active={!selectedImageNode && blockType === 'bullet'}
             title="Bullet List"
+            isDarkMode={isCurrentlyDarkMode}
+            disabled={!!selectedImageNode}
           >
             <FormatListBulletedIcon fontSize="small" />
           </ToolbarButton>
           
           <ToolbarButton
             onClick={() => insertList('number')}
+            active={!selectedImageNode && blockType === 'number'}
             title="Numbered List"
+            isDarkMode={isCurrentlyDarkMode}
+            disabled={!!selectedImageNode}
           >
             <FormatListNumberedIcon fontSize="small" />
           </ToolbarButton>
 
           <ToolbarButton
             onClick={() => insertList('check')}
+            active={!selectedImageNode && blockType === 'check'}
             title="Checklist"
+            isDarkMode={isCurrentlyDarkMode}
+            disabled={!!selectedImageNode}
           >
             <CheckBoxIcon fontSize="small" />
           </ToolbarButton>
@@ -650,6 +960,8 @@ const ComprehensiveLexicalToolbar: React.FC = () => {
           <ToolbarButton
             onClick={outdentContent}
             title="Decrease Indent"
+            isDarkMode={isCurrentlyDarkMode}
+            disabled={!!selectedImageNode}
           >
             <FormatIndentDecreaseIcon fontSize="small" />
           </ToolbarButton>
@@ -657,18 +969,22 @@ const ComprehensiveLexicalToolbar: React.FC = () => {
           <ToolbarButton
             onClick={indentContent}
             title="Increase Indent"
+            isDarkMode={isCurrentlyDarkMode}
+            disabled={!!selectedImageNode}
           >
             <FormatIndentIncreaseIcon fontSize="small" />
           </ToolbarButton>
         </div>
 
-        <ToolbarDivider />
+        <ToolbarDivider isDarkMode={isCurrentlyDarkMode} />
 
-        {/* Special Elements & Media */}
-        <div style={{ display: 'flex', gap: '1px' }}>
+        <div style={{ display: 'flex', gap: '2px' }}>
           <ToolbarButton
             onClick={() => formatHeading('quote')}
+            active={!selectedImageNode && blockType === 'quote'}
             title="Quote"
+            isDarkMode={isCurrentlyDarkMode}
+            disabled={!!selectedImageNode}
           >
             <FormatQuoteIcon fontSize="small" />
           </ToolbarButton>
@@ -676,33 +992,63 @@ const ComprehensiveLexicalToolbar: React.FC = () => {
           <ToolbarButton
             onClick={insertHorizontalRule}
             title="Horizontal Rule"
+            isDarkMode={isCurrentlyDarkMode}
           >
             <HorizontalRuleIcon fontSize="small" />
           </ToolbarButton>
 
           <ToolbarButton
-            onClick={() => console.log('Link - Coming soon')}
+            onClick={openLinkModal}
+            active={!selectedImageNode && isLink}
             title="Insert Link"
-            disabled
+            isDarkMode={isCurrentlyDarkMode}
+            disabled={!!selectedImageNode}
           >
             <LinkIcon fontSize="small" />
           </ToolbarButton>
           
-          {/* UPDATED: Image button now functional */}
           <ToolbarButton
             onClick={openImageModal}
             title="Insert Image"
+            isDarkMode={isCurrentlyDarkMode}
           >
             <ImageIcon fontSize="small" />
+          </ToolbarButton>
+
+          <ToolbarButton
+            onClick={openCodeBlockModal}
+            title="Insert Code Block"
+            isDarkMode={isCurrentlyDarkMode}
+          >
+            <DataObjectIcon fontSize="small" />
           </ToolbarButton>
         </div>
       </div>
 
-      {/* Image Upload Modal */}
+      {shouldStick && (
+        <div style={{ height: isMobile ? '48px' : '56px' }} />
+      )}
+
       <ImageUploadModal
         isOpen={isImageModalOpen}
         onClose={() => setIsImageModalOpen(false)}
         onInsert={handleImageInsert}
+        isDarkMode={isCurrentlyDarkMode}
+      />
+
+      <LinkModal
+        isOpen={isLinkModalOpen}
+        onClose={() => setIsLinkModalOpen(false)}
+        onInsert={handleLinkInsert}
+        initialText={selectedText}
+        isDarkMode={isCurrentlyDarkMode}
+      />
+
+      <CodeBlockModal
+        isOpen={isCodeBlockModalOpen}
+        onClose={() => setIsCodeBlockModalOpen(false)}
+        onInsert={handleCodeBlockInsert}
+        isDarkMode={isCurrentlyDarkMode}
       />
     </>
   );

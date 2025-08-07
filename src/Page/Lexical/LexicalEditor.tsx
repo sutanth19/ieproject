@@ -1,11 +1,12 @@
-// LexicalEditor.tsx - Clean version with Image Support
-import React, { useEffect } from 'react';
+// Complete LexicalEditor.tsx with editor reference for sticky toolbar
+import React, { useEffect, useRef } from 'react';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
+import { CheckListPlugin } from '@lexical/react/LexicalCheckListPlugin';
 import { TablePlugin } from '@lexical/react/LexicalTablePlugin';
 import { HorizontalRulePlugin } from '@lexical/react/LexicalHorizontalRulePlugin';
 import { HeadingNode, QuoteNode } from '@lexical/rich-text';
@@ -18,10 +19,19 @@ import { LexicalEditorProps } from '../../types/lexical';
 import { useLexicalEditor } from '../../hooks/useLexicalEditor';
 import { OnChangePlugin } from './plugins/OnChangePlugin';
 import ComprehensiveLexicalToolbar from './LexicalToolbar';
+import { useTheme } from './../../themes/ThemeContext';
 
 // Import Image components
 import { ImageNode } from './ImageNode';
 import { ImagePlugin } from './ImagePlugin';
+
+// Import Link components
+import { LinkNode } from './LinkNode';
+import { LinkPlugin } from './LinkPlugin';
+
+// Import CodeBlock components
+import { CodeBlockNode } from './CodeBlockNode';
+import { CodeBlockPlugin } from './CodeBlockPlugin';
 
 // Table setup component
 const TableSetup: React.FC = () => {
@@ -40,40 +50,76 @@ const TableSetup: React.FC = () => {
   return null;
 };
 
-export const LexicalEditor: React.FC<LexicalEditorProps> = ({
+export const LexicalEditor: React.FC<LexicalEditorProps & { 
+  isDarkMode?: boolean;
+  className?: string;
+  stickyOffset?: number;
+}> = ({
   config = {},
   initialValue,
   onChange,
   className,
   style,
-  placeholder = 'Enter some text...',
+  isDarkMode = false,
+  stickyOffset = 0,
 }) => {
+  const { darkMode } = useTheme();
   const { outputs, handleEditorChange } = useLexicalEditor(onChange);
+  const editorContainerRef = useRef<HTMLDivElement | null>(null);
+  
+  // Use darkMode from theme context instead of prop
+  const isCurrentlyDarkMode = darkMode;
+  
+  // Combine your app's theme classes with the editor
+  const editorContainerClass = `lexical-editor-container ${isCurrentlyDarkMode ? 'dark-mode' : ''} ${className || ''}`;
+  const editorContentClass = `lexical-editor-content ${isCurrentlyDarkMode ? 'dark-mode' : ''}`;
+  const placeholderClass = `lexical-editor-placeholder ${isCurrentlyDarkMode ? 'dark-mode' : ''}`;
   
   const editorConfig = {
     namespace: config.namespace || 'LexicalEditor',
     theme: config.theme || {
-      heading: {
-        h1: 'text-3xl font-bold',
-        h2: 'text-2xl font-bold', 
-        h3: 'text-xl font-bold',
+      // Text formatting theme classes (no Tailwind)
+      text: {
+        bold: 'editor-text-bold',
+        italic: 'editor-text-italic',
+        underline: 'editor-text-underline',
+        strikethrough: 'editor-text-strikethrough',
+        underlineStrikethrough: 'editor-text-underlineStrikethrough',
+        code: 'editor-text-code',
+        subscript: 'editor-text-subscript',
+        superscript: 'editor-text-superscript',
       },
+      // Heading styles (replaced Tailwind with custom CSS classes)
+      heading: {
+        h1: 'editor-heading-h1',
+        h2: 'editor-heading-h2', 
+        h3: 'editor-heading-h3',
+        h4: 'editor-heading-h4',
+        h5: 'editor-heading-h5',
+        h6: 'editor-heading-h6',
+      },
+      // List styles (replaced Tailwind with custom CSS classes)
       list: {
         nested: {
           listitem: 'list-nested-listitem',
         },
-        ol: 'list-decimal list-inside',
-        ul: 'list-disc list-inside',
-        listitem: 'list-item',
+        ol: 'editor-list-ordered',
+        ul: 'editor-list-unordered',
+        listitem: 'editor-list-item',
+        checklist: 'editor-checklist',
+        listitemChecked: 'checklist-item-checked',
+        listitemUnchecked: 'checklist-item-unchecked',
       },
-      quote: 'border-l-4 border-gray-300 pl-4 italic',
-      table: 'border-collapse border border-gray-300 w-full my-4',
-      tableCell: 'border border-gray-300 px-3 py-2 min-w-20 relative',
-      tableCellHeader: 'border border-gray-300 px-3 py-2 min-w-20 bg-gray-100 font-bold relative',
-      tableRow: 'border-b border-gray-300',
-      hr: 'border-none border-t border-gray-300 my-4',
-      // Add image theme
+      // Other elements (replaced Tailwind with custom CSS classes)
+      quote: 'editor-quote',
+      table: 'editor-table',
+      tableCell: 'editor-table-cell',
+      tableCellHeader: 'editor-table-cell-header',
+      tableRow: 'editor-table-row',
+      hr: 'editor-hr',
       image: 'editor-image',
+      link: 'editor-link',
+      codeblock: 'editor-codeblock', // Added CodeBlock theme
     },
     onError: config.onError || ((error, editor) => console.error('Lexical Error:', error)),
     nodes: [
@@ -85,52 +131,58 @@ export const LexicalEditor: React.FC<LexicalEditorProps> = ({
       TableCellNode,
       TableRowNode,
       HorizontalRuleNode,
-      ImageNode, // Add ImageNode here
+      ImageNode,
+      LinkNode,
+      CodeBlockNode, // Added CodeBlock node
       ...(config.nodes || [])
     ],
     ...(initialValue && { editorState: initialValue }),
   };
 
   return (
-    <div className={className} style={style}>
+    <div 
+      ref={editorContainerRef}
+      className={editorContainerClass} 
+      style={style}
+    >
       <LexicalComposer initialConfig={editorConfig}>
-        <div className="lexical-editor" style={{ border: '1px solid #d1d5db', borderRadius: '6px', overflow: 'hidden' }}>
-          <ComprehensiveLexicalToolbar />
+        <div className={`lexical-editor ${isCurrentlyDarkMode ? 'dark-mode' : ''}`}>
+          <ComprehensiveLexicalToolbar 
+            isDarkMode={isCurrentlyDarkMode} 
+            stickyOffset={70}
+            editorRef={editorContainerRef}
+          />
           <RichTextPlugin
             contentEditable={
               <ContentEditable
+                className={editorContentClass}
                 style={{
+                  color: isCurrentlyDarkMode ? '#ffffff' : '#333333',
+                  caretColor: isCurrentlyDarkMode ? '#ffffff' : '#333333',
+                  padding: '16px 20px', 
                   minHeight: '200px',
-                  padding: '12px',
-                  outline: 'none',
-                  fontSize: '14px',
-                  lineHeight: '1.5',
-                  position: 'relative',
+                  height: 'auto',
+                  overflow: 'visible',
                 }}
-                aria-placeholder={placeholder}
-                placeholder={
-                  <div style={{ 
-                    padding: '12px', 
-                    color: '#9ca3af',
-                    pointerEvents: 'none',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                  }}>
-                    {placeholder}
-                  </div>
-                }
               />
+            }
+            placeholder={
+              <div className={placeholderClass}>
+                Start typing your content here...
+              </div>
             }
             ErrorBoundary={LexicalErrorBoundary}
           />
         </div>
         <HistoryPlugin />
         <ListPlugin />
+        <CheckListPlugin />
         <TablePlugin hasCellMerge={true} hasCellBackgroundColor={true} />
         <HorizontalRulePlugin />
         <TableSetup />
         <ImagePlugin />
+        <LinkPlugin />
+        <CodeBlockPlugin /> {/* Added CodeBlock plugin */}
         <OnChangePlugin onChange={handleEditorChange} />
       </LexicalComposer>
     </div>

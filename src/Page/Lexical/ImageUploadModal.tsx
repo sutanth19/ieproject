@@ -1,23 +1,155 @@
-// ImageUploadModal.tsx - Fixed version with proper file handling
+// ImageUploadModal.tsx - Updated to use your CSS variable system
 import React, { useState, useCallback } from 'react';
+import { styled } from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
+import Input from '@mui/material/Input';
+import FormLabel from '@mui/material/FormLabel';
 
 interface ImageUploadModalProps {
   isOpen: boolean;
   onClose: () => void;
   onInsert: (imageData: { src: string; altText: string }) => void;
+  isDarkMode?: boolean;
 }
+
+// Updated to use your CSS variables
+const StyledDialog = styled(Dialog)<{ isDarkMode: boolean }>(({ isDarkMode }) => ({
+  '& .MuiDialog-paper': {
+    backgroundColor: isDarkMode ? 'var(--card-background-color-dark-mode) !important' : 'white !important',
+    color: isDarkMode ? 'var(--section-color-dark-mode)' : 'var(--section-color-light-mode)',
+    borderRadius: '8px',
+    borderLeft: 'var(--border-accent-width) solid var(--color-light-mode)',
+    boxShadow: isDarkMode 
+      ? '0 8px 16px rgba(0, 0, 0, 0.3)' 
+      : '0 8px 16px rgba(0, 0, 0, 0.1)',
+    maxWidth: '500px',
+    width: '90%',
+    maxHeight: '80vh',
+    animation: 'cardFadeIn 0.3s ease forwards',
+  },
+  '& .MuiDialog-container': {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+}));
+
+const StyledTextField = styled(TextField)<{ isDarkMode: boolean }>(({ isDarkMode }) => ({
+  '& .MuiOutlinedInput-root': {
+    backgroundColor: isDarkMode ? 'var(--card-background-color-dark-mode)' : 'white',
+    color: isDarkMode ? 'var(--section-color-dark-mode)' : 'var(--section-color-light-mode)',
+    transition: 'var(--standard-transition)',
+    '& fieldset': {
+      borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.23)' : 'rgba(0, 0, 0, 0.23)',
+    },
+    '&:hover fieldset': {
+      borderColor: 'var(--color-light-mode)',
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: 'var(--color-light-mode)',
+    },
+  },
+  '& .MuiInputLabel-root': {
+    color: isDarkMode ? 'var(--section-color-dark-mode)' : 'var(--section-color-light-mode)',
+    fontWeight: 500,
+    fontSize: '14px',
+  },
+  '& .MuiInputLabel-root.Mui-focused': {
+    color: 'var(--color-light-mode)',
+  },
+}));
+
+const StyledInput = styled(Input)<{ isDarkMode: boolean }>(({ isDarkMode }) => ({
+  width: '100%',
+  padding: '8px',
+  border: isDarkMode ? '1px solid rgba(255, 255, 255, 0.23)' : '1px solid rgba(0, 0, 0, 0.23)',
+  borderRadius: '4px',
+  backgroundColor: isDarkMode ? 'var(--card-background-color-dark-mode)' : 'white',
+  color: isDarkMode ? 'var(--section-color-dark-mode)' : 'var(--section-color-light-mode)',
+  transition: 'var(--standard-transition)',
+  '&:before, &:after': {
+    display: 'none',
+  },
+  '&:hover': {
+    borderColor: 'var(--color-light-mode)',
+  },
+}));
+
+const StyledTabs = styled(Tabs)<{ isDarkMode: boolean }>(({ isDarkMode }) => ({
+  borderBottom: isDarkMode ? '1px solid rgba(255, 255, 255, 0.23)' : '1px solid rgba(0, 0, 0, 0.23)',
+  '& .MuiTabs-indicator': {
+    backgroundColor: 'var(--color-light-mode)',
+  },
+}));
+
+const StyledTab = styled(Tab)<{ isDarkMode: boolean }>(({ isDarkMode }) => ({
+  color: isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.6)',
+  fontWeight: 400,
+  transition: 'var(--standard-transition)',
+  '&.Mui-selected': {
+    color: 'var(--color-light-mode)',
+    fontWeight: 600,
+  },
+}));
+
+// Same button sizes as CodeBlockModal
+const StyledButton = styled(Button)<{ isDarkMode: boolean; variant: 'outlined' | 'contained' }>(({ isDarkMode, variant }) => ({
+  padding: '8px 16px', // Same as CodeBlockModal
+  fontWeight: 600,
+  fontSize: '0.875rem', // Same as CodeBlockModal
+  borderRadius: '4px',
+  transition: 'var(--standard-transition)',
+  letterSpacing: '0.5px',
+  ...(variant === 'outlined' && {
+    border: isDarkMode ? '1px solid rgba(255, 255, 255, 0.23)' : '1px solid rgba(0, 0, 0, 0.23)',
+    backgroundColor: isDarkMode ? 'var(--card-background-color-dark-mode)' : 'white',
+    color: isDarkMode ? 'var(--section-color-dark-mode)' : 'var(--section-color-light-mode)',
+    '&:hover': {
+      backgroundColor: isDarkMode ? 'var(--section-stripe-background-dark-mode)' : 'var(--section-stripe-background-light-mode)',
+      borderColor: 'var(--color-light-mode)',
+    },
+  }),
+  ...(variant === 'contained' && {
+    backgroundColor: 'var(--primary-button-color)',
+    color: 'white',
+    boxShadow: 'var(--button-shadow)',
+    '&:hover': {
+      backgroundColor: 'var(--primary-button-hover)',
+      boxShadow: 'var(--button-shadow-hover)',
+    },
+    '&:disabled': {
+      backgroundColor: '#9ca3af',
+      color: 'white',
+    },
+  }),
+}));
+
+const StyledFormLabel = styled(FormLabel)<{ isDarkMode: boolean }>(({ isDarkMode }) => ({
+  display: 'block',
+  marginBottom: '4px',
+  fontSize: '14px',
+  fontWeight: 500,
+  color: isDarkMode ? 'var(--section-color-dark-mode)' : 'var(--section-color-light-mode)',
+}));
 
 export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
   isOpen,
   onClose,
   onInsert,
+  isDarkMode = false, 
 }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState('');
   const [altText, setAltText] = useState('');
   const [uploadMethod, setUploadMethod] = useState<'file' | 'url'>('file');
   const [previewUrl, setPreviewUrl] = useState('');
-  const [fileDataUrl, setFileDataUrl] = useState(''); // Add this for base64 data
+  const [fileDataUrl, setFileDataUrl] = useState('');
 
   // Convert file to base64 data URL (permanent)
   const convertFileToDataUrl = useCallback((file: File): Promise<string> => {
@@ -41,12 +173,11 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
       try {
         setSelectedFile(file);
         
-        // Create both blob URL (for immediate preview) and data URL (for permanent storage)
         const blobUrl = URL.createObjectURL(file);
         const dataUrl = await convertFileToDataUrl(file);
         
         setPreviewUrl(blobUrl);
-        setFileDataUrl(dataUrl); // Store the permanent data URL
+        setFileDataUrl(dataUrl);
         setAltText(file.name.split('.')[0]);
         
         console.log('File selected:', {
@@ -68,14 +199,13 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     const url = event.target.value;
     setImageUrl(url);
     setPreviewUrl(url);
-    setFileDataUrl(''); // Clear file data when using URL
+    setFileDataUrl('');
   };
 
   const handleInsert = () => {
     let src = '';
     
     if (uploadMethod === 'file' && selectedFile && fileDataUrl) {
-      // Use the permanent data URL instead of blob URL
       src = fileDataUrl;
       console.log('Inserting file as data URL, length:', src.length);
     } else if (uploadMethod === 'url' && imageUrl) {
@@ -92,12 +222,10 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
   };
 
   const handleClose = () => {
-    // Clean up blob URL if it exists
     if (previewUrl && selectedFile && previewUrl.startsWith('blob:')) {
       URL.revokeObjectURL(previewUrl);
     }
     
-    // Reset all state
     setSelectedFile(null);
     setImageUrl('');
     setAltText('');
@@ -107,9 +235,7 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     onClose();
   };
 
-  // Handle method switch
   const handleMethodSwitch = (method: 'file' | 'url') => {
-    // Clean up previous preview if switching from file
     if (uploadMethod === 'file' && previewUrl && previewUrl.startsWith('blob:')) {
       URL.revokeObjectURL(previewUrl);
     }
@@ -122,150 +248,119 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     setAltText('');
   };
 
-  if (!isOpen) return null;
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    handleMethodSwitch(newValue === 0 ? 'file' : 'url');
+  };
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 1000,
-      }}
-      onClick={handleClose}
+    <StyledDialog
+      open={isOpen}
+      onClose={handleClose}
+      isDarkMode={isDarkMode}
+      maxWidth="sm"
+      fullWidth
     >
-      <div
-        style={{
-          backgroundColor: 'white',
-          borderRadius: '8px',
-          padding: '24px',
-          maxWidth: '500px',
-          width: '90%',
-          maxHeight: '80vh',
-          overflow: 'auto',
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h2 style={{ margin: '0 0 16px 0', fontSize: '18px', fontWeight: '600' }}>
+      <DialogContent sx={{ 
+        padding: '24px',
+        backgroundColor: isDarkMode ? 'var(--card-background-color-dark-mode) !important' : 'white !important',
+        color: isDarkMode ? 'var(--section-color-dark-mode)' : 'var(--section-color-light-mode)'
+      }}>
+        {/* Title */}
+        <Typography 
+          variant="h6" 
+          className="section-title"
+          sx={{ 
+            margin: '0 0 16px 0', 
+            fontSize: '18px', 
+            fontWeight: 500,
+          }}
+        >
           Insert Image
-        </h2>
+        </Typography>
 
         {/* Upload Method Tabs */}
-        <div style={{ display: 'flex', marginBottom: '16px', borderBottom: '1px solid #e5e7eb' }}>
-          <button
-            onClick={() => handleMethodSwitch('file')}
-            style={{
-              padding: '8px 16px',
-              border: 'none',
-              backgroundColor: 'transparent',
-              borderBottom: uploadMethod === 'file' ? '2px solid #3b82f6' : '2px solid transparent',
-              color: uploadMethod === 'file' ? '#3b82f6' : '#6b7280',
-              cursor: 'pointer',
-              fontWeight: uploadMethod === 'file' ? '600' : '400',
-            }}
-          >
-            Upload File
-          </button>
-          <button
-            onClick={() => handleMethodSwitch('url')}
-            style={{
-              padding: '8px 16px',
-              border: 'none',
-              backgroundColor: 'transparent',
-              borderBottom: uploadMethod === 'url' ? '2px solid #3b82f6' : '2px solid transparent',
-              color: uploadMethod === 'url' ? '#3b82f6' : '#6b7280',
-              cursor: 'pointer',
-              fontWeight: uploadMethod === 'url' ? '600' : '400',
-            }}
-          >
-            Image URL
-          </button>
-        </div>
+        <StyledTabs
+          value={uploadMethod === 'file' ? 0 : 1}
+          onChange={handleTabChange}
+          isDarkMode={isDarkMode}
+          sx={{ marginBottom: '16px' }}
+        >
+          <StyledTab label="Upload File" isDarkMode={isDarkMode} />
+          <StyledTab label="Image URL" isDarkMode={isDarkMode} />
+        </StyledTabs>
 
         {/* File Upload */}
         {uploadMethod === 'file' && (
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '600' }}>
+          <Box sx={{ marginBottom: '16px' }}>
+            <StyledFormLabel isDarkMode={isDarkMode}>
               Select Image File
-            </label>
-            <input
+            </StyledFormLabel>
+            <StyledInput
               type="file"
-              accept="image/*"
+              inputProps={{ accept: "image/*" }}
               onChange={handleFileSelect}
-              style={{
-                width: '100%',
-                padding: '8px',
-                border: '1px solid #d1d5db',
-                borderRadius: '4px',
-              }}
+              isDarkMode={isDarkMode}
             />
             {selectedFile && (
-              <div style={{ marginTop: '8px', fontSize: '12px', color: '#6b7280' }}>
+              <Typography 
+                variant="caption" 
+                sx={{ 
+                  display: 'block',
+                  marginTop: '8px', 
+                  fontSize: '12px', 
+                  color: isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.6)' 
+                }}
+              >
                 Selected: {selectedFile.name} ({(selectedFile.size / 1024).toFixed(1)} KB)
-              </div>
+              </Typography>
             )}
-          </div>
+          </Box>
         )}
 
         {/* URL Input */}
         {uploadMethod === 'url' && (
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '600' }}>
-              Image URL
-            </label>
-            <input
-              type="url"
+          <Box sx={{ marginBottom: '16px' }}>
+            <StyledTextField
+              fullWidth
+              label="Image URL"
               placeholder="https://example.com/image.jpg"
               value={imageUrl}
               onChange={handleUrlChange}
-              style={{
-                width: '100%',
-                padding: '8px',
-                border: '1px solid #d1d5db',
-                borderRadius: '4px',
-              }}
+              isDarkMode={isDarkMode}
+              variant="outlined"
+              size="small"
             />
-          </div>
+          </Box>
         )}
 
         {/* Alt Text */}
-        <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '600' }}>
-            Alt Text (for accessibility) *
-          </label>
-          <input
-            type="text"
+        <Box sx={{ marginBottom: '16px' }}>
+          <StyledTextField
+            fullWidth
+            label="Alt Text*"
             placeholder="Describe the image..."
             value={altText}
             onChange={(e) => setAltText(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '8px',
-              border: '1px solid #d1d5db',
-              borderRadius: '4px',
-            }}
+            isDarkMode={isDarkMode}
+            variant="outlined"
+            size="small"
             required
           />
-        </div>
+        </Box>
 
         {/* Preview */}
         {previewUrl && (
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '600' }}>
+          <Box sx={{ marginBottom: '16px' }}>
+            <StyledFormLabel isDarkMode={isDarkMode}>
               Preview
-            </label>
-            <div style={{ 
-              border: '1px solid #d1d5db', 
-              borderRadius: '4px', 
+            </StyledFormLabel>
+            <Box sx={{ 
+              border: isDarkMode ? '1px solid rgba(255, 255, 255, 0.23)' : '1px solid rgba(0, 0, 0, 0.23)', 
+              borderRadius: '8px', 
               padding: '8px',
               textAlign: 'center',
-              backgroundColor: '#f9fafb'
+              backgroundColor: isDarkMode ? 'var(--section-stripe-background-dark-mode)' : 'var(--section-stripe-background-light-mode)',
+              transition: 'var(--standard-transition)',
             }}>
               <img
                 src={previewUrl}
@@ -283,51 +378,33 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                   console.log('Preview image loaded successfully');
                 }}
               />
-            </div>
-          </div>
+            </Box>
+          </Box>
         )}
+      </DialogContent>
 
-        {/* Debug Info (remove in production) */}
-        {process.env.NODE_ENV === 'development' && (
-          <div style={{ marginBottom: '16px', fontSize: '12px', color: '#6b7280' }}>
-            <strong>Debug:</strong><br />
-            Method: {uploadMethod}<br />
-            Preview URL: {previewUrl ? `${previewUrl.substring(0, 50)}...` : 'None'}<br />
-            Data URL: {fileDataUrl ? `${fileDataUrl.substring(0, 50)}...` : 'None'}<br />
-            Alt Text: {altText || 'Empty'}
-          </div>
-        )}
-
-        {/* Buttons */}
-        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-          <button
-            onClick={handleClose}
-            style={{
-              padding: '8px 16px',
-              border: '1px solid #d1d5db',
-              backgroundColor: 'white',
-              borderRadius: '4px',
-              cursor: 'pointer',
-            }}
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleInsert}
-            disabled={!previewUrl || !altText}
-            style={{
-              padding: '8px 16px',
-              border: 'none',
-              backgroundColor: previewUrl && altText ? '#3b82f6' : '#9ca3af',
-              color: 'white',
-              borderRadius: '4px',
-              cursor: previewUrl && altText ? 'pointer' : 'not-allowed',
-            }}
-          >
-            Insert Image
-          </button>
-        </div>
-      </div>
-    </div>
+      {/* Buttons */}
+      <DialogActions sx={{ 
+        padding: '0 24px 24px 24px', 
+        gap: '8px',
+        backgroundColor: isDarkMode ? 'var(--card-background-color-dark-mode) !important' : 'white !important'
+      }}>
+        <StyledButton
+          onClick={handleClose}
+          variant="outlined"
+          isDarkMode={isDarkMode}
+        >
+          Cancel
+        </StyledButton>
+        <StyledButton
+          onClick={handleInsert}
+          disabled={!previewUrl || !altText}
+          variant="contained"
+          isDarkMode={isDarkMode}
+        >
+          Insert Image
+        </StyledButton>
+      </DialogActions>
+    </StyledDialog>
   );
 };

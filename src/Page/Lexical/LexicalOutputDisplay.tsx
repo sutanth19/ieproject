@@ -1,4 +1,7 @@
 import React from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
 import { LexicalOutputData } from '../../types/lexical';
 
 interface LexicalOutputDisplayProps {
@@ -7,6 +10,7 @@ interface LexicalOutputDisplayProps {
   showHtml?: boolean;
   showPlainText?: boolean;
   className?: string;
+  isDarkMode?: boolean;
 }
 
 export const LexicalOutputDisplay: React.FC<LexicalOutputDisplayProps> = ({
@@ -15,15 +19,41 @@ export const LexicalOutputDisplay: React.FC<LexicalOutputDisplayProps> = ({
   showHtml = true,
   showPlainText = true,
   className,
+  isDarkMode = false,
 }) => {
-  // Format JSON with proper indentation
+  // Format JSON with proper indentation and truncate long data URLs
   const formatJson = (jsonString: string): string => {
     if (!jsonString) return '';
     try {
       const parsed = JSON.parse(jsonString);
-      return JSON.stringify(parsed, null, 2); // 2 spaces indentation
+      
+      // Function to truncate long data URLs for better readability
+      const truncateDataUrls = (obj: any): any => {
+        if (typeof obj === 'string' && obj.startsWith('data:image/')) {
+          const commaIndex = obj.indexOf(',');
+          if (commaIndex !== -1 && obj.length > 100) {
+            const prefix = obj.substring(0, commaIndex + 1);
+            const suffix = obj.substring(obj.length - 20);
+            return `${prefix}...[${obj.length - commaIndex - 1} chars]...${suffix}`;
+          }
+        } else if (typeof obj === 'object' && obj !== null) {
+          if (Array.isArray(obj)) {
+            return obj.map(truncateDataUrls);
+          } else {
+            const result: any = {};
+            for (const [key, value] of Object.entries(obj)) {
+              result[key] = truncateDataUrls(value);
+            }
+            return result;
+          }
+        }
+        return obj;
+      };
+      
+      const truncatedParsed = truncateDataUrls(parsed);
+      return JSON.stringify(truncatedParsed, null, 2);
     } catch (error) {
-      return jsonString; // Return original if parsing fails
+      return jsonString;
     }
   };
 
@@ -31,7 +61,7 @@ export const LexicalOutputDisplay: React.FC<LexicalOutputDisplayProps> = ({
     { 
       key: 'json', 
       label: 'JSON Output (for editor)', 
-      value: formatJson(data.json), // Format the JSON
+      value: formatJson(data.json),
       show: showJson,
       language: 'json'
     },
@@ -52,51 +82,35 @@ export const LexicalOutputDisplay: React.FC<LexicalOutputDisplayProps> = ({
   ].filter(output => output.show);
 
   return (
-    <div className={className} style={{ display: 'grid', gridTemplateColumns: `repeat(${outputs.length}, 1fr)`, gap: '16px' }}>
-      {outputs.map(({ key, label, value, language }) => (
-        <div key={key}>
-          <h3 style={{ 
-            fontSize: '14px', 
-            fontWeight: '600', 
-            marginBottom: '8px',
-            color: '#374151'
-          }}>
-            {label}
-          </h3>
-          <div style={{
-            border: '1px solid #d1d5db',
-            borderRadius: '6px',
-            overflow: 'hidden',
-            backgroundColor: '#f8fafc'
-          }}>
-            <div style={{
-              backgroundColor: '#e5e7eb',
-              padding: '8px 12px',
-              fontSize: '12px',
-              fontWeight: '500',
-              color: '#6b7280',
-              borderBottom: '1px solid #d1d5db'
-            }}>
-              {language.toUpperCase()}
+    // Use MUI Grid v2 for responsive layout, but keep your CSS classes for styling
+    <Box className={`output-panels-container ${isDarkMode ? 'dark-mode' : ''} ${className || ''}`}>
+      <Grid container spacing={2}>
+        {outputs.map(({ key, label, value, language }) => (
+          <Grid size={{ xs: 12, md: 6, lg: 4 }} key={key}>
+            <Typography 
+              variant="subtitle2" 
+              className={isDarkMode ? 'dark-mode' : ''}
+              sx={{ 
+                fontWeight: 600, 
+                mb: 1,
+                // Let CSS handle the color
+                color: 'inherit'
+              }}
+            >
+              {label}
+            </Typography>
+            {/* Keep your existing CSS classes */}
+            <div className={`output-panel ${isDarkMode ? 'dark-mode' : ''}`}>
+              <div className={`output-panel-header ${isDarkMode ? 'dark-mode' : ''}`}>
+                {language.toUpperCase()}
+              </div>
+              <pre className={`output-panel-content ${isDarkMode ? 'dark-mode' : ''}`}>
+                {value || '(empty)'}
+              </pre>
             </div>
-            <pre style={{ 
-              margin: 0,
-              padding: '12px',
-              fontSize: '11px',
-              fontFamily: '"Fira Code", "Cascadia Code", "SF Mono", Monaco, "Inconsolata", "Roboto Mono", "Source Code Pro", monospace',
-              lineHeight: '1.5',
-              overflow: 'auto',
-              maxHeight: '300px',
-              backgroundColor: 'transparent',
-              color: '#1f2937',
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-word'
-            }}>
-              {value || '(empty)'}
-            </pre>
-          </div>
-        </div>
-      ))}
-    </div>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
   );
 };

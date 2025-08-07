@@ -149,16 +149,33 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  // Login function
+  // Login function - FIXED VERSION
   const login = async (userNtId: string, password: string): Promise<AuthResponse> => {
     setLoading(true);
     try {
       const response = await authAPI.login(userNtId, password);
       console.log('Login response:', response.data);
       
-      // Store token in API 
-      if (response.data && response.data.data) {
-        const loginToken: string = response.data.data;
+      // FIXED: Handle the token correctly - server returns token directly in response.data
+      if (response.data) {
+        let loginToken: string;
+        
+        // Check if response.data is already a string (the token)
+        if (typeof response.data === 'string') {
+          loginToken = response.data;
+        } else if (response.data.data) {
+          // Fallback: check if token is nested under data.data
+          loginToken = response.data.data;
+        } else if (response.data.token) {
+          // Fallback: check if token is under data.token
+          loginToken = response.data.token;
+        } else {
+          return {
+            success: false,
+            message: 'No token received from server'
+          };
+        }
+        
         localStorage.setItem('authToken', loginToken);
         setToken(loginToken);
         console.log('Token stored in localStorage');

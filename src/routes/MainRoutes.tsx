@@ -11,7 +11,10 @@ import GenetalListDetails from '../Page/Gantt/GenericListDetail';
 import Maintenance from '../Page/Maintenance/Maintenance';
 import AdminRoutes from './AdminRoutes';
 import GenericTopics from '../Page/Topics/GenericTopics';
-import LexicalPlayground from '../Page/Lexical'; // Add this import
+import LexicalPlayground from '../Page/Lexical'; 
+import Preview from '../Page/Lexical/PreviewModal';
+import ArticleList from './../Page/Article/ArticleList';
+import ArticleViewer from './../Page/Article/ArticleViewer';
 
 interface ProtectedAdminRouteProps {
   children: React.ReactNode;
@@ -38,7 +41,13 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ loginKey = 0 }) => {
       <Route path="/project/list" element={<ProjectList />} />
       <Route path="/project/:projectName" element={<GenetalListDetails />} />
       <Route path="/project/gantt" element={<GanttView />} />
-      <Route path="/lexical" element={<LexicalPlayground />} /> {/* Add this route */}
+      
+      {/* Article Routes */}
+      <Route path="/articles" element={<ArticleList />} />
+      <Route path="/article/view/:articleGuid" element={<ArticleViewer />} />
+      <Route path="/article/edit/:articleGuid" element={<LexicalPlayground />} />
+      <Route path="/text-editor" element={<LexicalPlayground />} />
+      
       <Route
         path="/admin/*"
         element={

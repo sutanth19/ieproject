@@ -18,6 +18,10 @@ const logEnvironmentVariables = (): void => {
 
 if (import.meta.env.DEV) logEnvironmentVariables();
 
+const getUserTimezone = (): string => {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone;
+};
+
 const API_KEY: string = import.meta.env.VITE_AUTH_API_KEY;
 const API_TIMEOUT: number = parseInt(import.meta.env.VITE_API_TIMEOUT) || 5000;
 const API_BASE_URL: string =
@@ -59,10 +63,17 @@ api.interceptors.request.use(
 
     console.log(`Making ${config.method?.toUpperCase()} request to: ${config.baseURL}${config.url}`);
 
-    if (config.url.includes('/api/auth/')) {
-      config.headers['X-App-Key'] = API_KEY;
-      console.log('Auth endpoint detected - adding X-App-Key');
-    } else {
+    // FIXED: Add X-App-Key to ALL requests, not just auth endpoints
+    config.headers['X-App-Key'] = API_KEY;
+    console.log('Added X-App-Key to request');
+
+    // Add timezone header for Hafizie's datetime conversion
+    const timezone = getUserTimezone();
+    config.headers['Time-Zone'] = timezone;
+    console.log('Added timezone header:', timezone);
+
+    // Add Authorization header for non-auth endpoints
+    if (!config.url.includes('/api/auth/')) {
       let token: string | null = localStorage.getItem('authToken');
       if (!token) {
         token = getTokenFromCookies();
@@ -74,6 +85,9 @@ api.interceptors.request.use(
       if (token && !isTokenExpired(token)) {
         config.headers['Authorization'] = `Bearer ${token}`;
         console.log('Added Authorization header');
+      } else if (token && isTokenExpired(token)) {
+        console.log('Token is expired, removing from storage');
+        localStorage.removeItem('authToken');
       }
     }
 
